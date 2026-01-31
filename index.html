@@ -1157,7 +1157,7 @@
         // ========== CONFIGURATION ==========
         const SUPABASE_URL = 'https://nnsgxxgvnmejhpwoyffj.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5uc2d4eGd2bm1lamhwd295ZmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY3MDc2NjksImV4cCI6MjA1MjI4MzY2OX0.aCROjILi-P8BuVDvBFNWTYBBwXcBnRx2OokPykkA7Gg';
-        const AIRTABLE_TOKEN = 'patYah9J08s35ASWN.4a3f2b29e4770ef39a3d99b03344ae78544240653df9055819fa58bd48b97e2e';
+        // Airtable token removed - using secure proxy at /api/airtable
         const AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
         const AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
         const AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
@@ -1183,7 +1183,35 @@
         let teamMembers = [];
         let currentCurrency = 'CAD';
         let fxRate = 1.39;
-        
+
+        // ========== AIRTABLE PROXY HELPER ==========
+        async function fetchAirtable(path, options = {}) {
+            const url = new URL('/api/airtable', window.location.origin);
+            url.searchParams.set('path', path);
+
+            // Forward query params from path if present
+            if (path.includes('?')) {
+                const [basePath, queryString] = path.split('?');
+                url.searchParams.set('path', basePath);
+                const params = new URLSearchParams(queryString);
+                for (const [key, value] of params) {
+                    url.searchParams.set(key, value);
+                }
+            }
+
+            const fetchOptions = {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            };
+
+            if (options.body) {
+                fetchOptions.body = typeof options.body === 'string' ? options.body : JSON.stringify(options.body);
+            }
+
+            const response = await fetch(url.toString(), fetchOptions);
+            return response.json();
+        }
+
         // ========== AUTH ==========
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -1317,10 +1345,7 @@
         // ========== DATA LOADING ==========
         async function loadAdminSettings() {
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_SETTINGS_TABLE}`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
+                const data = await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_SETTINGS_TABLE}`);
                 
                 if (data.records) {
                     data.records.forEach(r => {
@@ -1343,10 +1368,7 @@
         
         async function loadTeamMembers() {
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
+                const data = await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`);
                 teamMembers = data.records || [];
             } catch (err) {
                 console.error('Error loading team:', err);
@@ -1356,10 +1378,7 @@
         
         async function loadClients() {
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}?pageSize=100`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
+                const data = await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}?pageSize=100`);
                 allClients = data.records || [];
             } catch (err) {
                 console.error('Error loading clients:', err);
@@ -1374,13 +1393,10 @@
                 const maxPages = 100;
                 
                 do {
-                    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CALLS_TABLE}?pageSize=100&sort[0][field]=Timestamp&sort[0][direction]=desc`;
-                    if (offset) url += `&offset=${offset}`;
-                    
-                    const response = await fetch(url, {
-                        headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                    });
-                    const data = await response.json();
+                    let path = `${AIRTABLE_BASE}/${AIRTABLE_CALLS_TABLE}?pageSize=100&sort[0][field]=Timestamp&sort[0][direction]=desc`;
+                    if (offset) path += `&offset=${offset}`;
+
+                    const data = await fetchAirtable(path);
                     
                     if (data.records) all = all.concat(data.records);
                     offset = data.offset;
@@ -1402,13 +1418,10 @@
                 const maxPages = 50;
                 
                 do {
-                    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_LEADS_TABLE}?pageSize=100`;
-                    if (offset) url += `&offset=${offset}`;
-                    
-                    const response = await fetch(url, {
-                        headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                    });
-                    const data = await response.json();
+                    let path = `${AIRTABLE_BASE}/${AIRTABLE_LEADS_TABLE}?pageSize=100`;
+                    if (offset) path += `&offset=${offset}`;
+
+                    const data = await fetchAirtable(path);
                     
                     if (data.records) all = all.concat(data.records);
                     offset = data.offset;
@@ -2052,15 +2065,11 @@
             const newStatus = client.fields['Status'] === 'Active' ? 'Paused' : 'Active';
             
             try {
-                await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
+                await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
                     method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ fields: { Status: newStatus } })
+                    body: { fields: { Status: newStatus } }
                 });
-                
+
                 client.fields['Status'] = newStatus;
                 renderClients();
                 showToast(`Client ${newStatus === 'Active' ? 'activated' : 'paused'} successfully`, 'success');
@@ -2084,15 +2093,11 @@
             };
             
             try {
-                await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
+                await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
                     method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ fields: updates })
+                    body: { fields: updates }
                 });
-                
+
                 // Update local data
                 const client = allClients.find(c => c.id === clientId);
                 if (client) Object.assign(client.fields, updates);
@@ -2158,13 +2163,9 @@
             }
             
             try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`, {
+                await fetchAirtable(`${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
+                    body: {
                         records: [{
                             fields: {
                                 Name: name,
@@ -2174,9 +2175,9 @@
                                 'Added Date': new Date().toISOString().split('T')[0]
                             }
                         }]
-                    })
+                    }
                 });
-                
+
                 await loadTeamMembers();
                 closeModal('addTeamModal');
                 renderTeam();
