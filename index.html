@@ -3833,7 +3833,18 @@
         <span id="toastMessage">Saved successfully</span>
     </div>
 
+    <!-- Supabase Auth -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+        // ===== SUPABASE CONFIG =====
+        const SUPABASE_URL = 'https://bflmikgoafdffezrfpgb.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_e4DbIJ2T-9QAMtXzYo4o8Q_x135R40k';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Only allow this email to access admin
+        const ALLOWED_ADMIN_EMAIL = 'info@prioai.ca';
+
         // ===== APP STATE =====
         const AppState = {
             currentUser: null,
@@ -4034,22 +4045,79 @@
         };
 
         // ===== AUTH =====
-        const ADMIN_USERS = {
-            'admin@prioai.ca': { password: 'admin123', name: 'Admin', role: 'Owner' }
-        };
-
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.toLowerCase().trim();
             const password = document.getElementById('loginPassword').value;
+            const loginError = document.getElementById('loginError');
+            const loginBtn = document.querySelector('.login-form button');
 
-            const user = ADMIN_USERS[email];
-            if (user && user.password === password) {
-                AppState.currentUser = { email, ...user };
-                showAdminPanel();
-            } else {
-                document.getElementById('loginError').style.display = 'block';
+            // Check if email is allowed
+            if (email !== ALLOWED_ADMIN_EMAIL) {
+                loginError.textContent = 'Access denied. This email is not authorized for admin access.';
+                loginError.style.display = 'block';
+                return;
             }
+
+            // Show loading state
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Signing in...';
+            loginError.style.display = 'none';
+
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) {
+                    loginError.textContent = error.message || 'Invalid email or password';
+                    loginError.style.display = 'block';
+                    return;
+                }
+
+                if (data.user) {
+                    AppState.currentUser = {
+                        email: data.user.email,
+                        name: data.user.user_metadata?.display_name || 'Admin',
+                        role: 'Owner',
+                        id: data.user.id
+                    };
+                    showAdminPanel();
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                loginError.textContent = 'An error occurred. Please try again.';
+                loginError.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Sign In';
+            }
+        }
+
+        async function checkExistingSession() {
+            try {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session && session.user) {
+                    // Verify the user email is allowed
+                    if (session.user.email.toLowerCase() === ALLOWED_ADMIN_EMAIL) {
+                        AppState.currentUser = {
+                            email: session.user.email,
+                            name: session.user.user_metadata?.display_name || 'Admin',
+                            role: 'Owner',
+                            id: session.user.id
+                        };
+                        showAdminPanel();
+                        return true;
+                    } else {
+                        // Sign out unauthorized user
+                        await supabaseClient.auth.signOut();
+                    }
+                }
+            } catch (err) {
+                console.error('Session check error:', err);
+            }
+            return false;
         }
 
         // ===== LOAD DATA FROM AIRTABLE =====
@@ -4348,7 +4416,12 @@
             });
         }
 
-        function handleLogout() {
+        async function handleLogout() {
+            try {
+                await supabaseClient.auth.signOut();
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
             AppState.currentUser = null;
             document.getElementById('adminLayout').style.display = 'none';
             document.getElementById('loginScreen').style.display = 'flex';
@@ -6198,7 +6271,7 @@
             renderCostCategories();
         }
 
-        function changePassword() {
+        async function changePassword() {
             const currentPassword = document.getElementById('settingsCurrentPassword').value;
             const newPassword = document.getElementById('settingsNewPassword').value;
             const confirmPassword = document.getElementById('settingsConfirmPassword').value;
@@ -6218,24 +6291,38 @@
                 return;
             }
 
-            // Check current password
-            const user = ADMIN_USERS[AppState.currentUser.email];
-            if (user && user.password !== currentPassword) {
-                showToast('Current password is incorrect', 'error');
-                return;
+            try {
+                // Verify current password by re-authenticating
+                const { error: verifyError } = await supabaseClient.auth.signInWithPassword({
+                    email: AppState.currentUser.email,
+                    password: currentPassword
+                });
+
+                if (verifyError) {
+                    showToast('Current password is incorrect', 'error');
+                    return;
+                }
+
+                // Update password via Supabase
+                const { error: updateError } = await supabaseClient.auth.updateUser({
+                    password: newPassword
+                });
+
+                if (updateError) {
+                    showToast('Failed to update password: ' + updateError.message, 'error');
+                    return;
+                }
+
+                // Clear form
+                document.getElementById('settingsCurrentPassword').value = '';
+                document.getElementById('settingsNewPassword').value = '';
+                document.getElementById('settingsConfirmPassword').value = '';
+
+                showToast('Password changed successfully', 'success');
+            } catch (err) {
+                console.error('Password change error:', err);
+                showToast('An error occurred. Please try again.', 'error');
             }
-
-            // Update password
-            if (user) {
-                user.password = newPassword;
-            }
-
-            // Clear form
-            document.getElementById('settingsCurrentPassword').value = '';
-            document.getElementById('settingsNewPassword').value = '';
-            document.getElementById('settingsConfirmPassword').value = '';
-
-            showToast('Password changed successfully', 'success');
         }
 
         function exportAllData() {
@@ -7197,9 +7284,8 @@
             }
         });
 
-        // Auto-login for development (remove in production)
-        AppState.currentUser = { email: 'admin@prioai.ca', name: 'Admin', role: 'Owner' };
-        showAdminPanel();
+        // Check for existing Supabase session on page load
+        checkExistingSession();
     </script>
 </body>
 </html>
