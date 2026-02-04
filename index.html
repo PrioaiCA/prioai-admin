@@ -1503,13 +1503,12 @@
                         </svg>
                         Clients
                     </button>
-                    <button class="nav-item disabled" data-section="leads">
+                    <button class="nav-item" data-section="leads">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
                             <polyline points="22 4 12 14.01 9 11.01"/>
                         </svg>
                         Lead Generation
-                        <span class="coming-soon">Soon</span>
                     </button>
                 </div>
 
@@ -1849,7 +1848,392 @@
                 </div>
             </section>
 
+            <!-- ===== LEAD GENERATION SECTION ===== -->
+            <section class="admin-section" id="section-leads">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Lead Generation</h1>
+                        <p class="page-subtitle">Track leads, assignments, and lead gen service performance</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddLeadModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Lead
+                    </button>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs" id="leadsTabs">
+                    <button class="tab active" data-tab="leads-overview" onclick="switchLeadTab('leads-overview')">Overview</button>
+                    <button class="tab" data-tab="leads-all" onclick="switchLeadTab('leads-all')">All Leads</button>
+                    <button class="tab" data-tab="leads-clients" onclick="switchLeadTab('leads-clients')">Client Services</button>
+                </div>
+
+                <!-- Overview Tab -->
+                <div class="tab-content active" id="tab-leads-overview">
+                    <!-- Lead Stats -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Total Leads (MTD)</div>
+                            <div class="stat-value" id="leadsTotalCount">0</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-label">Converted</div>
+                            <div class="stat-value success" id="leadsConvertedCount">0</div>
+                        </div>
+                        <div class="stat-card warning">
+                            <div class="stat-label">In Progress</div>
+                            <div class="stat-value warning" id="leadsInProgressCount">0</div>
+                        </div>
+                        <div class="stat-card accent">
+                            <div class="stat-label">Conversion Rate</div>
+                            <div class="stat-value accent" id="leadsConversionRate">0%</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Lead Gen Revenue (MTD)</div>
+                            <div class="stat-value success" id="leadsRevenue">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Active Lead Gen Clients</div>
+                            <div class="stat-value" id="leadsActiveClients">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Avg Cost Per Lead</div>
+                            <div class="stat-value" id="leadsCostPerLead">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Leads Pending Assignment</div>
+                            <div class="stat-value warning" id="leadsPendingAssignment">0</div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Leads -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                Recent Leads
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" onclick="switchLeadTab('leads-all')">View All</button>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Lead</th>
+                                        <th>Source</th>
+                                        <th>Assigned To</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentLeadsTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Leads by Client -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="20" x2="18" y2="10"/>
+                                    <line x1="12" y1="20" x2="12" y2="4"/>
+                                    <line x1="6" y1="20" x2="6" y2="14"/>
+                                </svg>
+                                Leads by Client (MTD)
+                            </h3>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Leads Received</th>
+                                        <th>Converted</th>
+                                        <th>Conversion Rate</th>
+                                        <th>Lead Gen Fee</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leadsByClientTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Leads Tab -->
+                <div class="tab-content" id="tab-leads-all">
+                    <!-- Filters -->
+                    <div class="filters-bar">
+                        <input type="text" class="search-input" id="leadSearch" placeholder="Search leads..." oninput="filterLeads()">
+                        <select class="filter-select" id="leadStatusFilter" onchange="filterLeads()">
+                            <option value="">All Status</option>
+                            <option value="New">New</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Qualified">Qualified</option>
+                            <option value="Converted">Converted</option>
+                            <option value="Lost">Lost</option>
+                            <option value="Invalid">Invalid</option>
+                        </select>
+                        <select class="filter-select" id="leadClientFilter" onchange="filterLeads()">
+                            <option value="">All Clients</option>
+                            <!-- Populated by JS -->
+                        </select>
+                        <select class="filter-select" id="leadSourceFilter" onchange="filterLeads()">
+                            <option value="">All Sources</option>
+                            <option value="Website">Website</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Google Ads">Google Ads</option>
+                            <option value="Referral">Referral</option>
+                            <option value="Cold Outreach">Cold Outreach</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Leads Table -->
+                    <div class="card">
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Lead</th>
+                                        <th>Contact Info</th>
+                                        <th>Source</th>
+                                        <th>Assigned To</th>
+                                        <th>Status</th>
+                                        <th>Value</th>
+                                        <th>Created</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="allLeadsTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Client Services Tab -->
+                <div class="tab-content" id="tab-leads-clients">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                </svg>
+                                Lead Generation Service by Client
+                            </h3>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Client</th>
+                                        <th>Lead Gen Status</th>
+                                        <th>Monthly Fee</th>
+                                        <th>Leads Target</th>
+                                        <th>Leads Delivered (MTD)</th>
+                                        <th>Delivery Rate</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="leadGenClientsTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
+    </div>
+
+    <!-- ===== LEAD MODAL (Add/Edit) ===== -->
+    <div class="modal-overlay" id="leadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="leadModalTitle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    Add New Lead
+                </h2>
+                <button class="modal-close" onclick="closeLeadModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="leadForm">
+                    <input type="hidden" id="leadFormId">
+
+                    <!-- Lead Info -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Lead Information
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Full Name</label>
+                            <input type="text" class="form-input" id="leadName" placeholder="e.g., John Smith" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Company</label>
+                            <input type="text" class="form-input" id="leadCompany" placeholder="e.g., Acme Corp">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Email</label>
+                            <input type="email" class="form-input" id="leadEmail" placeholder="e.g., john@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Phone</label>
+                            <input type="tel" class="form-input" id="leadPhone" placeholder="e.g., (555) 123-4567" required>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Assignment & Status -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <polyline points="17 11 19 13 23 9"/>
+                        </svg>
+                        Assignment & Status
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Assign To Client</label>
+                            <select class="form-select" id="leadAssignedTo" required>
+                                <option value="">Select client...</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Status</label>
+                            <select class="form-select" id="leadStatus" required>
+                                <option value="New">New</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Qualified">Qualified</option>
+                                <option value="Converted">Converted</option>
+                                <option value="Lost">Lost</option>
+                                <option value="Invalid">Invalid</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Source</label>
+                            <select class="form-select" id="leadSource" required>
+                                <option value="Website">Website</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Google Ads">Google Ads</option>
+                                <option value="Referral">Referral</option>
+                                <option value="Cold Outreach">Cold Outreach</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estimated Value ($)</label>
+                            <input type="number" class="form-input" id="leadValue" min="0" step="100" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" id="leadNotes" placeholder="Additional details about this lead..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLeadModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveLead()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Save Lead
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LEAD VIEW MODAL ===== -->
+    <div class="modal-overlay" id="leadViewModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="viewLeadTitle">Lead Details</h2>
+                <button class="modal-close" onclick="closeLeadViewModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="leadViewContent">
+                <!-- Populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLeadViewModal()">Close</button>
+                <button class="btn btn-primary" onclick="editLeadFromView()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit Lead
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== LEAD DELETE CONFIRM MODAL ===== -->
+    <div class="modal-overlay" id="deleteLeadConfirmModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-body">
+                <div class="confirm-dialog">
+                    <div class="confirm-icon danger">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                        </svg>
+                    </div>
+                    <h3 class="confirm-title">Delete Lead?</h3>
+                    <p class="confirm-message" id="deleteLeadConfirmMessage">Are you sure you want to delete this lead?</p>
+                    <div class="confirm-actions">
+                        <button class="btn btn-secondary" onclick="closeDeleteLeadConfirm()">Cancel</button>
+                        <button class="btn btn-primary" style="background: var(--danger);" onclick="confirmDeleteLead()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== CLIENT MODAL (Add/Edit) ===== -->
@@ -2202,7 +2586,139 @@
                 vercel: 20,
                 supabase: 25,
                 other: 754
-            }
+            },
+            leads: [
+                {
+                    id: 1,
+                    name: 'Robert Johnson',
+                    company: 'Johnson Enterprises',
+                    email: 'robert@johnsonent.com',
+                    phone: '(555) 234-5678',
+                    source: 'Google Ads',
+                    assignedTo: 1, // Client ID
+                    status: 'Converted',
+                    value: 2500,
+                    notes: 'Very interested in dental services',
+                    createdAt: '2026-02-01T10:30:00'
+                },
+                {
+                    id: 2,
+                    name: 'Maria Garcia',
+                    company: '',
+                    email: 'maria.g@email.com',
+                    phone: '(555) 345-6789',
+                    source: 'Facebook',
+                    assignedTo: 1,
+                    status: 'Qualified',
+                    value: 1500,
+                    notes: '',
+                    createdAt: '2026-02-02T14:15:00'
+                },
+                {
+                    id: 3,
+                    name: 'James Wilson',
+                    company: 'Wilson HVAC',
+                    email: 'james@wilsonhvac.com',
+                    phone: '(555) 456-7890',
+                    source: 'Website',
+                    assignedTo: 2,
+                    status: 'Converted',
+                    value: 3500,
+                    notes: 'Needs commercial HVAC service',
+                    createdAt: '2026-02-01T09:00:00'
+                },
+                {
+                    id: 4,
+                    name: 'Emily Chen',
+                    company: 'Chen Dental',
+                    email: 'emily@chendental.com',
+                    phone: '(555) 567-8901',
+                    source: 'Referral',
+                    assignedTo: 1,
+                    status: 'Contacted',
+                    value: 2000,
+                    notes: 'Referred by Dr. Smith',
+                    createdAt: '2026-02-03T11:45:00'
+                },
+                {
+                    id: 5,
+                    name: 'Michael Brown',
+                    company: '',
+                    email: 'mbrown@gmail.com',
+                    phone: '(555) 678-9012',
+                    source: 'Google Ads',
+                    assignedTo: 2,
+                    status: 'New',
+                    value: 1000,
+                    notes: '',
+                    createdAt: '2026-02-04T08:30:00'
+                },
+                {
+                    id: 6,
+                    name: 'Sarah Davis',
+                    company: 'Davis Legal',
+                    email: 'sarah@davislegal.com',
+                    phone: '(555) 789-0123',
+                    source: 'Website',
+                    assignedTo: 2,
+                    status: 'Converted',
+                    value: 5000,
+                    notes: 'High value commercial client',
+                    createdAt: '2026-01-28T16:00:00'
+                },
+                {
+                    id: 7,
+                    name: 'David Lee',
+                    company: '',
+                    email: 'dlee@email.com',
+                    phone: '(555) 890-1234',
+                    source: 'Cold Outreach',
+                    assignedTo: 1,
+                    status: 'Lost',
+                    value: 800,
+                    notes: 'Not interested at this time',
+                    createdAt: '2026-01-30T13:20:00'
+                },
+                {
+                    id: 8,
+                    name: 'Jennifer Martinez',
+                    company: 'Martinez Corp',
+                    email: 'jen@martinezcorp.com',
+                    phone: '(555) 901-2345',
+                    source: 'Facebook',
+                    assignedTo: 2,
+                    status: 'Qualified',
+                    value: 4000,
+                    notes: 'Following up next week',
+                    createdAt: '2026-02-03T15:10:00'
+                },
+                {
+                    id: 9,
+                    name: 'Thomas Anderson',
+                    company: '',
+                    email: 'tanderson@email.com',
+                    phone: '(555) 012-3456',
+                    source: 'Website',
+                    assignedTo: null,
+                    status: 'New',
+                    value: 0,
+                    notes: 'Needs assignment',
+                    createdAt: '2026-02-04T10:00:00'
+                },
+                {
+                    id: 10,
+                    name: 'Lisa Thompson',
+                    company: 'Thompson Dental',
+                    email: 'lisa@thompsondental.com',
+                    phone: '(555) 123-4567',
+                    source: 'Google Ads',
+                    assignedTo: 1,
+                    status: 'New',
+                    value: 1800,
+                    notes: '',
+                    createdAt: '2026-02-04T11:30:00'
+                }
+            ]
         };
 
         // ===== AIRTABLE CONFIG =====
@@ -2539,6 +3055,8 @@
             // Trigger section-specific updates
             if (sectionId === 'clients') {
                 updateClientsSection();
+            } else if (sectionId === 'leads') {
+                updateLeadsSection();
             }
         }
 
@@ -2970,6 +3488,508 @@
             if (currentViewClientId) {
                 closeClientViewModal();
                 editClient(currentViewClientId);
+            }
+        }
+
+        // ===== LEAD GENERATION SECTION =====
+        let currentViewLeadId = null;
+        let deleteLeadId = null;
+
+        function switchLeadTab(tabId) {
+            document.querySelectorAll('#leadsTabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`#leadsTabs .tab[data-tab="${tabId}"]`).classList.add('active');
+            document.querySelectorAll('#section-leads .tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+        }
+
+        function updateLeadsSection() {
+            const leads = AppState.leads;
+            const converted = leads.filter(l => l.status === 'Converted').length;
+            const inProgress = leads.filter(l => ['New', 'Contacted', 'Qualified'].includes(l.status)).length;
+            const conversionRate = leads.length > 0 ? ((converted / leads.length) * 100).toFixed(1) : 0;
+
+            const leadGenClients = AppState.clients.filter(c => c.hasLeadGen && c.status === 'Active');
+            const leadGenRevenue = leadGenClients.reduce((sum, c) => sum + c.leadGenCost, 0);
+            const pendingAssignment = leads.filter(l => !l.assignedTo).length;
+
+            document.getElementById('leadsTotalCount').textContent = leads.length;
+            document.getElementById('leadsConvertedCount').textContent = converted;
+            document.getElementById('leadsInProgressCount').textContent = inProgress;
+            document.getElementById('leadsConversionRate').textContent = conversionRate + '%';
+            document.getElementById('leadsRevenue').textContent = formatCurrency(leadGenRevenue);
+            document.getElementById('leadsActiveClients').textContent = leadGenClients.length;
+            document.getElementById('leadsCostPerLead').textContent = leads.length > 0 ? formatCurrency(leadGenRevenue / leads.length) : '$0';
+            document.getElementById('leadsPendingAssignment').textContent = pendingAssignment;
+
+            // Populate client filter dropdown
+            const clientFilter = document.getElementById('leadClientFilter');
+            clientFilter.innerHTML = '<option value="">All Clients</option>' +
+                AppState.clients.map(c => `<option value="${c.id}">${c.agentName}</option>`).join('');
+
+            renderRecentLeadsTable();
+            renderLeadsByClientTable();
+            renderAllLeadsTable();
+            renderLeadGenClientsTable();
+        }
+
+        function getClientById(id) {
+            return AppState.clients.find(c => c.id === id);
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+
+        function formatDateTime(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' +
+                   date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        }
+
+        function getLeadStatusBadge(status) {
+            const classes = {
+                'New': 'badge-info',
+                'Contacted': 'badge-warning',
+                'Qualified': 'badge-purple',
+                'Converted': 'badge-success',
+                'Lost': 'badge-danger',
+                'Invalid': 'badge-neutral'
+            };
+            return `<span class="badge ${classes[status] || 'badge-neutral'}">${status}</span>`;
+        }
+
+        function renderRecentLeadsTable() {
+            const recentLeads = [...AppState.leads].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 5);
+            const tbody = document.getElementById('recentLeadsTable');
+
+            if (recentLeads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No leads yet</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = recentLeads.map(lead => {
+                const client = getClientById(lead.assignedTo);
+                return `
+                    <tr>
+                        <td>
+                            <div class="client-name">${lead.name}</div>
+                            ${lead.company ? `<div class="client-org">${lead.company}</div>` : ''}
+                        </td>
+                        <td><span class="badge badge-neutral">${lead.source}</span></td>
+                        <td>${client ? `<span style="color: ${client.color}; font-weight: 500;">${client.agentName}</span>` : '<span style="color: var(--warning);">Unassigned</span>'}</td>
+                        <td>${getLeadStatusBadge(lead.status)}</td>
+                        <td style="color: var(--text-muted); font-size: 0.85rem;">${formatDateTime(lead.createdAt)}</td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="action-btn view" onclick="viewLead(${lead.id})">View</button>
+                                <button class="action-btn edit" onclick="editLead(${lead.id})">Edit</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLeadsByClientTable() {
+            const leadGenClients = AppState.clients.filter(c => c.hasLeadGen);
+            const tbody = document.getElementById('leadsByClientTable');
+
+            if (leadGenClients.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No clients with lead gen service</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = leadGenClients.map(client => {
+                const clientLeads = AppState.leads.filter(l => l.assignedTo === client.id);
+                const converted = clientLeads.filter(l => l.status === 'Converted').length;
+                const convRate = clientLeads.length > 0 ? ((converted / clientLeads.length) * 100).toFixed(1) : 0;
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="client-info">
+                                <div class="client-avatar" style="background: ${client.color};">${client.name.charAt(0)}</div>
+                                <div>
+                                    <div class="client-name">${client.agentName}</div>
+                                    <div class="client-org">${client.organization}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><strong>${clientLeads.length}</strong></td>
+                        <td><span class="badge badge-success">${converted}</span></td>
+                        <td>${convRate}%</td>
+                        <td>${formatCurrency(client.leadGenCost)}/mo</td>
+                        <td><span class="badge ${client.status === 'Active' ? 'badge-success' : 'badge-warning'}">${client.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterLeads() {
+            renderAllLeadsTable();
+        }
+
+        function renderAllLeadsTable() {
+            const search = document.getElementById('leadSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('leadStatusFilter').value;
+            const clientFilter = document.getElementById('leadClientFilter').value;
+            const sourceFilter = document.getElementById('leadSourceFilter').value;
+
+            let filtered = AppState.leads.filter(lead => {
+                const matchesSearch = !search ||
+                    lead.name.toLowerCase().includes(search) ||
+                    lead.email.toLowerCase().includes(search) ||
+                    (lead.company && lead.company.toLowerCase().includes(search));
+                const matchesStatus = !statusFilter || lead.status === statusFilter;
+                const matchesClient = !clientFilter || lead.assignedTo === parseInt(clientFilter);
+                const matchesSource = !sourceFilter || lead.source === sourceFilter;
+                return matchesSearch && matchesStatus && matchesClient && matchesSource;
+            });
+
+            filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+            const tbody = document.getElementById('allLeadsTable');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                <div class="empty-state-title">No leads found</div>
+                                <p>Try adjusting your filters</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(lead => {
+                const client = getClientById(lead.assignedTo);
+                return `
+                    <tr>
+                        <td>
+                            <div class="client-name">${lead.name}</div>
+                            ${lead.company ? `<div class="client-org">${lead.company}</div>` : ''}
+                        </td>
+                        <td>
+                            <div style="font-size: 0.85rem;">${lead.email}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${lead.phone}</div>
+                        </td>
+                        <td><span class="badge badge-neutral">${lead.source}</span></td>
+                        <td>${client
+                            ? `<div class="client-info" style="gap: 8px;"><div class="client-avatar" style="width: 28px; height: 28px; font-size: 0.75rem; background: ${client.color};">${client.name.charAt(0)}</div><span>${client.agentName}</span></div>`
+                            : '<span style="color: var(--warning);">Unassigned</span>'
+                        }</td>
+                        <td>${getLeadStatusBadge(lead.status)}</td>
+                        <td>${lead.value > 0 ? formatCurrency(lead.value) : '-'}</td>
+                        <td style="color: var(--text-muted); font-size: 0.85rem;">${formatDate(lead.createdAt)}</td>
+                        <td>
+                            <div class="actions-cell">
+                                <button class="action-btn view" onclick="viewLead(${lead.id})">View</button>
+                                <button class="action-btn edit" onclick="editLead(${lead.id})">Edit</button>
+                                <button class="action-btn danger" onclick="deleteLead(${lead.id})">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLeadGenClientsTable() {
+            const tbody = document.getElementById('leadGenClientsTable');
+            const clients = AppState.clients;
+
+            tbody.innerHTML = clients.map(client => {
+                const clientLeads = AppState.leads.filter(l => l.assignedTo === client.id);
+                const target = client.leadsTarget || 50;
+                const deliveryRate = target > 0 ? ((clientLeads.length / target) * 100).toFixed(0) : 0;
+
+                return `
+                    <tr>
+                        <td>
+                            <div class="client-info">
+                                <div class="client-avatar" style="background: ${client.color};">${client.name.charAt(0)}</div>
+                                <div>
+                                    <div class="client-name">${client.agentName}</div>
+                                    <div class="client-org">${client.organization}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            ${client.hasLeadGen
+                                ? '<span class="badge badge-success">Active</span>'
+                                : '<span class="badge badge-neutral">Inactive</span>'
+                            }
+                        </td>
+                        <td>${client.hasLeadGen ? formatCurrency(client.leadGenCost) : '-'}</td>
+                        <td>${client.hasLeadGen ? target : '-'}</td>
+                        <td><strong>${clientLeads.length}</strong></td>
+                        <td>
+                            ${client.hasLeadGen ? `
+                                <div style="min-width: 80px;">
+                                    <div style="font-weight: 600;">${deliveryRate}%</div>
+                                    <div class="progress-bar" style="margin-top: 4px;">
+                                        <div class="progress-fill ${deliveryRate >= 100 ? 'success' : deliveryRate >= 50 ? 'warning' : 'accent'}" style="width: ${Math.min(deliveryRate, 100)}%;"></div>
+                                    </div>
+                                </div>
+                            ` : '-'}
+                        </td>
+                        <td>
+                            <button class="action-btn edit" onclick="editClient(${client.id})">Edit Service</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Lead Modal Functions
+        function openAddLeadModal() {
+            document.getElementById('leadModalTitle').innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+                Add New Lead
+            `;
+            resetLeadForm();
+            populateClientDropdown();
+            document.getElementById('leadModal').classList.add('active');
+        }
+
+        function populateClientDropdown() {
+            const select = document.getElementById('leadAssignedTo');
+            select.innerHTML = '<option value="">Select client...</option>' +
+                AppState.clients.filter(c => c.status === 'Active').map(c =>
+                    `<option value="${c.id}">${c.agentName} (${c.organization})</option>`
+                ).join('');
+        }
+
+        function editLead(id) {
+            const lead = AppState.leads.find(l => l.id === id);
+            if (!lead) return;
+
+            document.getElementById('leadModalTitle').innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Lead
+            `;
+
+            populateClientDropdown();
+
+            document.getElementById('leadFormId').value = lead.id;
+            document.getElementById('leadName').value = lead.name || '';
+            document.getElementById('leadCompany').value = lead.company || '';
+            document.getElementById('leadEmail').value = lead.email || '';
+            document.getElementById('leadPhone').value = lead.phone || '';
+            document.getElementById('leadAssignedTo').value = lead.assignedTo || '';
+            document.getElementById('leadStatus').value = lead.status || 'New';
+            document.getElementById('leadSource').value = lead.source || 'Website';
+            document.getElementById('leadValue').value = lead.value || 0;
+            document.getElementById('leadNotes').value = lead.notes || '';
+
+            document.getElementById('leadModal').classList.add('active');
+        }
+
+        function closeLeadModal() {
+            document.getElementById('leadModal').classList.remove('active');
+            resetLeadForm();
+        }
+
+        function resetLeadForm() {
+            document.getElementById('leadForm').reset();
+            document.getElementById('leadFormId').value = '';
+        }
+
+        function saveLead() {
+            const form = document.getElementById('leadForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const leadId = document.getElementById('leadFormId').value;
+            const leadData = {
+                name: document.getElementById('leadName').value,
+                company: document.getElementById('leadCompany').value || '',
+                email: document.getElementById('leadEmail').value,
+                phone: document.getElementById('leadPhone').value,
+                assignedTo: document.getElementById('leadAssignedTo').value ? parseInt(document.getElementById('leadAssignedTo').value) : null,
+                status: document.getElementById('leadStatus').value,
+                source: document.getElementById('leadSource').value,
+                value: parseFloat(document.getElementById('leadValue').value) || 0,
+                notes: document.getElementById('leadNotes').value || ''
+            };
+
+            if (leadId) {
+                const index = AppState.leads.findIndex(l => l.id === parseInt(leadId));
+                if (index !== -1) {
+                    AppState.leads[index] = { ...AppState.leads[index], ...leadData };
+                    showToast('Lead updated successfully', 'success');
+                }
+            } else {
+                const newId = Math.max(...AppState.leads.map(l => l.id), 0) + 1;
+                AppState.leads.push({
+                    id: newId,
+                    ...leadData,
+                    createdAt: new Date().toISOString()
+                });
+                showToast('Lead created successfully', 'success');
+            }
+
+            closeLeadModal();
+            updateLeadsSection();
+        }
+
+        // View Lead
+        function viewLead(id) {
+            const lead = AppState.leads.find(l => l.id === id);
+            if (!lead) return;
+
+            currentViewLeadId = id;
+            document.getElementById('viewLeadTitle').textContent = lead.name;
+
+            const client = getClientById(lead.assignedTo);
+
+            document.getElementById('leadViewContent').innerHTML = `
+                <div class="client-header" style="margin-bottom: 24px;">
+                    <div class="client-header-avatar" style="background: var(--accent);">${lead.name.charAt(0)}</div>
+                    <div class="client-header-info">
+                        <div class="client-header-name">${lead.name}</div>
+                        ${lead.company ? `<div class="client-header-org">${lead.company}</div>` : ''}
+                        <div class="client-header-meta">
+                            ${getLeadStatusBadge(lead.status)}
+                            <span class="client-meta-item">
+                                <span class="badge badge-neutral">${lead.source}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+                    <div class="stat-card">
+                        <div class="stat-label">Assigned To</div>
+                        <div class="stat-value" style="font-size: 1rem;">
+                            ${client
+                                ? `<div class="client-info" style="gap: 10px;"><div class="client-avatar" style="width: 32px; height: 32px; font-size: 0.85rem; background: ${client.color};">${client.name.charAt(0)}</div><span>${client.agentName}</span></div>`
+                                : '<span style="color: var(--warning);">Unassigned</span>'
+                            }
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Estimated Value</div>
+                        <div class="stat-value ${lead.value > 0 ? 'success' : ''}">${lead.value > 0 ? formatCurrency(lead.value) : 'Not set'}</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <h3 class="card-title">Contact Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="financial-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Email</span>
+                                <span class="breakdown-value"><a href="mailto:${lead.email}" style="color: var(--accent);">${lead.email}</a></span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Phone</span>
+                                <span class="breakdown-value"><a href="tel:${lead.phone}" style="color: var(--accent);">${lead.phone}</a></span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Created</span>
+                                <span class="breakdown-value">${formatDateTime(lead.createdAt)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${lead.notes ? `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: var(--text-secondary);">${lead.notes}</p>
+                    </div>
+                </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <select class="form-select" style="max-width: 200px;" onchange="quickUpdateLeadStatus(${lead.id}, this.value)">
+                        <option value="" disabled selected>Change Status...</option>
+                        <option value="New">New</option>
+                        <option value="Contacted">Contacted</option>
+                        <option value="Qualified">Qualified</option>
+                        <option value="Converted">Converted</option>
+                        <option value="Lost">Lost</option>
+                        <option value="Invalid">Invalid</option>
+                    </select>
+                    <button class="btn btn-secondary" style="color: var(--danger);" onclick="deleteLead(${lead.id}); closeLeadViewModal();">Delete Lead</button>
+                </div>
+            `;
+
+            document.getElementById('leadViewModal').classList.add('active');
+        }
+
+        function closeLeadViewModal() {
+            document.getElementById('leadViewModal').classList.remove('active');
+            currentViewLeadId = null;
+        }
+
+        function editLeadFromView() {
+            if (currentViewLeadId) {
+                closeLeadViewModal();
+                editLead(currentViewLeadId);
+            }
+        }
+
+        function quickUpdateLeadStatus(id, newStatus) {
+            if (!newStatus) return;
+            const lead = AppState.leads.find(l => l.id === id);
+            if (lead) {
+                lead.status = newStatus;
+                showToast(`Lead status updated to ${newStatus}`, 'success');
+                updateLeadsSection();
+                if (currentViewLeadId === id) {
+                    viewLead(id); // Refresh the view
+                }
+            }
+        }
+
+        // Delete Lead
+        function deleteLead(id) {
+            const lead = AppState.leads.find(l => l.id === id);
+            if (!lead) return;
+
+            deleteLeadId = id;
+            document.getElementById('deleteLeadConfirmMessage').textContent =
+                `Are you sure you want to delete lead "${lead.name}"? This action cannot be undone.`;
+            document.getElementById('deleteLeadConfirmModal').classList.add('active');
+        }
+
+        function closeDeleteLeadConfirm() {
+            document.getElementById('deleteLeadConfirmModal').classList.remove('active');
+            deleteLeadId = null;
+        }
+
+        function confirmDeleteLead() {
+            if (deleteLeadId) {
+                AppState.leads = AppState.leads.filter(l => l.id !== deleteLeadId);
+                showToast('Lead deleted successfully', 'success');
+                closeDeleteLeadConfirm();
+                updateLeadsSection();
             }
         }
 
