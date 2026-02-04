@@ -3884,6 +3884,12 @@
         // ===== AIRTABLE CONFIG =====
         const AIRTABLE_CONFIG = {
             baseId: 'applOjDjhH0RqLtBH',
+            get apiKey() {
+                return localStorage.getItem('airtable_api_key') || '';
+            },
+            set apiKey(value) {
+                localStorage.setItem('airtable_api_key', value);
+            },
             tables: {
                 clients: 'tblMptC862PyL7Znw',
                 leads: 'tblLpN4wceakfNFpq',
@@ -3894,9 +3900,22 @@
             }
         };
 
+        // Prompt for API key if not set
+        function ensureApiKey() {
+            if (!AIRTABLE_CONFIG.apiKey) {
+                const key = prompt('Enter your Airtable API key (Personal Access Token):');
+                if (key && key.startsWith('pat')) {
+                    AIRTABLE_CONFIG.apiKey = key;
+                    return true;
+                }
+                return false;
+            }
+            return true;
+        }
+
         // ===== AIRTABLE HELPER =====
         /**
-         * Fetch data from Airtable via secure proxy
+         * Fetch data from Airtable API directly
          * @param {string} table - Table name from AIRTABLE_CONFIG.tables
          * @param {Object} options - Fetch options
          * @param {string} options.method - HTTP method (GET, POST, PATCH, DELETE)
@@ -3908,8 +3927,8 @@
         async function fetchAirtable(table, options = {}) {
             const { method = 'GET', recordId = null, body = null, params = {} } = options;
 
-            // Build URL
-            let url = `/api/airtable/${AIRTABLE_CONFIG.baseId}/${table}`;
+            // Build URL - call Airtable API directly
+            let url = `https://api.airtable.com/v0/${AIRTABLE_CONFIG.baseId}/${encodeURIComponent(table)}`;
             if (recordId) {
                 url += `/${recordId}`;
             }
@@ -3927,10 +3946,11 @@
                 url += `?${queryParams.toString()}`;
             }
 
-            // Prepare fetch options
+            // Prepare fetch options with Authorization header
             const fetchOptions = {
                 method,
                 headers: {
+                    'Authorization': `Bearer ${AIRTABLE_CONFIG.apiKey}`,
                     'Content-Type': 'application/json'
                 }
             };
@@ -3951,7 +3971,7 @@
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || `HTTP ${response.status}`);
+                    throw new Error(data.error?.message || data.error || `HTTP ${response.status}`);
                 }
 
                 return data;
@@ -4018,6 +4038,12 @@
 
         // ===== LOAD DATA FROM AIRTABLE =====
         async function loadDataFromAirtable() {
+            // Check for API key first
+            if (!ensureApiKey()) {
+                showToast('No API key provided. Using default data.', 'warning');
+                return;
+            }
+
             try {
                 showToast('Loading data from Airtable...', 'info');
 
