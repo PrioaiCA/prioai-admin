@@ -1514,7 +1514,8 @@
         });
 
         // Auto-login for development (remove in production)
-        // showAdminPanel();
+        AppState.currentUser = { email: 'admin@prioai.ca', name: 'Admin', role: 'Owner' };
+        showAdminPanel();
     </script>
 </body>
 </html>
