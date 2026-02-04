@@ -3,15 +3,17 @@
 
 // Allowed Airtable bases and tables
 const ALLOWED_PATHS = {
-    bases: ['appXXXXXXXXXXXXXX'], // Replace with your actual base ID
-    tables: ['Clients', 'Calls', 'Leads', 'Costs', 'Revenue', 'Settings']
+    bases: ['applOjDjhH0RqLtBH'],
+    tables: ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq', 'tblvB5OpG0b5mVix3', 'Clients', 'Calls', 'Leads', 'Costs', 'Revenue', 'Settings']
 };
 
 // CORS allowed origins
 const ALLOWED_ORIGINS = [
     'https://prioai.ca',
-    'https://dashboard.prioai.ca',
     'https://www.prioai.ca',
+    'https://dash.prioai.ca',
+    'https://dashboard.prioai.ca',
+    'https://admin.prioai.ca',
     'http://localhost:3000',
     'http://localhost:8788',
     'http://127.0.0.1:3000',

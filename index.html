@@ -2171,12 +2171,14 @@
                         <input type="text" class="search-input" id="leadSearch" placeholder="Search leads..." oninput="filterLeads()">
                         <select class="filter-select" id="leadStatusFilter" onchange="filterLeads()">
                             <option value="">All Status</option>
-                            <option value="New">New</option>
-                            <option value="Contacted">Contacted</option>
-                            <option value="Qualified">Qualified</option>
-                            <option value="Converted">Converted</option>
-                            <option value="Lost">Lost</option>
-                            <option value="Invalid">Invalid</option>
+                            <option value="Booked">Booked</option>
+                            <option value="Callback">Callback</option>
+                            <option value="Timeline">Timeline</option>
+                            <option value="Follow Up">Follow Up</option>
+                            <option value="Active">Active</option>
+                            <option value="Interested">Interested</option>
+                            <option value="Not Interested">Not Interested</option>
+                            <option value="DNC">DNC</option>
                         </select>
                         <select class="filter-select" id="leadClientFilter" onchange="filterLeads()">
                             <option value="">All Clients</option>
@@ -2835,12 +2837,13 @@
                                 <input type="text" class="form-input" id="callSearchInput" placeholder="Search calls..." style="width: 200px;" onkeyup="filterCalls()">
                                 <select class="filter-select" id="callOutcomeFilter" onchange="filterCalls()">
                                     <option value="">All Outcomes</option>
-                                    <option value="Booking Made">Booking Made</option>
-                                    <option value="Information Given">Information Given</option>
+                                    <option value="Booked">Booked</option>
+                                    <option value="Callback">Callback</option>
+                                    <option value="Timeline">Timeline</option>
+                                    <option value="Follow Up">Follow Up</option>
+                                    <option value="Not Interested">Not Interested</option>
                                     <option value="Voicemail">Voicemail</option>
                                     <option value="No Answer">No Answer</option>
-                                    <option value="Transferred">Transferred</option>
-                                    <option value="Callback Scheduled">Callback Scheduled</option>
                                 </select>
                             </div>
                         </div>
@@ -2894,29 +2897,33 @@
 
                 <!-- Outcomes Tab -->
                 <div class="tab-content" id="tab-calls-outcomes">
-                    <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);">
                         <div class="card" style="text-align: center; padding: 24px;">
-                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--success);" id="outcomeBookings">0</div>
-                            <div style="color: var(--text-secondary); margin-top: 8px;">Bookings Made</div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--success);" id="outcomeBooked">0</div>
+                            <div style="color: var(--text-secondary); margin-top: 8px;">Booked</div>
                         </div>
                         <div class="card" style="text-align: center; padding: 24px;">
-                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);" id="outcomeInfo">0</div>
-                            <div style="color: var(--text-secondary); margin-top: 8px;">Information Given</div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);" id="outcomeCallback">0</div>
+                            <div style="color: var(--text-secondary); margin-top: 8px;">Callback</div>
                         </div>
                         <div class="card" style="text-align: center; padding: 24px;">
-                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--purple);" id="outcomeTransferred">0</div>
-                            <div style="color: var(--text-secondary); margin-top: 8px;">Transferred</div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--purple);" id="outcomeTimeline">0</div>
+                            <div style="color: var(--text-secondary); margin-top: 8px;">Timeline</div>
                         </div>
                         <div class="card" style="text-align: center; padding: 24px;">
-                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning);" id="outcomeCallback">0</div>
-                            <div style="color: var(--text-secondary); margin-top: 8px;">Callback Scheduled</div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning);" id="outcomeFollowUp">0</div>
+                            <div style="color: var(--text-secondary); margin-top: 8px;">Follow Up</div>
+                        </div>
+                        <div class="card" style="text-align: center; padding: 24px;">
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--danger);" id="outcomeNotInterested">0</div>
+                            <div style="color: var(--text-secondary); margin-top: 8px;">Not Interested</div>
                         </div>
                         <div class="card" style="text-align: center; padding: 24px;">
                             <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-muted);" id="outcomeVoicemail">0</div>
                             <div style="color: var(--text-secondary); margin-top: 8px;">Voicemail</div>
                         </div>
                         <div class="card" style="text-align: center; padding: 24px;">
-                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--danger);" id="outcomeNoAnswer">0</div>
+                            <div style="font-size: 2.5rem; font-weight: 700; color: var(--text-muted);" id="outcomeNoAnswer">0</div>
                             <div style="color: var(--text-secondary); margin-top: 8px;">No Answer</div>
                         </div>
                     </div>
@@ -3446,12 +3453,14 @@
                         <div class="form-group">
                             <label class="form-label required">Status</label>
                             <select class="form-select" id="leadStatus" required>
-                                <option value="New">New</option>
-                                <option value="Contacted">Contacted</option>
-                                <option value="Qualified">Qualified</option>
-                                <option value="Converted">Converted</option>
-                                <option value="Lost">Lost</option>
-                                <option value="Invalid">Invalid</option>
+                                <option value="Active">Active</option>
+                                <option value="Booked">Booked</option>
+                                <option value="Callback">Callback</option>
+                                <option value="Timeline">Timeline</option>
+                                <option value="Follow Up">Follow Up</option>
+                                <option value="Interested">Interested</option>
+                                <option value="Not Interested">Not Interested</option>
+                                <option value="DNC">DNC</option>
                             </select>
                         </div>
                     </div>
@@ -3821,72 +3830,7 @@
             currentUser: null,
             currency: 'CAD',
             fxRate: 1.39,
-            clients: [
-                {
-                    id: 1,
-                    name: 'Sarah',
-                    agentName: 'Dental Assistant AI',
-                    organization: 'Smile Dental Clinic',
-                    email: 'sarah@smileclinic.com',
-                    plan: 'Professional',
-                    monthlyRate: 1500,
-                    hasLeadGen: true,
-                    leadGenCost: 250,
-                    callsMTD: 423,
-                    callLimit: 500,
-                    bookings: 34,
-                    status: 'Active',
-                    color: '#3b82f6'
-                },
-                {
-                    id: 2,
-                    name: 'Mike',
-                    agentName: 'HVAC Scheduler',
-                    organization: 'CoolAir Services',
-                    email: 'mike@coolair.com',
-                    plan: 'Enterprise',
-                    monthlyRate: 2000,
-                    hasLeadGen: true,
-                    leadGenCost: 500,
-                    callsMTD: 687,
-                    callLimit: 1000,
-                    bookings: 42,
-                    status: 'Active',
-                    color: '#8b5cf6'
-                },
-                {
-                    id: 3,
-                    name: 'Jessica',
-                    agentName: 'Legal Intake Bot',
-                    organization: 'Parker Law Firm',
-                    email: 'jessica@parkerlaw.com',
-                    plan: 'Starter',
-                    monthlyRate: 0,
-                    hasLeadGen: false,
-                    leadGenCost: 0,
-                    callsMTD: 89,
-                    callLimit: 100,
-                    bookings: 8,
-                    status: 'Active',
-                    color: '#22c55e'
-                },
-                {
-                    id: 4,
-                    name: 'David',
-                    agentName: 'Roofing Assistant',
-                    organization: 'TopRoof Inc',
-                    email: 'david@toproof.com',
-                    plan: 'Starter',
-                    monthlyRate: 0,
-                    hasLeadGen: false,
-                    leadGenCost: 0,
-                    callsMTD: 48,
-                    callLimit: 100,
-                    bookings: 5,
-                    status: 'Paused',
-                    color: '#f59e0b'
-                }
-            ],
+            clients: [], // Loaded from Airtable
             costs: {
                 retell: 892,
                 openai: 156,
@@ -3908,9 +3852,10 @@
                 { id: 1, category: 'Setup Fee', description: 'New client onboarding', clientId: 2, amount: 500 }
             ],
             plans: [
-                { id: 1, name: 'Starter', price: 0, callLimit: 100, features: ['Basic AI agent', '100 calls/month', 'Email support'] },
-                { id: 2, name: 'Professional', price: 1500, callLimit: 500, features: ['Custom AI agent', '500 calls/month', 'Priority support', 'Analytics dashboard'] },
-                { id: 3, name: 'Enterprise', price: 2500, callLimit: 1000, features: ['Multiple AI agents', '1000 calls/month', '24/7 support', 'Custom integrations', 'Dedicated account manager'] }
+                { id: 1, name: 'Starter', price: 199, callLimit: 1000, features: ['1,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 2, name: 'Professional', price: 399, callLimit: 3000, features: ['3,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 3, name: 'Growth', price: 599, callLimit: 6000, features: ['6,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 4, name: 'Enterprise', price: 0, callLimit: 999999, features: ['Unlimited calls', 'All features included', 'Dedicated support', 'Custom integrations', 'SLA guarantee'] }
             ],
             settings: {
                 currency: 'CAD',
@@ -3920,189 +3865,29 @@
                 usageAlerts: true,
                 newLeadAlerts: true,
                 paymentReminders: true,
-                defaultLeadGenFee: 250,
-                defaultLeadsTarget: 50,
+                defaultLeadGenFee: 400,
+                defaultLeadsTarget: 20,
                 retellRate: 0.10,
                 openaiRate: 0.002
             },
-            leads: [
-                {
-                    id: 1,
-                    name: 'Robert Johnson',
-                    company: 'Johnson Enterprises',
-                    email: 'robert@johnsonent.com',
-                    phone: '(555) 234-5678',
-                    source: 'Google Ads',
-                    assignedTo: 1, // Client ID
-                    status: 'Converted',
-                    value: 2500,
-                    notes: 'Very interested in dental services',
-                    createdAt: '2026-02-01T10:30:00'
-                },
-                {
-                    id: 2,
-                    name: 'Maria Garcia',
-                    company: '',
-                    email: 'maria.g@email.com',
-                    phone: '(555) 345-6789',
-                    source: 'Facebook',
-                    assignedTo: 1,
-                    status: 'Qualified',
-                    value: 1500,
-                    notes: '',
-                    createdAt: '2026-02-02T14:15:00'
-                },
-                {
-                    id: 3,
-                    name: 'James Wilson',
-                    company: 'Wilson HVAC',
-                    email: 'james@wilsonhvac.com',
-                    phone: '(555) 456-7890',
-                    source: 'Website',
-                    assignedTo: 2,
-                    status: 'Converted',
-                    value: 3500,
-                    notes: 'Needs commercial HVAC service',
-                    createdAt: '2026-02-01T09:00:00'
-                },
-                {
-                    id: 4,
-                    name: 'Emily Chen',
-                    company: 'Chen Dental',
-                    email: 'emily@chendental.com',
-                    phone: '(555) 567-8901',
-                    source: 'Referral',
-                    assignedTo: 1,
-                    status: 'Contacted',
-                    value: 2000,
-                    notes: 'Referred by Dr. Smith',
-                    createdAt: '2026-02-03T11:45:00'
-                },
-                {
-                    id: 5,
-                    name: 'Michael Brown',
-                    company: '',
-                    email: 'mbrown@gmail.com',
-                    phone: '(555) 678-9012',
-                    source: 'Google Ads',
-                    assignedTo: 2,
-                    status: 'New',
-                    value: 1000,
-                    notes: '',
-                    createdAt: '2026-02-04T08:30:00'
-                },
-                {
-                    id: 6,
-                    name: 'Sarah Davis',
-                    company: 'Davis Legal',
-                    email: 'sarah@davislegal.com',
-                    phone: '(555) 789-0123',
-                    source: 'Website',
-                    assignedTo: 2,
-                    status: 'Converted',
-                    value: 5000,
-                    notes: 'High value commercial client',
-                    createdAt: '2026-01-28T16:00:00'
-                },
-                {
-                    id: 7,
-                    name: 'David Lee',
-                    company: '',
-                    email: 'dlee@email.com',
-                    phone: '(555) 890-1234',
-                    source: 'Cold Outreach',
-                    assignedTo: 1,
-                    status: 'Lost',
-                    value: 800,
-                    notes: 'Not interested at this time',
-                    createdAt: '2026-01-30T13:20:00'
-                },
-                {
-                    id: 8,
-                    name: 'Jennifer Martinez',
-                    company: 'Martinez Corp',
-                    email: 'jen@martinezcorp.com',
-                    phone: '(555) 901-2345',
-                    source: 'Facebook',
-                    assignedTo: 2,
-                    status: 'Qualified',
-                    value: 4000,
-                    notes: 'Following up next week',
-                    createdAt: '2026-02-03T15:10:00'
-                },
-                {
-                    id: 9,
-                    name: 'Thomas Anderson',
-                    company: '',
-                    email: 'tanderson@email.com',
-                    phone: '(555) 012-3456',
-                    source: 'Website',
-                    assignedTo: null,
-                    status: 'New',
-                    value: 0,
-                    notes: 'Needs assignment',
-                    createdAt: '2026-02-04T10:00:00'
-                },
-                {
-                    id: 10,
-                    name: 'Lisa Thompson',
-                    company: 'Thompson Dental',
-                    email: 'lisa@thompsondental.com',
-                    phone: '(555) 123-4567',
-                    source: 'Google Ads',
-                    assignedTo: 1,
-                    status: 'New',
-                    value: 1800,
-                    notes: '',
-                    createdAt: '2026-02-04T11:30:00'
-                }
-            ],
-            calls: [
-                { id: 1, clientId: 1, callerName: 'John Smith', callerPhone: '(555) 111-2222', duration: 245, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Scheduled dental cleaning appointment for next Tuesday.', timestamp: '2026-02-04T09:15:00' },
-                { id: 2, clientId: 1, callerName: 'Mary Johnson', callerPhone: '(555) 222-3333', duration: 180, outcome: 'Information Given', sentiment: 'Neutral', summary: 'Inquired about pricing for teeth whitening services.', timestamp: '2026-02-04T10:30:00' },
-                { id: 3, clientId: 2, callerName: 'Bob Williams', callerPhone: '(555) 333-4444', duration: 320, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Scheduled HVAC maintenance for commercial building.', timestamp: '2026-02-04T11:00:00' },
-                { id: 4, clientId: 1, callerName: 'Susan Davis', callerPhone: '(555) 444-5555', duration: 45, outcome: 'Voicemail', sentiment: 'Neutral', summary: 'Left voicemail about appointment reminder.', timestamp: '2026-02-04T11:45:00' },
-                { id: 5, clientId: 2, callerName: 'James Wilson', callerPhone: '(555) 555-6666', duration: 210, outcome: 'Callback Scheduled', sentiment: 'Positive', summary: 'Interested in new AC installation, callback scheduled for tomorrow.', timestamp: '2026-02-04T13:00:00' },
-                { id: 6, clientId: 1, callerName: 'Patricia Brown', callerPhone: '(555) 666-7777', duration: 165, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Emergency dental appointment scheduled for today.', timestamp: '2026-02-04T14:15:00' },
-                { id: 7, clientId: 2, callerName: 'Michael Miller', callerPhone: '(555) 777-8888', duration: 30, outcome: 'No Answer', sentiment: 'Neutral', summary: 'No answer after 30 seconds.', timestamp: '2026-02-04T14:45:00' },
-                { id: 8, clientId: 1, callerName: 'Jennifer Garcia', callerPhone: '(555) 888-9999', duration: 195, outcome: 'Transferred', sentiment: 'Neutral', summary: 'Transferred to billing department for insurance question.', timestamp: '2026-02-04T15:30:00' },
-                { id: 9, clientId: 2, callerName: 'David Martinez', callerPhone: '(555) 999-0000', duration: 275, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Scheduled AC repair for residential property.', timestamp: '2026-02-03T09:00:00' },
-                { id: 10, clientId: 1, callerName: 'Linda Anderson', callerPhone: '(555) 000-1111', duration: 150, outcome: 'Information Given', sentiment: 'Positive', summary: 'Explained dental implant procedure and costs.', timestamp: '2026-02-03T10:15:00' },
-                { id: 11, clientId: 2, callerName: 'Chris Taylor', callerPhone: '(555) 111-0000', duration: 240, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Annual maintenance contract renewed.', timestamp: '2026-02-03T11:30:00' },
-                { id: 12, clientId: 1, callerName: 'Nancy Thomas', callerPhone: '(555) 222-1111', duration: 60, outcome: 'Voicemail', sentiment: 'Neutral', summary: 'Left voicemail about upcoming appointment.', timestamp: '2026-02-03T13:00:00' },
-                { id: 13, clientId: 2, callerName: 'Kevin Jackson', callerPhone: '(555) 333-2222', duration: 180, outcome: 'Information Given', sentiment: 'Neutral', summary: 'Provided estimate for ductwork replacement.', timestamp: '2026-02-03T14:00:00' },
-                { id: 14, clientId: 1, callerName: 'Carol White', callerPhone: '(555) 444-3333', duration: 290, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Root canal procedure scheduled.', timestamp: '2026-02-02T09:30:00' },
-                { id: 15, clientId: 2, callerName: 'Daniel Harris', callerPhone: '(555) 555-4444', duration: 200, outcome: 'Callback Scheduled', sentiment: 'Positive', summary: 'Will call back with decision on new system.', timestamp: '2026-02-02T10:45:00' },
-                { id: 16, clientId: 1, callerName: 'Betty Clark', callerPhone: '(555) 666-5555', duration: 175, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Scheduled routine checkup.', timestamp: '2026-02-02T11:30:00' },
-                { id: 17, clientId: 2, callerName: 'George Lewis', callerPhone: '(555) 777-6666', duration: 25, outcome: 'No Answer', sentiment: 'Neutral', summary: 'No answer.', timestamp: '2026-02-02T13:15:00' },
-                { id: 18, clientId: 1, callerName: 'Helen Robinson', callerPhone: '(555) 888-7777', duration: 220, outcome: 'Transferred', sentiment: 'Neutral', summary: 'Transferred to specialist for orthodontic consultation.', timestamp: '2026-02-02T14:30:00' },
-                { id: 19, clientId: 2, callerName: 'Frank Walker', callerPhone: '(555) 999-8888', duration: 260, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Emergency repair scheduled.', timestamp: '2026-02-01T09:00:00' },
-                { id: 20, clientId: 1, callerName: 'Dorothy Hall', callerPhone: '(555) 000-9999', duration: 135, outcome: 'Information Given', sentiment: 'Neutral', summary: 'Explained insurance coverage options.', timestamp: '2026-02-01T10:00:00' },
-                { id: 21, clientId: 2, callerName: 'Edward Allen', callerPhone: '(555) 111-8888', duration: 195, outcome: 'Booking Made', sentiment: 'Positive', summary: 'New customer installation scheduled.', timestamp: '2026-02-01T11:15:00' },
-                { id: 22, clientId: 1, callerName: 'Sandra Young', callerPhone: '(555) 222-9999', duration: 300, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Family dental plan setup for 4 members.', timestamp: '2026-02-01T13:30:00' },
-                { id: 23, clientId: 2, callerName: 'Richard King', callerPhone: '(555) 333-0000', duration: 50, outcome: 'Voicemail', sentiment: 'Neutral', summary: 'Left message about service reminder.', timestamp: '2026-02-01T14:45:00' },
-                { id: 24, clientId: 1, callerName: 'Margaret Wright', callerPhone: '(555) 444-1111', duration: 185, outcome: 'Booking Made', sentiment: 'Positive', summary: 'Cosmetic consultation scheduled.', timestamp: '2026-01-31T09:30:00' },
-                { id: 25, clientId: 2, callerName: 'Joseph Scott', callerPhone: '(555) 555-2222', duration: 230, outcome: 'Information Given', sentiment: 'Positive', summary: 'Detailed breakdown of maintenance plans provided.', timestamp: '2026-01-31T10:45:00' }
-            ],
+            leads: [], // Loaded from Airtable
+            calls: [], // Loaded from Airtable
             goals: [
-                { id: 1, type: 'revenue', target: 10000, description: 'Monthly Revenue Target', current: 5250 },
-                { id: 2, type: 'clients', target: 10, description: 'Active Clients Goal', current: 3 },
-                { id: 3, type: 'calls', target: 500, description: 'Monthly Call Volume', current: 247 },
-                { id: 4, type: 'bookings', target: 100, description: 'Monthly Bookings', current: 89 },
-                { id: 5, type: 'conversion', target: 25, description: 'Booking Conversion Rate (%)', current: 18 }
+                { id: 1, type: 'revenue', target: 10000, description: 'Monthly Revenue Target', current: 0 },
+                { id: 2, type: 'clients', target: 10, description: 'Active Clients Goal', current: 0 },
+                { id: 3, type: 'calls', target: 500, description: 'Monthly Call Volume', current: 0 },
+                { id: 4, type: 'bookings', target: 100, description: 'Monthly Bookings', current: 0 },
+                { id: 5, type: 'conversion', target: 25, description: 'Booking Conversion Rate (%)', current: 0 }
             ]
         };
 
         // ===== AIRTABLE CONFIG =====
         const AIRTABLE_CONFIG = {
-            baseId: 'appXXXXXXXXXXXXXX', // Replace with your actual base ID
+            baseId: 'applOjDjhH0RqLtBH',
             tables: {
-                clients: 'Clients',
-                calls: 'Calls',
-                leads: 'Leads',
-                costs: 'Costs',
-                revenue: 'Revenue',
-                settings: 'Settings'
+                clients: 'tblMptC862PyL7Znw',
+                leads: 'tblLpN4wceakfNFpq',
+                calls: 'tblvB5OpG0b5mVix3'
             }
         };
 
@@ -4228,13 +4013,139 @@
             }
         }
 
+        // ===== LOAD DATA FROM AIRTABLE =====
+        async function loadDataFromAirtable() {
+            try {
+                showToast('Loading data from Airtable...', 'info');
+
+                // Load clients
+                const clientsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.clients);
+                if (clientsResponse.records) {
+                    AppState.clients = clientsResponse.records.map((record, index) => {
+                        const f = record.fields;
+                        const planName = f['Monthly Plan'] || 'Starter';
+                        const plan = AppState.plans.find(p => p.name === planName) || AppState.plans[0];
+                        return {
+                            id: index + 1,
+                            airtableId: record.id,
+                            name: (f['Agent Name'] || '').split(' ')[0] || 'Client',
+                            agentName: f['Agent Name'] || 'AI Agent',
+                            organization: f['Agent Name'] || 'Unknown',
+                            email: f['Email'] || '',
+                            phone: f['Retell Phone'] || '',
+                            plan: planName,
+                            monthlyRate: plan.price,
+                            hasLeadGen: false, // Will be set based on lead gen service
+                            leadGenCost: 0,
+                            callsMTD: parseInt(f['Calls This Month']) || 0,
+                            callLimit: parseInt(f['Call Limit']) || plan.callLimit,
+                            bookings: 0, // Will be calculated from calls
+                            status: f['Status'] || 'Active',
+                            color: getClientColor(index),
+                            googleCalendarEmail: f['Google Calendar Email'] || ''
+                        };
+                    });
+                }
+
+                // Load leads
+                const leadsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.leads);
+                if (leadsResponse.records) {
+                    AppState.leads = leadsResponse.records.map((record, index) => {
+                        const f = record.fields;
+                        const clientEmail = f['Client Email'] || '';
+                        const client = AppState.clients.find(c => c.email === clientEmail);
+                        return {
+                            id: index + 1,
+                            airtableId: record.id,
+                            name: `${f['First Name'] || ''} ${f['Last Name'] || ''}`.trim() || 'Unknown',
+                            company: '',
+                            email: f['Email'] || '',
+                            phone: f['Phone'] || '',
+                            source: 'Prio AI',
+                            assignedTo: client ? client.id : null,
+                            status: f['Status'] || f['Disposition'] || 'Active',
+                            value: 0,
+                            notes: f['Client Notes'] || '',
+                            createdAt: f['Updated At'] || new Date().toISOString(),
+                            bookedTime: f['Booked Time'] || null,
+                            callbackDate: f['Callback Date'] || null,
+                            followUpDate: f['Follow Up Date'] || null,
+                            lastOutcome: f['Last Outcome'] || f['Outcome'] || ''
+                        };
+                    });
+                }
+
+                // Load calls
+                const callsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.calls);
+                if (callsResponse.records) {
+                    AppState.calls = callsResponse.records.map((record, index) => {
+                        const f = record.fields;
+                        return {
+                            id: index + 1,
+                            airtableId: record.id,
+                            clientId: 1, // Default, would need client lookup
+                            callerName: 'Lead',
+                            callerPhone: '',
+                            duration: 180, // Default 3 min
+                            outcome: f['Outcome'] || 'No Answer',
+                            sentiment: 'Neutral',
+                            summary: '',
+                            timestamp: f['Timestamp'] || new Date().toISOString()
+                        };
+                    });
+
+                    // Calculate bookings per client
+                    AppState.clients.forEach(client => {
+                        client.bookings = AppState.calls.filter(c =>
+                            c.clientId === client.id && c.outcome === 'Booked'
+                        ).length;
+                    });
+                }
+
+                // Update goals with current values
+                updateGoalCurrentValues();
+
+                showToast('Data loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load data from Airtable:', error);
+                showToast('Using local data (Airtable unavailable)', 'warning');
+            }
+        }
+
+        function getClientColor(index) {
+            const colors = ['#3b82f6', '#8b5cf6', '#22c55e', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#84cc16'];
+            return colors[index % colors.length];
+        }
+
+        function updateGoalCurrentValues() {
+            const activeClients = AppState.clients.filter(c => c.status === 'Active');
+            const totalRevenue = activeClients.reduce((sum, c) => sum + c.monthlyRate + (c.hasLeadGen ? c.leadGenCost : 0), 0);
+            const totalCalls = AppState.calls.length;
+            const bookings = AppState.calls.filter(c => c.outcome === 'Booked').length;
+            const conversionRate = totalCalls > 0 ? Math.round((bookings / totalCalls) * 100) : 0;
+
+            AppState.goals.forEach(goal => {
+                switch (goal.type) {
+                    case 'revenue': goal.current = totalRevenue; break;
+                    case 'clients': goal.current = activeClients.length; break;
+                    case 'calls': goal.current = totalCalls; break;
+                    case 'bookings': goal.current = bookings; break;
+                    case 'conversion': goal.current = conversionRate; break;
+                }
+            });
+        }
+
         function showAdminPanel() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminLayout').style.display = 'flex';
             document.getElementById('userAvatar').textContent = AppState.currentUser.name.charAt(0);
             document.getElementById('userName').textContent = AppState.currentUser.name;
             document.getElementById('userRole').textContent = AppState.currentUser.role;
-            updateDashboard();
+
+            // Load data from Airtable then update dashboard
+            loadDataFromAirtable().then(() => {
+                updateDashboard();
+            });
         }
 
         function handleLogout() {
@@ -5311,12 +5222,14 @@
                 <div style="display: flex; gap: 12px; margin-top: 24px;">
                     <select class="form-select" style="max-width: 200px;" onchange="quickUpdateLeadStatus(${lead.id}, this.value)">
                         <option value="" disabled selected>Change Status...</option>
-                        <option value="New">New</option>
-                        <option value="Contacted">Contacted</option>
-                        <option value="Qualified">Qualified</option>
-                        <option value="Converted">Converted</option>
-                        <option value="Lost">Lost</option>
-                        <option value="Invalid">Invalid</option>
+                        <option value="Active">Active</option>
+                        <option value="Booked">Booked</option>
+                        <option value="Callback">Callback</option>
+                        <option value="Timeline">Timeline</option>
+                        <option value="Follow Up">Follow Up</option>
+                        <option value="Interested">Interested</option>
+                        <option value="Not Interested">Not Interested</option>
+                        <option value="DNC">DNC</option>
                     </select>
                     <button class="btn btn-secondary" style="color: var(--danger);" onclick="deleteLead(${lead.id}); closeLeadViewModal();">Delete Lead</button>
                 </div>
@@ -6135,7 +6048,7 @@
 
             // Calculate stats
             const totalCalls = calls.length;
-            const successfulCalls = calls.filter(c => ['Booking Made', 'Information Given', 'Callback Scheduled', 'Transferred'].includes(c.outcome)).length;
+            const successfulCalls = calls.filter(c => ['Booked', 'Callback', 'Timeline', 'Follow Up'].includes(c.outcome)).length;
             const bookings = calls.filter(c => c.outcome === 'Booking Made').length;
             const totalDuration = calls.reduce((sum, c) => sum + c.duration, 0);
             const avgDuration = totalCalls > 0 ? totalDuration / totalCalls : 0;
@@ -6250,12 +6163,13 @@
 
             const total = calls.length;
             const outcomeColors = {
-                'Booking Made': 'var(--success)',
-                'Information Given': 'var(--accent)',
-                'Callback Scheduled': 'var(--warning)',
-                'Transferred': 'var(--purple)',
+                'Booked': 'var(--success)',
+                'Callback': 'var(--accent)',
+                'Timeline': 'var(--purple)',
+                'Follow Up': 'var(--warning)',
+                'Not Interested': 'var(--danger)',
                 'Voicemail': 'var(--text-muted)',
-                'No Answer': 'var(--danger)'
+                'No Answer': 'var(--text-muted)'
             };
 
             container.innerHTML = Object.entries(outcomes)
@@ -6303,12 +6217,13 @@
                 const client = AppState.clients.find(c => c.id === call.clientId);
                 const date = new Date(call.timestamp);
                 const outcomeColors = {
-                    'Booking Made': 'success',
-                    'Information Given': 'accent',
-                    'Callback Scheduled': 'warning',
-                    'Transferred': 'purple',
+                    'Booked': 'success',
+                    'Callback': 'accent',
+                    'Timeline': 'purple',
+                    'Follow Up': 'warning',
+                    'Not Interested': 'danger',
                     'Voicemail': '',
-                    'No Answer': 'danger'
+                    'No Answer': ''
                 };
                 const sentimentColors = {
                     'Positive': 'success',
@@ -6376,7 +6291,7 @@
             tbody.innerHTML = AppState.clients.map(client => {
                 const clientCalls = AppState.calls.filter(c => c.clientId === client.id);
                 const totalCalls = clientCalls.length;
-                const successful = clientCalls.filter(c => ['Booking Made', 'Information Given', 'Callback Scheduled', 'Transferred'].includes(c.outcome)).length;
+                const successful = clientCalls.filter(c => ['Booked', 'Callback', 'Timeline', 'Follow Up'].includes(c.outcome)).length;
                 const bookings = clientCalls.filter(c => c.outcome === 'Booking Made').length;
                 const totalDuration = clientCalls.reduce((sum, c) => sum + c.duration, 0);
                 const avgDuration = totalCalls > 0 ? totalDuration / totalCalls : 0;
@@ -6413,10 +6328,11 @@
 
         function renderOutcomesTab(calls) {
             const outcomes = {
-                'Booking Made': 0,
-                'Information Given': 0,
-                'Transferred': 0,
-                'Callback Scheduled': 0,
+                'Booked': 0,
+                'Callback': 0,
+                'Timeline': 0,
+                'Follow Up': 0,
+                'Not Interested': 0,
                 'Voicemail': 0,
                 'No Answer': 0
             };
@@ -6427,28 +6343,30 @@
                 }
             });
 
-            document.getElementById('outcomeBookings').textContent = outcomes['Booking Made'];
-            document.getElementById('outcomeInfo').textContent = outcomes['Information Given'];
-            document.getElementById('outcomeTransferred').textContent = outcomes['Transferred'];
-            document.getElementById('outcomeCallback').textContent = outcomes['Callback Scheduled'];
+            document.getElementById('outcomeBooked').textContent = outcomes['Booked'];
+            document.getElementById('outcomeCallback').textContent = outcomes['Callback'];
+            document.getElementById('outcomeTimeline').textContent = outcomes['Timeline'];
+            document.getElementById('outcomeFollowUp').textContent = outcomes['Follow Up'];
+            document.getElementById('outcomeNotInterested').textContent = outcomes['Not Interested'];
             document.getElementById('outcomeVoicemail').textContent = outcomes['Voicemail'];
             document.getElementById('outcomeNoAnswer').textContent = outcomes['No Answer'];
 
             // Render trends breakdown
             const total = calls.length;
+            const successfulOutcomes = outcomes['Booked'] + outcomes['Callback'] + outcomes['Timeline'] + outcomes['Follow Up'];
             const container = document.getElementById('outcomeTrendsBreakdown');
             container.innerHTML = `
                 <div class="breakdown-item">
-                    <span class="breakdown-label">Successful Outcomes</span>
-                    <span class="breakdown-value success">${outcomes['Booking Made'] + outcomes['Information Given'] + outcomes['Callback Scheduled'] + outcomes['Transferred']} (${total > 0 ? (((outcomes['Booking Made'] + outcomes['Information Given'] + outcomes['Callback Scheduled'] + outcomes['Transferred']) / total) * 100).toFixed(1) : 0}%)</span>
+                    <span class="breakdown-label">Positive Outcomes</span>
+                    <span class="breakdown-value success">${successfulOutcomes} (${total > 0 ? ((successfulOutcomes / total) * 100).toFixed(1) : 0}%)</span>
                 </div>
                 <div class="breakdown-item">
                     <span class="breakdown-label">Booking Conversion Rate</span>
-                    <span class="breakdown-value accent">${total > 0 ? ((outcomes['Booking Made'] / total) * 100).toFixed(1) : 0}%</span>
+                    <span class="breakdown-value accent">${total > 0 ? ((outcomes['Booked'] / total) * 100).toFixed(1) : 0}%</span>
                 </div>
                 <div class="breakdown-item">
                     <span class="breakdown-label">Missed Opportunities</span>
-                    <span class="breakdown-value danger">${outcomes['Voicemail'] + outcomes['No Answer']} (${total > 0 ? (((outcomes['Voicemail'] + outcomes['No Answer']) / total) * 100).toFixed(1) : 0}%)</span>
+                    <span class="breakdown-value danger">${outcomes['Voicemail'] + outcomes['No Answer'] + outcomes['Not Interested']} (${total > 0 ? (((outcomes['Voicemail'] + outcomes['No Answer'] + outcomes['Not Interested']) / total) * 100).toFixed(1) : 0}%)</span>
                 </div>
             `;
         }
