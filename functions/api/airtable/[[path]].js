@@ -97,8 +97,8 @@ export async function onRequest(context) {
         });
     }
 
-    // Check for Airtable token
-    const airtableToken = env.AIRTABLE_TOKEN;
+    // Check for Airtable API key
+    const airtableToken = env.AIRTABLE_API_KEY;
     if (!airtableToken) {
         return new Response(JSON.stringify({ error: 'Server configuration error' }), {
             status: 500,
@@ -132,9 +132,12 @@ export async function onRequest(context) {
 
     // Extract and validate path
     // URL format: /api/airtable/BASE_ID/TABLE_NAME[/RECORD_ID]
-    const pathMatch = url.pathname.match(/^\/api\/airtable\/(.+)$/);
-    if (!pathMatch) {
-        return new Response(JSON.stringify({ error: 'Invalid endpoint' }), {
+    // The [[path]] catches everything after /api/airtable/
+    const pathMatch = url.pathname.match(/^\/api\/airtable\/?(.*)$/);
+    const airtablePath = pathMatch ? pathMatch[1] : context.params?.path?.join('/') || '';
+
+    if (!airtablePath) {
+        return new Response(JSON.stringify({ error: 'Invalid endpoint - path required' }), {
             status: 400,
             headers: {
                 'Content-Type': 'application/json',
@@ -142,8 +145,6 @@ export async function onRequest(context) {
             }
         });
     }
-
-    const airtablePath = pathMatch[1];
     const validation = validatePath(airtablePath);
 
     if (!validation.valid) {
