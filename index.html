@@ -4115,60 +4115,68 @@
                 }
 
                 // Load clients
-                const clientsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.clients);
-                if (clientsResponse.records) {
-                    AppState.clients = clientsResponse.records.map((record, index) => {
-                        const f = record.fields;
-                        const planName = f['Monthly Plan'] || 'Starter';
-                        const plan = AppState.plans.find(p => p.name === planName) || AppState.plans[0];
-                        return {
-                            id: index + 1,
-                            airtableId: record.id,
-                            name: (f['Agent Name'] || '').split(' ')[0] || 'Client',
-                            agentName: f['Agent Name'] || 'AI Agent',
-                            organization: f['Agent Name'] || 'Unknown',
-                            email: f['Email'] || '',
-                            phone: f['Retell Phone'] || '',
-                            plan: planName,
-                            monthlyRate: plan.price,
-                            hasLeadGen: false, // Will be set based on lead gen service
-                            leadGenCost: 0,
-                            callsMTD: parseInt(f['Calls This Month']) || 0,
-                            callLimit: parseInt(f['Call Limit']) || plan.callLimit,
-                            bookings: 0, // Will be calculated from calls
-                            status: f['Status'] || 'Active',
-                            color: getClientColor(index),
-                            googleCalendarEmail: f['Google Calendar Email'] || ''
-                        };
-                    });
+                try {
+                    const clientsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.clients);
+                    if (clientsResponse.records) {
+                        AppState.clients = clientsResponse.records.map((record, index) => {
+                            const f = record.fields;
+                            const planName = f['Monthly Plan'] || 'Starter';
+                            const plan = AppState.plans.find(p => p.name === planName) || AppState.plans[0];
+                            return {
+                                id: index + 1,
+                                airtableId: record.id,
+                                name: (f['Agent Name'] || '').split(' ')[0] || 'Client',
+                                agentName: f['Agent Name'] || 'AI Agent',
+                                organization: f['Agent Name'] || 'Unknown',
+                                email: f['Email'] || '',
+                                phone: f['Retell Phone'] || '',
+                                plan: planName,
+                                monthlyRate: plan.price,
+                                hasLeadGen: false,
+                                leadGenCost: 0,
+                                callsMTD: parseInt(f['Calls This Month']) || 0,
+                                callLimit: parseInt(f['Call Limit']) || plan.callLimit,
+                                bookings: 0,
+                                status: f['Status'] || 'Active',
+                                color: getClientColor(index),
+                                googleCalendarEmail: f['Google Calendar Email'] || ''
+                            };
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Could not load clients:', e);
                 }
 
                 // Load leads
-                const leadsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.leads);
-                if (leadsResponse.records) {
-                    AppState.leads = leadsResponse.records.map((record, index) => {
-                        const f = record.fields;
-                        const clientEmail = f['Client Email'] || '';
-                        const client = AppState.clients.find(c => c.email === clientEmail);
-                        return {
-                            id: index + 1,
-                            airtableId: record.id,
-                            name: `${f['First Name'] || ''} ${f['Last Name'] || ''}`.trim() || 'Unknown',
-                            company: '',
-                            email: f['Email'] || '',
-                            phone: f['Phone'] || '',
-                            source: 'Prio AI',
-                            assignedTo: client ? client.id : null,
-                            status: f['Status'] || f['Disposition'] || 'Active',
-                            value: 0,
-                            notes: f['Client Notes'] || '',
-                            createdAt: f['Updated At'] || new Date().toISOString(),
-                            bookedTime: f['Booked Time'] || null,
-                            callbackDate: f['Callback Date'] || null,
-                            followUpDate: f['Follow Up Date'] || null,
-                            lastOutcome: f['Last Outcome'] || f['Outcome'] || ''
-                        };
-                    });
+                try {
+                    const leadsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.leads);
+                    if (leadsResponse.records) {
+                        AppState.leads = leadsResponse.records.map((record, index) => {
+                            const f = record.fields;
+                            const clientEmail = f['Client Email'] || '';
+                            const client = AppState.clients.find(c => c.email === clientEmail);
+                            return {
+                                id: index + 1,
+                                airtableId: record.id,
+                                name: `${f['First Name'] || ''} ${f['Last Name'] || ''}`.trim() || 'Unknown',
+                                company: '',
+                                email: f['Email'] || '',
+                                phone: f['Phone'] || '',
+                                source: 'Prio AI',
+                                assignedTo: client ? client.id : null,
+                                status: f['Status'] || f['Disposition'] || 'Active',
+                                value: 0,
+                                notes: f['Client Notes'] || '',
+                                createdAt: f['Updated At'] || new Date().toISOString(),
+                                bookedTime: f['Booked Time'] || null,
+                                callbackDate: f['Callback Date'] || null,
+                                followUpDate: f['Follow Up Date'] || null,
+                                lastOutcome: f['Last Outcome'] || f['Outcome'] || ''
+                            };
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Could not load leads:', e);
                 }
 
                 // Load Lead Gen Inbox
@@ -4201,39 +4209,43 @@
                 }
 
                 // Load calls
-                const callsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.calls);
-                if (callsResponse.records) {
-                    AppState.calls = callsResponse.records.map((record, index) => {
-                        const f = record.fields;
-                        return {
-                            id: index + 1,
-                            airtableId: record.id,
-                            clientId: 1, // Default, would need client lookup
-                            callerName: 'Lead',
-                            callerPhone: '',
-                            duration: 180, // Default 3 min
-                            outcome: f['Outcome'] || 'No Answer',
-                            sentiment: 'Neutral',
-                            summary: '',
-                            timestamp: f['Timestamp'] || new Date().toISOString()
-                        };
-                    });
+                try {
+                    const callsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.calls);
+                    if (callsResponse.records) {
+                        AppState.calls = callsResponse.records.map((record, index) => {
+                            const f = record.fields;
+                            return {
+                                id: index + 1,
+                                airtableId: record.id,
+                                clientId: 1,
+                                callerName: 'Lead',
+                                callerPhone: '',
+                                duration: 180,
+                                outcome: f['Outcome'] || 'No Answer',
+                                sentiment: 'Neutral',
+                                summary: '',
+                                timestamp: f['Timestamp'] || new Date().toISOString()
+                            };
+                        });
 
-                    // Calculate bookings per client
-                    AppState.clients.forEach(client => {
-                        client.bookings = AppState.calls.filter(c =>
-                            c.clientId === client.id && c.outcome === 'Booked'
-                        ).length;
-                    });
+                        // Calculate bookings per client
+                        AppState.clients.forEach(client => {
+                            client.bookings = AppState.calls.filter(c =>
+                                c.clientId === client.id && c.outcome === 'Booked'
+                            ).length;
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Could not load calls:', e);
                 }
 
                 // Update goals with current values
                 updateGoalCurrentValues();
 
-                showToast('Data loaded successfully', 'success');
+                showToast('Data loaded from defaults', 'info');
             } catch (error) {
-                console.error('Failed to load data from Airtable:', error);
-                showToast('Using local data (Airtable unavailable)', 'warning');
+                console.error('Failed to load data:', error);
+                showToast('Using default data', 'warning');
             }
         }
 
