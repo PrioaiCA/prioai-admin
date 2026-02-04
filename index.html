@@ -3832,29 +3832,26 @@
             fxRate: 1.39,
             clients: [], // Loaded from Airtable
             costs: {
-                retell: 892,
-                openai: 156,
-                vercel: 20,
-                supabase: 25,
-                other: 754
+                server: 6.00,
+                airtable: 54,
+                twilio: 10.00,
+                google: 15.83,
+                phonePerClient: 2.00
             },
             costDetails: [
-                { id: 1, category: 'Retell AI', description: 'Voice AI usage', type: 'variable', amount: 892 },
-                { id: 2, category: 'OpenAI', description: 'GPT API usage', type: 'variable', amount: 156 },
-                { id: 3, category: 'Vercel', description: 'Hosting - Pro Plan', type: 'fixed', amount: 20 },
-                { id: 4, category: 'Supabase', description: 'Database - Pro Plan', type: 'fixed', amount: 25 },
-                { id: 5, category: 'Domain', description: 'prioai.ca renewal', type: 'fixed', amount: 15 },
-                { id: 6, category: 'Software', description: 'Various subscriptions', type: 'fixed', amount: 89 },
-                { id: 7, category: 'Marketing', description: 'Ad spend', type: 'variable', amount: 350 },
-                { id: 8, category: 'Tools', description: 'Development tools', type: 'fixed', amount: 50 }
+                { id: 1, category: 'Server', description: 'DigitalOcean server', type: 'fixed', amount: 6.00 },
+                { id: 2, category: 'Airtable', description: 'Airtable subscription', type: 'fixed', amount: 54 },
+                { id: 3, category: 'Twilio', description: 'Twilio SMS', type: 'fixed', amount: 10.00 },
+                { id: 4, category: 'Google', description: 'Google Workspace', type: 'fixed', amount: 15.83 },
+                { id: 5, category: 'Phone Lines', description: 'Retell phone per client', type: 'variable', amount: 2.00 }
             ],
             additionalRevenue: [
                 { id: 1, category: 'Setup Fee', description: 'New client onboarding', clientId: 2, amount: 500 }
             ],
             plans: [
-                { id: 1, name: 'Starter', price: 199, callLimit: 1000, features: ['1,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
-                { id: 2, name: 'Professional', price: 399, callLimit: 3000, features: ['3,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
-                { id: 3, name: 'Growth', price: 599, callLimit: 6000, features: ['6,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 1, name: 'Starter', price: 149, callLimit: 1000, promoPrice: 99, features: ['1,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 2, name: 'Professional', price: 249, callLimit: 3000, features: ['3,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
+                { id: 3, name: 'Growth', price: 399, callLimit: 6000, features: ['6,000 calls/month', 'All features included', 'Smart retry logic', 'Calendar integration', 'Priority support'] },
                 { id: 4, name: 'Enterprise', price: 0, callLimit: 999999, features: ['Unlimited calls', 'All features included', 'Dedicated support', 'Custom integrations', 'SLA guarantee'] }
             ],
             settings: {
@@ -3872,6 +3869,9 @@
             },
             leads: [], // Loaded from Airtable
             calls: [], // Loaded from Airtable
+            leadGenInbox: [], // Loaded from Airtable
+            teamMembers: [], // Loaded from Airtable
+            adminSettings: {}, // Key-value settings from Airtable
             goals: [
                 { id: 1, type: 'revenue', target: 10000, description: 'Monthly Revenue Target', current: 0 },
                 { id: 2, type: 'clients', target: 10, description: 'Active Clients Goal', current: 0 },
@@ -3887,7 +3887,10 @@
             tables: {
                 clients: 'tblMptC862PyL7Znw',
                 leads: 'tblLpN4wceakfNFpq',
-                calls: 'tblvB5OpG0b5mVix3'
+                calls: 'tblvB5OpG0b5mVix3',
+                leadGenInbox: 'tblJfJPnkTbMWhwTc',
+                adminSettings: 'tblGD3iwn1nU0gjtx',
+                teamMembers: 'tbl0TbzugbJiLZQOt'
             }
         };
 
@@ -4018,6 +4021,99 @@
             try {
                 showToast('Loading data from Airtable...', 'info');
 
+                // Load Admin Settings first (for pricing, costs, exchange rate)
+                try {
+                    const settingsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.adminSettings);
+                    if (settingsResponse.records) {
+                        // Convert to key-value object
+                        AppState.adminSettings = {};
+                        settingsResponse.records.forEach(record => {
+                            const key = record.fields['Setting Key'];
+                            const value = record.fields['Setting Value'];
+                            if (key) {
+                                AppState.adminSettings[key] = value;
+                            }
+                        });
+
+                        // Update exchange rate
+                        if (AppState.adminSettings.usd_to_cad_rate) {
+                            AppState.fxRate = parseFloat(AppState.adminSettings.usd_to_cad_rate);
+                            AppState.settings.exchangeRate = AppState.fxRate;
+                        }
+
+                        // Update plans with real pricing from settings
+                        if (AppState.adminSettings.starter_price) {
+                            const starterPlan = AppState.plans.find(p => p.name === 'Starter');
+                            if (starterPlan) starterPlan.price = parseFloat(AppState.adminSettings.starter_price);
+                        }
+                        if (AppState.adminSettings.professional_price) {
+                            const proPlan = AppState.plans.find(p => p.name === 'Professional');
+                            if (proPlan) proPlan.price = parseFloat(AppState.adminSettings.professional_price);
+                        }
+                        if (AppState.adminSettings.starter_call_limit) {
+                            const starterPlan = AppState.plans.find(p => p.name === 'Starter');
+                            if (starterPlan) starterPlan.callLimit = parseInt(AppState.adminSettings.starter_call_limit);
+                        }
+                        if (AppState.adminSettings.professional_call_limit) {
+                            const proPlan = AppState.plans.find(p => p.name === 'Professional');
+                            if (proPlan) proPlan.callLimit = parseInt(AppState.adminSettings.professional_call_limit);
+                        }
+
+                        // Update fixed costs
+                        const fixedCosts = [];
+                        if (AppState.adminSettings.fixed_cost_server) {
+                            fixedCosts.push({ id: 1, category: 'Server', description: 'DigitalOcean server', type: 'fixed', amount: parseFloat(AppState.adminSettings.fixed_cost_server) });
+                        }
+                        if (AppState.adminSettings.fixed_cost_airtable) {
+                            fixedCosts.push({ id: 2, category: 'Airtable', description: 'Airtable subscription', type: 'fixed', amount: parseFloat(AppState.adminSettings.fixed_cost_airtable) });
+                        }
+                        if (AppState.adminSettings.fixed_cost_twilio) {
+                            fixedCosts.push({ id: 3, category: 'Twilio', description: 'Twilio SMS', type: 'fixed', amount: parseFloat(AppState.adminSettings.fixed_cost_twilio) });
+                        }
+                        if (AppState.adminSettings.fixed_cost_google) {
+                            fixedCosts.push({ id: 4, category: 'Google', description: 'Google Workspace', type: 'fixed', amount: parseFloat(AppState.adminSettings.fixed_cost_google) });
+                        }
+                        if (fixedCosts.length > 0) {
+                            // Merge with existing cost details
+                            AppState.costDetails = [...fixedCosts, ...AppState.costDetails.filter(c => c.type === 'variable')];
+                            // Update costs object
+                            AppState.costs = {
+                                server: parseFloat(AppState.adminSettings.fixed_cost_server) || 0,
+                                airtable: parseFloat(AppState.adminSettings.fixed_cost_airtable) || 0,
+                                twilio: parseFloat(AppState.adminSettings.fixed_cost_twilio) || 0,
+                                google: parseFloat(AppState.adminSettings.fixed_cost_google) || 0,
+                                phonePerClient: parseFloat(AppState.adminSettings.fixed_cost_phone_per_client) || 0
+                            };
+                        }
+                    }
+                } catch (e) {
+                    console.warn('Could not load admin settings:', e);
+                }
+
+                // Load Team Members
+                try {
+                    const teamResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.teamMembers);
+                    if (teamResponse.records) {
+                        AppState.teamMembers = teamResponse.records.map((record, index) => {
+                            const f = record.fields;
+                            return {
+                                id: index + 1,
+                                airtableId: record.id,
+                                name: f['Name'] || 'Unknown',
+                                email: f['Email'] || '',
+                                role: f['Role'] || 'User',
+                                status: f['Status'] || 'Active',
+                                addedDate: f['Added Date'] || null,
+                                notes: f['Notes'] || '',
+                                adminLevel: f['Admin Level'] || 'User',
+                                phone: f['Phone'] || ''
+                            };
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Could not load team members:', e);
+                }
+
                 // Load clients
                 const clientsResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.clients);
                 if (clientsResponse.records) {
@@ -4073,6 +4169,35 @@
                             lastOutcome: f['Last Outcome'] || f['Outcome'] || ''
                         };
                     });
+                }
+
+                // Load Lead Gen Inbox
+                try {
+                    const inboxResponse = await Airtable.getRecords(AIRTABLE_CONFIG.tables.leadGenInbox);
+                    if (inboxResponse.records) {
+                        AppState.leadGenInbox = inboxResponse.records.map((record, index) => {
+                            const f = record.fields;
+                            return {
+                                id: index + 1,
+                                airtableId: record.id,
+                                leadGenId: f['LeadGen_ID'] || '',
+                                gmailMessageId: f['Gmail_Message_ID'] || '',
+                                firstName: f['First Name'] || '',
+                                lastName: f['Last Name'] || '',
+                                email: f['Email'] || '',
+                                phoneRaw: f['Phone_Raw'] || '',
+                                phoneE164: f['Phone_E164'] || '',
+                                leadType: f['Lead_Type'] || '',
+                                emailReceivedAt: f['Email_Received_At'] || null,
+                                notes: f['Notes'] || '',
+                                callbackDate: f['Callback_Date'] || null,
+                                assignedAt: f['Assigned_At'] || null,
+                                assignedClient: f['Assigned_Client'] || null
+                            };
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Could not load lead gen inbox:', e);
                 }
 
                 // Load calls
