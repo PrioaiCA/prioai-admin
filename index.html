@@ -4307,8 +4307,11 @@
             const leadGenRevenue = AppState.clients.filter(c => c.hasLeadGen && c.status === 'Active').reduce((sum, c) => sum + c.leadGenCost, 0);
             const totalRevenue = subscriptionRevenue + leadGenRevenue;
 
-            // Calculate costs
-            const totalCosts = Object.values(AppState.costs).reduce((sum, val) => sum + val, 0);
+            // Calculate costs (fixed costs + per-client phone lines)
+            const fixedCosts = (AppState.costs.server || 0) + (AppState.costs.airtable || 0) +
+                              (AppState.costs.twilio || 0) + (AppState.costs.google || 0);
+            const phoneLineCosts = (AppState.costs.phonePerClient || 0) * activeClients.length;
+            const totalCosts = fixedCosts + phoneLineCosts;
 
             // Calculate profit
             const netProfit = totalRevenue - totalCosts;
@@ -4353,24 +4356,24 @@
             // Update cost breakdown
             document.getElementById('costBreakdown').innerHTML = `
                 <div class="breakdown-item">
-                    <span class="breakdown-label">Retell AI (Usage)</span>
-                    <span class="breakdown-value">${formatCurrency(AppState.costs.retell)}</span>
+                    <span class="breakdown-label">Server (DigitalOcean)</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.server || 0)}</span>
                 </div>
                 <div class="breakdown-item">
-                    <span class="breakdown-label">OpenAI (Usage)</span>
-                    <span class="breakdown-value">${formatCurrency(AppState.costs.openai)}</span>
+                    <span class="breakdown-label">Airtable</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.airtable || 0)}</span>
                 </div>
                 <div class="breakdown-item">
-                    <span class="breakdown-label">Vercel Hosting</span>
-                    <span class="breakdown-value">${formatCurrency(AppState.costs.vercel)}</span>
+                    <span class="breakdown-label">Twilio SMS</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.twilio || 0)}</span>
                 </div>
                 <div class="breakdown-item">
-                    <span class="breakdown-label">Supabase</span>
-                    <span class="breakdown-value">${formatCurrency(AppState.costs.supabase)}</span>
+                    <span class="breakdown-label">Google Workspace</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.google || 0)}</span>
                 </div>
                 <div class="breakdown-item">
-                    <span class="breakdown-label">Other Fixed Costs</span>
-                    <span class="breakdown-value">${formatCurrency(AppState.costs.other)}</span>
+                    <span class="breakdown-label">Phone Lines (Per Client)</span>
+                    <span class="breakdown-value">${formatCurrency((AppState.costs.phonePerClient || 0) * activeClients.length)}</span>
                 </div>
                 <div class="breakdown-item" style="background: var(--danger-muted); border-color: rgba(239,68,68,0.3);">
                     <span class="breakdown-label" style="font-weight: 600;">Total Costs</span>
