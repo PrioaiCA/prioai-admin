@@ -1534,34 +1534,31 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">Financials</div>
-                    <button class="nav-item disabled" data-section="revenue">
+                    <button class="nav-item" data-section="revenue">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <line x1="12" y1="1" x2="12" y2="23"/>
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                         </svg>
                         Revenue
-                        <span class="coming-soon">Soon</span>
                     </button>
-                    <button class="nav-item disabled" data-section="costs">
+                    <button class="nav-item" data-section="costs">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="17 8 12 3 7 8"/>
                             <line x1="12" y1="3" x2="12" y2="15"/>
                         </svg>
                         Costs
-                        <span class="coming-soon">Soon</span>
                     </button>
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title">System</div>
-                    <button class="nav-item disabled" data-section="settings">
+                    <button class="nav-item" data-section="settings">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="3"/>
                             <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
                         </svg>
                         Settings
-                        <span class="coming-soon">Soon</span>
                     </button>
                 </div>
             </nav>
@@ -2061,7 +2058,596 @@
                 </div>
             </section>
 
+            <!-- ===== REVENUE SECTION ===== -->
+            <section class="admin-section" id="section-revenue">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Revenue Management</h1>
+                        <p class="page-subtitle">Track and manage all revenue streams</p>
+                    </div>
+                    <div class="header-actions">
+                        <select class="filter-select" id="revenueMonthFilter" onchange="updateRevenueSection()">
+                            <option value="2026-02">February 2026</option>
+                            <option value="2026-01">January 2026</option>
+                            <option value="2025-12">December 2025</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Revenue Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card success">
+                        <div class="stat-label">Total Revenue (MTD)</div>
+                        <div class="stat-value success" id="revenueTotalMTD">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Subscription Revenue</div>
+                        <div class="stat-value" id="revenueSubscriptions">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Lead Gen Revenue</div>
+                        <div class="stat-value" id="revenueLeadGen">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Setup Fees</div>
+                        <div class="stat-value" id="revenueSetupFees">$0</div>
+                    </div>
+                </div>
+
+                <div class="financial-grid">
+                    <!-- Revenue Breakdown -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                Revenue Breakdown
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="financial-breakdown" id="revenueBreakdownDetail">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Settings -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6m0 6v10"/>
+                                </svg>
+                                Additional Revenue
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" onclick="openAddRevenueModal()">+ Add Entry</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="financial-breakdown" id="additionalRevenueList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Revenue by Client -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                            </svg>
+                            Revenue by Client
+                        </h3>
+                    </div>
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Subscription</th>
+                                    <th>Lead Gen</th>
+                                    <th>Setup Fees</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="revenueByClientTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== COSTS SECTION ===== -->
+            <section class="admin-section" id="section-costs">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Cost Management</h1>
+                        <p class="page-subtitle">Track and manage all business costs</p>
+                    </div>
+                    <div class="header-actions">
+                        <select class="filter-select" id="costsMonthFilter" onchange="updateCostsSection()">
+                            <option value="2026-02">February 2026</option>
+                            <option value="2026-01">January 2026</option>
+                            <option value="2025-12">December 2025</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Cost Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card danger">
+                        <div class="stat-label">Total Costs (MTD)</div>
+                        <div class="stat-value danger" id="costsTotalMTD">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Fixed Costs</div>
+                        <div class="stat-value" id="costsFixed">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Variable/Usage Costs</div>
+                        <div class="stat-value" id="costsVariable">$0</div>
+                    </div>
+                    <div class="stat-card accent">
+                        <div class="stat-label">Profit Margin</div>
+                        <div class="stat-value accent" id="costsProfitMargin">0%</div>
+                    </div>
+                </div>
+
+                <div class="financial-grid">
+                    <!-- Fixed Costs -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="3" y1="9" x2="21" y2="9"/>
+                                </svg>
+                                Fixed Monthly Costs
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" onclick="openAddCostModal('fixed')">+ Add</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="financial-breakdown" id="fixedCostsList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Variable Costs -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                                Variable/Usage Costs
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" onclick="openAddCostModal('variable')">+ Add</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="financial-breakdown" id="variableCostsList">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cost Details Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                            </svg>
+                            All Costs
+                        </h3>
+                    </div>
+                    <div class="card-body no-padding">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allCostsTable">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Profitability Summary -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"/>
+                                <line x1="12" y1="20" x2="12" y2="4"/>
+                                <line x1="6" y1="20" x2="6" y2="14"/>
+                            </svg>
+                            Profitability Summary
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="financial-breakdown" id="profitabilitySummary">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== SETTINGS SECTION ===== -->
+            <section class="admin-section" id="section-settings">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Settings</h1>
+                        <p class="page-subtitle">Configure your admin dashboard</p>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs" id="settingsTabs">
+                    <button class="tab active" data-tab="settings-general" onclick="switchSettingsTab('settings-general')">General</button>
+                    <button class="tab" data-tab="settings-plans" onclick="switchSettingsTab('settings-plans')">Pricing Plans</button>
+                    <button class="tab" data-tab="settings-costs" onclick="switchSettingsTab('settings-costs')">Default Costs</button>
+                    <button class="tab" data-tab="settings-account" onclick="switchSettingsTab('settings-account')">Account</button>
+                </div>
+
+                <!-- General Settings Tab -->
+                <div class="tab-content active" id="tab-settings-general">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Display Settings</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Default Currency</label>
+                                <select class="form-select" id="settingsDefaultCurrency" style="max-width: 200px;" onchange="saveSettings()">
+                                    <option value="CAD">CAD (Canadian Dollar)</option>
+                                    <option value="USD">USD (US Dollar)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Exchange Rate (USD to CAD)</label>
+                                <input type="number" class="form-input" id="settingsExchangeRate" value="1.39" step="0.01" min="0" style="max-width: 200px;" onchange="saveSettings()">
+                                <div class="form-hint">Used for currency conversion</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Business Name</label>
+                                <input type="text" class="form-input" id="settingsBusinessName" value="Prio AI" style="max-width: 400px;" onchange="saveSettings()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Fiscal Year Start</label>
+                                <select class="form-select" id="settingsFiscalYear" style="max-width: 200px;" onchange="saveSettings()">
+                                    <option value="1">January</option>
+                                    <option value="4">April</option>
+                                    <option value="7">July</option>
+                                    <option value="10">October</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Notifications</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="toggle-wrapper" style="margin-bottom: 12px;">
+                                <div>
+                                    <div class="toggle-label">Client Usage Alerts</div>
+                                    <div class="toggle-description">Get notified when clients reach 80% of their call limit</div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="settingsUsageAlerts" checked onchange="saveSettings()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-wrapper" style="margin-bottom: 12px;">
+                                <div>
+                                    <div class="toggle-label">New Lead Notifications</div>
+                                    <div class="toggle-description">Get notified when new leads are added</div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="settingsNewLeadAlerts" checked onchange="saveSettings()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-wrapper">
+                                <div>
+                                    <div class="toggle-label">Payment Reminders</div>
+                                    <div class="toggle-description">Get reminded about upcoming payment due dates</div>
+                                </div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="settingsPaymentReminders" checked onchange="saveSettings()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Plans Tab -->
+                <div class="tab-content" id="tab-settings-plans">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Subscription Plans</h3>
+                            <button class="btn btn-sm btn-primary" onclick="openAddPlanModal()">+ Add Plan</button>
+                        </div>
+                        <div class="card-body no-padding">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Plan Name</th>
+                                        <th>Monthly Price</th>
+                                        <th>Call Limit</th>
+                                        <th>Features</th>
+                                        <th>Active Clients</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="plansTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Lead Generation Pricing</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Default Lead Gen Fee</label>
+                                    <input type="number" class="form-input" id="settingsDefaultLeadGenFee" value="250" step="25" min="0" onchange="saveSettings()">
+                                    <div class="form-hint">Default monthly fee for lead gen service</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Default Leads Target</label>
+                                    <input type="number" class="form-input" id="settingsDefaultLeadsTarget" value="50" step="5" min="0" onchange="saveSettings()">
+                                    <div class="form-hint">Default leads per month target</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Default Costs Tab -->
+                <div class="tab-content" id="tab-settings-costs">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Usage-Based Cost Rates</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Retell AI Cost per Minute</label>
+                                    <input type="number" class="form-input" id="settingsRetellRate" value="0.10" step="0.01" min="0" onchange="saveSettings()">
+                                    <div class="form-hint">Cost per minute of AI call time</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">OpenAI Cost per 1K Tokens</label>
+                                    <input type="number" class="form-input" id="settingsOpenAIRate" value="0.002" step="0.001" min="0" onchange="saveSettings()">
+                                    <div class="form-hint">Average cost per 1000 tokens</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Fixed Cost Categories</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="fixedCostCategories">
+                                <!-- Populated by JS -->
+                            </div>
+                            <button class="btn btn-secondary" style="margin-top: 16px;" onclick="addCostCategory()">+ Add Category</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Tab -->
+                <div class="tab-content" id="tab-settings-account">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Account Information</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Admin Name</label>
+                                    <input type="text" class="form-input" id="settingsAdminName" value="Admin" onchange="saveSettings()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Admin Email</label>
+                                    <input type="email" class="form-input" id="settingsAdminEmail" value="admin@prioai.ca" onchange="saveSettings()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Security</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" class="form-input" id="settingsCurrentPassword" style="max-width: 300px;">
+                            </div>
+                            <div class="form-row" style="max-width: 620px;">
+                                <div class="form-group">
+                                    <label class="form-label">New Password</label>
+                                    <input type="password" class="form-input" id="settingsNewPassword">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password" class="form-input" id="settingsConfirmPassword">
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                        </div>
+                    </div>
+
+                    <div class="card" style="border-color: var(--danger);">
+                        <div class="card-header">
+                            <h3 class="card-title" style="color: var(--danger);">Danger Zone</h3>
+                        </div>
+                        <div class="card-body">
+                            <p style="color: var(--text-secondary); margin-bottom: 16px;">These actions are irreversible. Please proceed with caution.</p>
+                            <div style="display: flex; gap: 12px;">
+                                <button class="btn btn-secondary" style="border-color: var(--warning); color: var(--warning);" onclick="exportAllData()">Export All Data</button>
+                                <button class="btn btn-secondary" style="border-color: var(--danger); color: var(--danger);" onclick="resetDashboard()">Reset Dashboard</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </main>
+    </div>
+
+    <!-- ===== COST MODAL ===== -->
+    <div class="modal-overlay" id="costModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="costModalTitle">Add Cost</h2>
+                <button class="modal-close" onclick="closeCostModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="costForm">
+                    <input type="hidden" id="costFormId">
+                    <input type="hidden" id="costFormType" value="fixed">
+                    <div class="form-group">
+                        <label class="form-label required">Category</label>
+                        <input type="text" class="form-input" id="costCategory" placeholder="e.g., Hosting, Software, etc." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-input" id="costDescription" placeholder="e.g., Vercel Pro Plan">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Amount (CAD)</label>
+                        <input type="number" class="form-input" id="costAmount" min="0" step="1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCostModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCost()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== REVENUE ENTRY MODAL ===== -->
+    <div class="modal-overlay" id="revenueModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Revenue Entry</h2>
+                <button class="modal-close" onclick="closeRevenueModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="revenueForm">
+                    <input type="hidden" id="revenueFormId">
+                    <div class="form-group">
+                        <label class="form-label required">Category</label>
+                        <select class="form-select" id="revenueCategory" required>
+                            <option value="Setup Fee">Setup Fee</option>
+                            <option value="Consulting">Consulting</option>
+                            <option value="Custom Development">Custom Development</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-input" id="revenueDescription" placeholder="e.g., Client onboarding fee">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Client</label>
+                        <select class="form-select" id="revenueClient">
+                            <option value="">No specific client</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Amount (CAD)</label>
+                        <input type="number" class="form-input" id="revenueAmount" min="0" step="1" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeRevenueModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveRevenue()">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== PLAN MODAL ===== -->
+    <div class="modal-overlay" id="planModal">
+        <div class="modal" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="planModalTitle">Add Plan</h2>
+                <button class="modal-close" onclick="closePlanModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="planForm">
+                    <input type="hidden" id="planFormId">
+                    <div class="form-group">
+                        <label class="form-label required">Plan Name</label>
+                        <input type="text" class="form-input" id="planName" placeholder="e.g., Professional" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Monthly Price (CAD)</label>
+                            <input type="number" class="form-input" id="planPrice" min="0" step="50" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Call Limit</label>
+                            <input type="number" class="form-input" id="planCallLimit" min="0" step="50" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Features (one per line)</label>
+                        <textarea class="form-textarea" id="planFeatures" placeholder="Priority support&#10;Custom branding&#10;API access"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closePlanModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="savePlan()">Save</button>
+            </div>
+        </div>
     </div>
 
     <!-- ===== LEAD MODAL (Add/Edit) ===== -->
@@ -2587,6 +3173,37 @@
                 supabase: 25,
                 other: 754
             },
+            costDetails: [
+                { id: 1, category: 'Retell AI', description: 'Voice AI usage', type: 'variable', amount: 892 },
+                { id: 2, category: 'OpenAI', description: 'GPT API usage', type: 'variable', amount: 156 },
+                { id: 3, category: 'Vercel', description: 'Hosting - Pro Plan', type: 'fixed', amount: 20 },
+                { id: 4, category: 'Supabase', description: 'Database - Pro Plan', type: 'fixed', amount: 25 },
+                { id: 5, category: 'Domain', description: 'prioai.ca renewal', type: 'fixed', amount: 15 },
+                { id: 6, category: 'Software', description: 'Various subscriptions', type: 'fixed', amount: 89 },
+                { id: 7, category: 'Marketing', description: 'Ad spend', type: 'variable', amount: 350 },
+                { id: 8, category: 'Tools', description: 'Development tools', type: 'fixed', amount: 50 }
+            ],
+            additionalRevenue: [
+                { id: 1, category: 'Setup Fee', description: 'New client onboarding', clientId: 2, amount: 500 }
+            ],
+            plans: [
+                { id: 1, name: 'Starter', price: 0, callLimit: 100, features: ['Basic AI agent', '100 calls/month', 'Email support'] },
+                { id: 2, name: 'Professional', price: 1500, callLimit: 500, features: ['Custom AI agent', '500 calls/month', 'Priority support', 'Analytics dashboard'] },
+                { id: 3, name: 'Enterprise', price: 2500, callLimit: 1000, features: ['Multiple AI agents', '1000 calls/month', '24/7 support', 'Custom integrations', 'Dedicated account manager'] }
+            ],
+            settings: {
+                currency: 'CAD',
+                exchangeRate: 1.39,
+                businessName: 'Prio AI',
+                fiscalYearStart: 1,
+                usageAlerts: true,
+                newLeadAlerts: true,
+                paymentReminders: true,
+                defaultLeadGenFee: 250,
+                defaultLeadsTarget: 50,
+                retellRate: 0.10,
+                openaiRate: 0.002
+            },
             leads: [
                 {
                     id: 1,
@@ -3057,6 +3674,12 @@
                 updateClientsSection();
             } else if (sectionId === 'leads') {
                 updateLeadsSection();
+            } else if (sectionId === 'revenue') {
+                updateRevenueSection();
+            } else if (sectionId === 'costs') {
+                updateCostsSection();
+            } else if (sectionId === 'settings') {
+                updateSettingsSection();
             }
         }
 
@@ -3990,6 +4613,744 @@
                 showToast('Lead deleted successfully', 'success');
                 closeDeleteLeadConfirm();
                 updateLeadsSection();
+            }
+        }
+
+        // ===== REVENUE SECTION =====
+        let editRevenueId = null;
+
+        function updateRevenueSection() {
+            const activeClients = AppState.clients.filter(c => c.status === 'Active');
+
+            // Calculate revenue components
+            const subscriptionRevenue = activeClients.reduce((sum, c) => sum + c.monthlyRate, 0);
+            const leadGenRevenue = activeClients.filter(c => c.hasLeadGen).reduce((sum, c) => sum + c.leadGenCost, 0);
+            const setupFeeRevenue = AppState.additionalRevenue
+                .filter(r => r.category === 'Setup Fee')
+                .reduce((sum, r) => sum + r.amount, 0);
+            const totalRevenue = subscriptionRevenue + leadGenRevenue + AppState.additionalRevenue.reduce((sum, r) => sum + r.amount, 0);
+
+            // Update stats
+            document.getElementById('revenueTotalMTD').textContent = formatCurrency(totalRevenue);
+            document.getElementById('revenueSubscriptions').textContent = formatCurrency(subscriptionRevenue);
+            document.getElementById('revenueLeadGen').textContent = formatCurrency(leadGenRevenue);
+            document.getElementById('revenueSetupFees').textContent = formatCurrency(setupFeeRevenue);
+
+            // Render breakdown
+            renderRevenueBreakdown(subscriptionRevenue, leadGenRevenue);
+
+            // Render additional revenue list
+            renderAdditionalRevenueList();
+
+            // Render revenue by client table
+            renderRevenueByClientTable();
+        }
+
+        function renderRevenueBreakdown(subscriptionRevenue, leadGenRevenue) {
+            const activeClients = AppState.clients.filter(c => c.status === 'Active');
+            const otherRevenue = AppState.additionalRevenue.reduce((sum, r) => sum + r.amount, 0);
+            const totalRevenue = subscriptionRevenue + leadGenRevenue + otherRevenue;
+
+            const container = document.getElementById('revenueBreakdownDetail');
+            container.innerHTML = `
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Subscriptions (${activeClients.filter(c => c.monthlyRate > 0).length} clients)</span>
+                    <span class="breakdown-value success">${formatCurrency(subscriptionRevenue)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Lead Gen Services (${activeClients.filter(c => c.hasLeadGen).length} clients)</span>
+                    <span class="breakdown-value success">${formatCurrency(leadGenRevenue)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Additional Revenue (${AppState.additionalRevenue.length} entries)</span>
+                    <span class="breakdown-value success">${formatCurrency(otherRevenue)}</span>
+                </div>
+                <div class="breakdown-item breakdown-total">
+                    <span class="breakdown-label">Total Monthly Revenue</span>
+                    <span class="breakdown-value success">${formatCurrency(totalRevenue)}</span>
+                </div>
+            `;
+        }
+
+        function renderAdditionalRevenueList() {
+            const container = document.getElementById('additionalRevenueList');
+
+            if (AppState.additionalRevenue.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No additional revenue entries</p>';
+                return;
+            }
+
+            container.innerHTML = AppState.additionalRevenue.map(rev => {
+                const client = rev.clientId ? AppState.clients.find(c => c.id === rev.clientId) : null;
+                return `
+                    <div class="breakdown-item" style="flex-wrap: wrap;">
+                        <div style="flex: 1;">
+                            <span class="breakdown-label">${rev.category}</span>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">
+                                ${rev.description || 'No description'}
+                                ${client ? ` • ${client.organization}` : ''}
+                            </div>
+                        </div>
+                        <span class="breakdown-value success">${formatCurrency(rev.amount)}</span>
+                        <div style="width: 100%; display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px;">
+                            <button class="btn btn-sm btn-secondary" onclick="editRevenue(${rev.id})">Edit</button>
+                            <button class="btn btn-sm btn-secondary" style="color: var(--danger);" onclick="deleteRevenue(${rev.id})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRevenueByClientTable() {
+            const tbody = document.getElementById('revenueByClientTable');
+
+            tbody.innerHTML = AppState.clients.map(client => {
+                const clientAdditionalRev = AppState.additionalRevenue
+                    .filter(r => r.clientId === client.id)
+                    .reduce((sum, r) => sum + r.amount, 0);
+                const leadGenRev = client.hasLeadGen ? client.leadGenCost : 0;
+                const total = client.monthlyRate + leadGenRev + clientAdditionalRev;
+
+                return `
+                    <tr>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 8px; height: 8px; border-radius: 50%; background: ${client.color};"></div>
+                                <div>
+                                    <div style="font-weight: 500;">${client.organization}</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-muted);">${client.agentName}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${formatCurrency(client.monthlyRate)}</td>
+                        <td>${client.hasLeadGen ? formatCurrency(leadGenRev) : '<span style="color: var(--text-muted);">-</span>'}</td>
+                        <td>${clientAdditionalRev > 0 ? formatCurrency(clientAdditionalRev) : '<span style="color: var(--text-muted);">-</span>'}</td>
+                        <td style="font-weight: 600; color: var(--success);">${formatCurrency(total)}</td>
+                        <td><span class="status-badge ${client.status === 'Active' ? 'success' : 'warning'}">${client.status}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openAddRevenueModal() {
+            editRevenueId = null;
+            document.getElementById('revenueForm').reset();
+            document.getElementById('revenueFormId').value = '';
+
+            // Populate client dropdown
+            const clientSelect = document.getElementById('revenueClient');
+            clientSelect.innerHTML = '<option value="">No specific client</option>' +
+                AppState.clients.map(c => `<option value="${c.id}">${c.organization}</option>`).join('');
+
+            document.getElementById('revenueModal').classList.add('active');
+        }
+
+        function editRevenue(id) {
+            const revenue = AppState.additionalRevenue.find(r => r.id === id);
+            if (!revenue) return;
+
+            editRevenueId = id;
+            document.getElementById('revenueFormId').value = id;
+            document.getElementById('revenueCategory').value = revenue.category;
+            document.getElementById('revenueDescription').value = revenue.description || '';
+            document.getElementById('revenueAmount').value = revenue.amount;
+
+            // Populate client dropdown
+            const clientSelect = document.getElementById('revenueClient');
+            clientSelect.innerHTML = '<option value="">No specific client</option>' +
+                AppState.clients.map(c => `<option value="${c.id}">${c.organization}</option>`).join('');
+            clientSelect.value = revenue.clientId || '';
+
+            document.getElementById('revenueModal').classList.add('active');
+        }
+
+        function closeRevenueModal() {
+            document.getElementById('revenueModal').classList.remove('active');
+            editRevenueId = null;
+        }
+
+        function saveRevenue() {
+            const category = document.getElementById('revenueCategory').value;
+            const description = document.getElementById('revenueDescription').value;
+            const clientId = document.getElementById('revenueClient').value;
+            const amount = parseInt(document.getElementById('revenueAmount').value);
+
+            if (!category || !amount) {
+                showToast('Please fill in required fields', 'error');
+                return;
+            }
+
+            if (editRevenueId) {
+                // Update existing
+                const revenue = AppState.additionalRevenue.find(r => r.id === editRevenueId);
+                if (revenue) {
+                    revenue.category = category;
+                    revenue.description = description;
+                    revenue.clientId = clientId ? parseInt(clientId) : null;
+                    revenue.amount = amount;
+                    showToast('Revenue entry updated', 'success');
+                }
+            } else {
+                // Add new
+                const newId = Math.max(...AppState.additionalRevenue.map(r => r.id), 0) + 1;
+                AppState.additionalRevenue.push({
+                    id: newId,
+                    category,
+                    description,
+                    clientId: clientId ? parseInt(clientId) : null,
+                    amount
+                });
+                showToast('Revenue entry added', 'success');
+            }
+
+            closeRevenueModal();
+            updateRevenueSection();
+            updateDashboard();
+        }
+
+        function deleteRevenue(id) {
+            if (confirm('Are you sure you want to delete this revenue entry?')) {
+                AppState.additionalRevenue = AppState.additionalRevenue.filter(r => r.id !== id);
+                showToast('Revenue entry deleted', 'success');
+                updateRevenueSection();
+                updateDashboard();
+            }
+        }
+
+        // ===== COSTS SECTION =====
+        let editCostId = null;
+
+        function updateCostsSection() {
+            const fixedCosts = AppState.costDetails.filter(c => c.type === 'fixed');
+            const variableCosts = AppState.costDetails.filter(c => c.type === 'variable');
+            const totalFixed = fixedCosts.reduce((sum, c) => sum + c.amount, 0);
+            const totalVariable = variableCosts.reduce((sum, c) => sum + c.amount, 0);
+            const totalCosts = totalFixed + totalVariable;
+
+            // Calculate revenue for profit margin
+            const activeClients = AppState.clients.filter(c => c.status === 'Active');
+            const totalRevenue = activeClients.reduce((sum, c) => sum + c.monthlyRate + (c.hasLeadGen ? c.leadGenCost : 0), 0) +
+                AppState.additionalRevenue.reduce((sum, r) => sum + r.amount, 0);
+            const profitMargin = totalRevenue > 0 ? ((totalRevenue - totalCosts) / totalRevenue * 100).toFixed(1) : 0;
+
+            // Update stats
+            document.getElementById('costsTotalMTD').textContent = formatCurrency(totalCosts);
+            document.getElementById('costsFixed').textContent = formatCurrency(totalFixed);
+            document.getElementById('costsVariable').textContent = formatCurrency(totalVariable);
+            document.getElementById('costsProfitMargin').textContent = profitMargin + '%';
+
+            // Render lists
+            renderFixedCostsList(fixedCosts);
+            renderVariableCostsList(variableCosts);
+            renderAllCostsTable();
+            renderProfitabilitySummary(totalRevenue, totalCosts);
+        }
+
+        function renderFixedCostsList(costs) {
+            const container = document.getElementById('fixedCostsList');
+
+            if (costs.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No fixed costs</p>';
+                return;
+            }
+
+            const total = costs.reduce((sum, c) => sum + c.amount, 0);
+            container.innerHTML = costs.map(cost => `
+                <div class="breakdown-item">
+                    <div>
+                        <span class="breakdown-label">${cost.category}</span>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${cost.description || 'No description'}</div>
+                    </div>
+                    <span class="breakdown-value">${formatCurrency(cost.amount)}</span>
+                </div>
+            `).join('') + `
+                <div class="breakdown-item breakdown-total">
+                    <span class="breakdown-label">Total Fixed Costs</span>
+                    <span class="breakdown-value">${formatCurrency(total)}</span>
+                </div>
+            `;
+        }
+
+        function renderVariableCostsList(costs) {
+            const container = document.getElementById('variableCostsList');
+
+            if (costs.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">No variable costs</p>';
+                return;
+            }
+
+            const total = costs.reduce((sum, c) => sum + c.amount, 0);
+            container.innerHTML = costs.map(cost => `
+                <div class="breakdown-item">
+                    <div>
+                        <span class="breakdown-label">${cost.category}</span>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">${cost.description || 'No description'}</div>
+                    </div>
+                    <span class="breakdown-value">${formatCurrency(cost.amount)}</span>
+                </div>
+            `).join('') + `
+                <div class="breakdown-item breakdown-total">
+                    <span class="breakdown-label">Total Variable Costs</span>
+                    <span class="breakdown-value">${formatCurrency(total)}</span>
+                </div>
+            `;
+        }
+
+        function renderAllCostsTable() {
+            const tbody = document.getElementById('allCostsTable');
+
+            tbody.innerHTML = AppState.costDetails.map(cost => `
+                <tr>
+                    <td style="font-weight: 500;">${cost.category}</td>
+                    <td style="color: var(--text-secondary);">${cost.description || '-'}</td>
+                    <td>
+                        <span class="status-badge ${cost.type === 'fixed' ? 'warning' : 'danger'}">
+                            ${cost.type === 'fixed' ? 'Fixed' : 'Variable'}
+                        </span>
+                    </td>
+                    <td style="font-weight: 500;">${formatCurrency(cost.amount)}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="action-btn" onclick="editCost(${cost.id})" title="Edit">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn danger" onclick="deleteCost(${cost.id})" title="Delete">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderProfitabilitySummary(totalRevenue, totalCosts) {
+            const netProfit = totalRevenue - totalCosts;
+            const profitMargin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : 0;
+
+            const container = document.getElementById('profitabilitySummary');
+            container.innerHTML = `
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Total Revenue</span>
+                    <span class="breakdown-value success">${formatCurrency(totalRevenue)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Total Costs</span>
+                    <span class="breakdown-value danger">${formatCurrency(totalCosts)}</span>
+                </div>
+                <div class="breakdown-item breakdown-total">
+                    <span class="breakdown-label">Net Profit</span>
+                    <span class="breakdown-value ${netProfit >= 0 ? 'success' : 'danger'}">${formatCurrency(netProfit)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Profit Margin</span>
+                    <span class="breakdown-value ${parseFloat(profitMargin) >= 20 ? 'success' : parseFloat(profitMargin) >= 0 ? 'warning' : 'danger'}">${profitMargin}%</span>
+                </div>
+            `;
+        }
+
+        function openAddCostModal(type = 'fixed') {
+            editCostId = null;
+            document.getElementById('costForm').reset();
+            document.getElementById('costFormId').value = '';
+            document.getElementById('costFormType').value = type;
+            document.getElementById('costModalTitle').textContent = `Add ${type === 'fixed' ? 'Fixed' : 'Variable'} Cost`;
+            document.getElementById('costModal').classList.add('active');
+        }
+
+        function editCost(id) {
+            const cost = AppState.costDetails.find(c => c.id === id);
+            if (!cost) return;
+
+            editCostId = id;
+            document.getElementById('costFormId').value = id;
+            document.getElementById('costFormType').value = cost.type;
+            document.getElementById('costCategory').value = cost.category;
+            document.getElementById('costDescription').value = cost.description || '';
+            document.getElementById('costAmount').value = cost.amount;
+            document.getElementById('costModalTitle').textContent = 'Edit Cost';
+            document.getElementById('costModal').classList.add('active');
+        }
+
+        function closeCostModal() {
+            document.getElementById('costModal').classList.remove('active');
+            editCostId = null;
+        }
+
+        function saveCost() {
+            const category = document.getElementById('costCategory').value;
+            const description = document.getElementById('costDescription').value;
+            const amount = parseInt(document.getElementById('costAmount').value);
+            const type = document.getElementById('costFormType').value;
+
+            if (!category || !amount) {
+                showToast('Please fill in required fields', 'error');
+                return;
+            }
+
+            if (editCostId) {
+                // Update existing
+                const cost = AppState.costDetails.find(c => c.id === editCostId);
+                if (cost) {
+                    cost.category = category;
+                    cost.description = description;
+                    cost.amount = amount;
+                    cost.type = type;
+
+                    // Update legacy costs object
+                    updateLegacyCosts();
+                    showToast('Cost updated', 'success');
+                }
+            } else {
+                // Add new
+                const newId = Math.max(...AppState.costDetails.map(c => c.id), 0) + 1;
+                AppState.costDetails.push({
+                    id: newId,
+                    category,
+                    description,
+                    type,
+                    amount
+                });
+
+                // Update legacy costs object
+                updateLegacyCosts();
+                showToast('Cost added', 'success');
+            }
+
+            closeCostModal();
+            updateCostsSection();
+            updateDashboard();
+        }
+
+        function updateLegacyCosts() {
+            // Update the legacy costs object for backwards compatibility
+            AppState.costs = {
+                retell: AppState.costDetails.find(c => c.category === 'Retell AI')?.amount || 0,
+                openai: AppState.costDetails.find(c => c.category === 'OpenAI')?.amount || 0,
+                vercel: AppState.costDetails.find(c => c.category === 'Vercel')?.amount || 0,
+                supabase: AppState.costDetails.find(c => c.category === 'Supabase')?.amount || 0,
+                other: AppState.costDetails
+                    .filter(c => !['Retell AI', 'OpenAI', 'Vercel', 'Supabase'].includes(c.category))
+                    .reduce((sum, c) => sum + c.amount, 0)
+            };
+        }
+
+        function deleteCost(id) {
+            if (confirm('Are you sure you want to delete this cost?')) {
+                AppState.costDetails = AppState.costDetails.filter(c => c.id !== id);
+                updateLegacyCosts();
+                showToast('Cost deleted', 'success');
+                updateCostsSection();
+                updateDashboard();
+            }
+        }
+
+        // ===== SETTINGS SECTION =====
+        function switchSettingsTab(tabId) {
+            document.querySelectorAll('#section-settings .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#section-settings .tab-content').forEach(c => c.classList.remove('active'));
+
+            document.querySelector(`#section-settings .tab[data-tab="${tabId}"]`)?.classList.add('active');
+            document.getElementById(`tab-${tabId}`)?.classList.add('active');
+        }
+
+        function updateSettingsSection() {
+            // Populate settings fields with current values
+            document.getElementById('settingsDefaultCurrency').value = AppState.settings.currency;
+            document.getElementById('settingsExchangeRate').value = AppState.settings.exchangeRate;
+            document.getElementById('settingsBusinessName').value = AppState.settings.businessName;
+            document.getElementById('settingsFiscalYear').value = AppState.settings.fiscalYearStart;
+            document.getElementById('settingsUsageAlerts').checked = AppState.settings.usageAlerts;
+            document.getElementById('settingsNewLeadAlerts').checked = AppState.settings.newLeadAlerts;
+            document.getElementById('settingsPaymentReminders').checked = AppState.settings.paymentReminders;
+            document.getElementById('settingsDefaultLeadGenFee').value = AppState.settings.defaultLeadGenFee;
+            document.getElementById('settingsDefaultLeadsTarget').value = AppState.settings.defaultLeadsTarget;
+            document.getElementById('settingsRetellRate').value = AppState.settings.retellRate;
+            document.getElementById('settingsOpenAIRate').value = AppState.settings.openaiRate;
+
+            // Populate admin info
+            if (AppState.currentUser) {
+                document.getElementById('settingsAdminName').value = AppState.currentUser.name;
+                document.getElementById('settingsAdminEmail').value = AppState.currentUser.email;
+            }
+
+            // Render plans table
+            renderPlansTable();
+
+            // Render cost categories
+            renderCostCategories();
+        }
+
+        function saveSettings() {
+            AppState.settings.currency = document.getElementById('settingsDefaultCurrency').value;
+            AppState.settings.exchangeRate = parseFloat(document.getElementById('settingsExchangeRate').value);
+            AppState.settings.businessName = document.getElementById('settingsBusinessName').value;
+            AppState.settings.fiscalYearStart = parseInt(document.getElementById('settingsFiscalYear').value);
+            AppState.settings.usageAlerts = document.getElementById('settingsUsageAlerts').checked;
+            AppState.settings.newLeadAlerts = document.getElementById('settingsNewLeadAlerts').checked;
+            AppState.settings.paymentReminders = document.getElementById('settingsPaymentReminders').checked;
+            AppState.settings.defaultLeadGenFee = parseInt(document.getElementById('settingsDefaultLeadGenFee').value);
+            AppState.settings.defaultLeadsTarget = parseInt(document.getElementById('settingsDefaultLeadsTarget').value);
+            AppState.settings.retellRate = parseFloat(document.getElementById('settingsRetellRate').value);
+            AppState.settings.openaiRate = parseFloat(document.getElementById('settingsOpenAIRate').value);
+
+            // Update global exchange rate
+            AppState.fxRate = AppState.settings.exchangeRate;
+
+            showToast('Settings saved', 'success');
+        }
+
+        function renderPlansTable() {
+            const tbody = document.getElementById('plansTable');
+
+            tbody.innerHTML = AppState.plans.map(plan => {
+                const clientsOnPlan = AppState.clients.filter(c => c.plan === plan.name).length;
+                return `
+                    <tr>
+                        <td style="font-weight: 500;">${plan.name}</td>
+                        <td>${plan.price === 0 ? '<span style="color: var(--text-muted);">Free</span>' : formatCurrency(plan.price)}</td>
+                        <td>${plan.callLimit.toLocaleString()} calls</td>
+                        <td>
+                            <div style="max-width: 200px; font-size: 0.8rem; color: var(--text-secondary);">
+                                ${plan.features.slice(0, 2).join(', ')}${plan.features.length > 2 ? '...' : ''}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="status-badge ${clientsOnPlan > 0 ? 'success' : ''}">${clientsOnPlan}</span>
+                        </td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="action-btn" onclick="editPlan(${plan.id})" title="Edit">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                </button>
+                                <button class="action-btn danger" onclick="deletePlan(${plan.id})" title="Delete">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        let editPlanId = null;
+
+        function openAddPlanModal() {
+            editPlanId = null;
+            document.getElementById('planForm').reset();
+            document.getElementById('planFormId').value = '';
+            document.getElementById('planModalTitle').textContent = 'Add Plan';
+            document.getElementById('planModal').classList.add('active');
+        }
+
+        function editPlan(id) {
+            const plan = AppState.plans.find(p => p.id === id);
+            if (!plan) return;
+
+            editPlanId = id;
+            document.getElementById('planFormId').value = id;
+            document.getElementById('planName').value = plan.name;
+            document.getElementById('planPrice').value = plan.price;
+            document.getElementById('planCallLimit').value = plan.callLimit;
+            document.getElementById('planFeatures').value = plan.features.join('\n');
+            document.getElementById('planModalTitle').textContent = 'Edit Plan';
+            document.getElementById('planModal').classList.add('active');
+        }
+
+        function closePlanModal() {
+            document.getElementById('planModal').classList.remove('active');
+            editPlanId = null;
+        }
+
+        function savePlan() {
+            const name = document.getElementById('planName').value;
+            const price = parseInt(document.getElementById('planPrice').value) || 0;
+            const callLimit = parseInt(document.getElementById('planCallLimit').value) || 0;
+            const featuresText = document.getElementById('planFeatures').value;
+            const features = featuresText.split('\n').map(f => f.trim()).filter(f => f);
+
+            if (!name) {
+                showToast('Please enter a plan name', 'error');
+                return;
+            }
+
+            if (editPlanId) {
+                // Update existing
+                const plan = AppState.plans.find(p => p.id === editPlanId);
+                if (plan) {
+                    const oldName = plan.name;
+                    plan.name = name;
+                    plan.price = price;
+                    plan.callLimit = callLimit;
+                    plan.features = features;
+
+                    // Update clients with this plan
+                    if (oldName !== name) {
+                        AppState.clients.forEach(c => {
+                            if (c.plan === oldName) c.plan = name;
+                        });
+                    }
+
+                    showToast('Plan updated', 'success');
+                }
+            } else {
+                // Add new
+                const newId = Math.max(...AppState.plans.map(p => p.id), 0) + 1;
+                AppState.plans.push({
+                    id: newId,
+                    name,
+                    price,
+                    callLimit,
+                    features
+                });
+                showToast('Plan added', 'success');
+            }
+
+            closePlanModal();
+            renderPlansTable();
+        }
+
+        function deletePlan(id) {
+            const plan = AppState.plans.find(p => p.id === id);
+            if (!plan) return;
+
+            const clientsOnPlan = AppState.clients.filter(c => c.plan === plan.name).length;
+            if (clientsOnPlan > 0) {
+                showToast(`Cannot delete: ${clientsOnPlan} client(s) are on this plan`, 'error');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete the "${plan.name}" plan?`)) {
+                AppState.plans = AppState.plans.filter(p => p.id !== id);
+                showToast('Plan deleted', 'success');
+                renderPlansTable();
+            }
+        }
+
+        function renderCostCategories() {
+            const container = document.getElementById('fixedCostCategories');
+            const categories = [...new Set(AppState.costDetails.filter(c => c.type === 'fixed').map(c => c.category))];
+
+            if (categories.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No fixed cost categories defined</p>';
+                return;
+            }
+
+            container.innerHTML = categories.map(cat => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 8px;">
+                    <span>${cat}</span>
+                    <button class="btn btn-sm btn-secondary" style="color: var(--danger);" onclick="removeCostCategory('${cat}')">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function addCostCategory() {
+            const category = prompt('Enter new cost category name:');
+            if (category && category.trim()) {
+                showToast(`Category "${category.trim()}" added. Create a cost in Costs section to use it.`, 'success');
+            }
+        }
+
+        function removeCostCategory(category) {
+            const costsInCategory = AppState.costDetails.filter(c => c.category === category).length;
+            if (costsInCategory > 0) {
+                showToast(`Cannot remove: ${costsInCategory} cost(s) use this category`, 'error');
+                return;
+            }
+            showToast('Category removed', 'success');
+            renderCostCategories();
+        }
+
+        function changePassword() {
+            const currentPassword = document.getElementById('settingsCurrentPassword').value;
+            const newPassword = document.getElementById('settingsNewPassword').value;
+            const confirmPassword = document.getElementById('settingsConfirmPassword').value;
+
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showToast('Please fill in all password fields', 'error');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showToast('New passwords do not match', 'error');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            // Check current password
+            const user = ADMIN_USERS[AppState.currentUser.email];
+            if (user && user.password !== currentPassword) {
+                showToast('Current password is incorrect', 'error');
+                return;
+            }
+
+            // Update password
+            if (user) {
+                user.password = newPassword;
+            }
+
+            // Clear form
+            document.getElementById('settingsCurrentPassword').value = '';
+            document.getElementById('settingsNewPassword').value = '';
+            document.getElementById('settingsConfirmPassword').value = '';
+
+            showToast('Password changed successfully', 'success');
+        }
+
+        function exportAllData() {
+            const data = {
+                exportDate: new Date().toISOString(),
+                settings: AppState.settings,
+                clients: AppState.clients,
+                leads: AppState.leads,
+                costs: AppState.costDetails,
+                additionalRevenue: AppState.additionalRevenue,
+                plans: AppState.plans
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prioai-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            showToast('Data exported successfully', 'success');
+        }
+
+        function resetDashboard() {
+            if (confirm('Are you sure you want to reset ALL dashboard data? This cannot be undone!')) {
+                if (confirm('This will delete all clients, leads, costs, and settings. Type "RESET" to confirm.')) {
+                    const confirmText = prompt('Type RESET to confirm:');
+                    if (confirmText === 'RESET') {
+                        // Reset to minimal state
+                        AppState.clients = [];
+                        AppState.leads = [];
+                        AppState.costDetails = [];
+                        AppState.additionalRevenue = [];
+                        AppState.costs = { retell: 0, openai: 0, vercel: 0, supabase: 0, other: 0 };
+
+                        showToast('Dashboard has been reset', 'success');
+                        updateDashboard();
+                        switchSection('overview');
+                    } else {
+                        showToast('Reset cancelled', 'info');
+                    }
+                }
             }
         }
 
