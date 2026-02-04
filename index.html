@@ -1283,6 +1283,122 @@
             }
         };
 
+        // ===== AIRTABLE CONFIG =====
+        const AIRTABLE_CONFIG = {
+            baseId: 'appXXXXXXXXXXXXXX', // Replace with your actual base ID
+            tables: {
+                clients: 'Clients',
+                calls: 'Calls',
+                leads: 'Leads',
+                costs: 'Costs',
+                revenue: 'Revenue',
+                settings: 'Settings'
+            }
+        };
+
+        // ===== AIRTABLE HELPER =====
+        /**
+         * Fetch data from Airtable via secure proxy
+         * @param {string} table - Table name from AIRTABLE_CONFIG.tables
+         * @param {Object} options - Fetch options
+         * @param {string} options.method - HTTP method (GET, POST, PATCH, DELETE)
+         * @param {string} options.recordId - Record ID for single record operations
+         * @param {Object} options.body - Request body for POST/PATCH
+         * @param {Object} options.params - Query parameters (filterByFormula, sort, etc.)
+         * @returns {Promise<Object>} - Airtable response data
+         */
+        async function fetchAirtable(table, options = {}) {
+            const { method = 'GET', recordId = null, body = null, params = {} } = options;
+
+            // Build URL
+            let url = `/api/airtable/${AIRTABLE_CONFIG.baseId}/${table}`;
+            if (recordId) {
+                url += `/${recordId}`;
+            }
+
+            // Add query parameters
+            const queryParams = new URLSearchParams();
+            for (const [key, value] of Object.entries(params)) {
+                if (Array.isArray(value)) {
+                    value.forEach(v => queryParams.append(key, v));
+                } else {
+                    queryParams.append(key, value);
+                }
+            }
+            if (queryParams.toString()) {
+                url += `?${queryParams.toString()}`;
+            }
+
+            // Prepare fetch options
+            const fetchOptions = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            if (body && ['POST', 'PATCH', 'PUT'].includes(method)) {
+                fetchOptions.body = JSON.stringify(body);
+            }
+
+            try {
+                const response = await fetch(url, fetchOptions);
+
+                // Handle rate limiting
+                if (response.status === 429) {
+                    const retryAfter = response.headers.get('Retry-After') || 60;
+                    throw new Error(`Rate limited. Retry after ${retryAfter} seconds.`);
+                }
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || `HTTP ${response.status}`);
+                }
+
+                return data;
+            } catch (error) {
+                console.error('Airtable fetch error:', error);
+                throw error;
+            }
+        }
+
+        // Convenience methods for common operations
+        const Airtable = {
+            // Get all records from a table
+            async getRecords(table, params = {}) {
+                return fetchAirtable(table, { params });
+            },
+
+            // Get a single record by ID
+            async getRecord(table, recordId) {
+                return fetchAirtable(table, { recordId });
+            },
+
+            // Create new record(s)
+            async createRecords(table, records) {
+                const body = Array.isArray(records)
+                    ? { records: records.map(r => ({ fields: r })) }
+                    : { records: [{ fields: records }] };
+                return fetchAirtable(table, { method: 'POST', body });
+            },
+
+            // Update record(s)
+            async updateRecords(table, records) {
+                const body = Array.isArray(records)
+                    ? { records }
+                    : { records: [records] };
+                return fetchAirtable(table, { method: 'PATCH', body });
+            },
+
+            // Delete record(s)
+            async deleteRecords(table, recordIds) {
+                const ids = Array.isArray(recordIds) ? recordIds : [recordIds];
+                const params = { 'records[]': ids };
+                return fetchAirtable(table, { method: 'DELETE', params });
+            }
+        };
+
         // ===== AUTH =====
         const ADMIN_USERS = {
             'admin@prioai.ca': { password: 'admin123', name: 'Admin', role: 'Owner' }
