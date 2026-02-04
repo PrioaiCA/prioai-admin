@@ -870,6 +870,581 @@
             cursor: pointer;
             color: var(--text-primary);
         }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 700px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: modalIn 0.2s ease;
+        }
+
+        .modal.large {
+            max-width: 900px;
+        }
+
+        @keyframes modalIn {
+            from {
+                transform: scale(0.95);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-close {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover {
+            background: var(--danger-muted);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.15s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-muted);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-select {
+            cursor: pointer;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .form-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        .form-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 24px 0;
+        }
+
+        .form-section-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* ===== TOGGLE SWITCH ===== */
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toggle-description {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            transition: all 0.2s;
+        }
+
+        .toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .toggle input:checked + .toggle-slider {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .toggle input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+            background: white;
+        }
+
+        /* ===== TABS ===== */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-tertiary);
+            padding: 4px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== FILTERS ===== */
+        .filters-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-select {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            min-width: 150px;
+        }
+
+        .search-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 16px;
+            padding-left: 40px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            min-width: 250px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 14px center;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .filters-bar .btn {
+            margin-left: auto;
+        }
+
+        /* ===== CLIENT DETAIL VIEW ===== */
+        .client-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .client-header-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .client-header-info {
+            flex: 1;
+        }
+
+        .client-header-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .client-header-org {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .client-header-meta {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .client-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .client-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        /* ===== PROGRESS BAR ===== */
+        .progress-bar {
+            height: 8px;
+            background: var(--bg-elevated);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-fill.success { background: var(--success); }
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.danger { background: var(--danger); }
+        .progress-fill.accent { background: var(--accent); }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-btn.danger {
+            background: var(--danger-muted);
+            color: var(--danger);
+        }
+
+        .action-btn.danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .action-btn.success {
+            background: var(--success-muted);
+            color: var(--success);
+        }
+
+        .action-btn.success:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 24px;
+            color: var(--text-muted);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        /* ===== INLINE EDIT ===== */
+        .inline-edit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .inline-edit-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 100px;
+        }
+
+        .inline-edit-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* ===== CONFIRM DIALOG ===== */
+        .confirm-dialog {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .confirm-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-icon.danger {
+            background: var(--danger-muted);
+            color: var(--danger);
+        }
+
+        .confirm-icon.warning {
+            background: var(--warning-muted);
+            color: var(--warning);
+        }
+
+        .confirm-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .confirm-message {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        /* ===== QUICK STATS ROW ===== */
+        .quick-stats {
+            display: flex;
+            gap: 24px;
+            padding: 16px 20px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .quick-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .quick-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ===== COLOR PICKER ===== */
+        .color-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: white;
+            box-shadow: 0 0 0 2px var(--accent);
+        }
     </style>
 </head>
 <body>
@@ -919,7 +1494,7 @@
 
                 <div class="nav-section">
                     <div class="nav-section-title">Management</div>
-                    <button class="nav-item disabled" data-section="clients">
+                    <button class="nav-item" data-section="clients">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
                             <circle cx="9" cy="7" r="4"/>
@@ -927,7 +1502,6 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                         </svg>
                         Clients
-                        <span class="coming-soon">Soon</span>
                     </button>
                     <button class="nav-item disabled" data-section="leads">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1194,7 +1768,355 @@
                 </div>
             </section>
 
+            <!-- ===== CLIENTS SECTION ===== -->
+            <section class="admin-section" id="section-clients">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Client Management</h1>
+                        <p class="page-subtitle">Manage all clients, subscriptions, and services</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openAddClientModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Client
+                    </button>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Clients</div>
+                        <div class="stat-value" id="clientsTotalCount">0</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Active</div>
+                        <div class="stat-value success" id="clientsActiveCount">0</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Paused</div>
+                        <div class="stat-value warning" id="clientsPausedCount">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total MRR</div>
+                        <div class="stat-value" id="clientsTotalMRR">$0</div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <input type="text" class="search-input" id="clientSearch" placeholder="Search clients..." oninput="filterClients()">
+                    <select class="filter-select" id="clientStatusFilter" onchange="filterClients()">
+                        <option value="">All Status</option>
+                        <option value="Active">Active</option>
+                        <option value="Paused">Paused</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                    <select class="filter-select" id="clientPlanFilter" onchange="filterClients()">
+                        <option value="">All Plans</option>
+                        <option value="Starter">Starter</option>
+                        <option value="Professional">Professional</option>
+                        <option value="Enterprise">Enterprise</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                    <select class="filter-select" id="clientLeadGenFilter" onchange="filterClients()">
+                        <option value="">Lead Gen: All</option>
+                        <option value="true">Has Lead Gen</option>
+                        <option value="false">No Lead Gen</option>
+                    </select>
+                </div>
+
+                <!-- Clients Table -->
+                <div class="card">
+                    <div class="card-body no-padding">
+                        <table class="data-table" id="clientsManagementTable">
+                            <thead>
+                                <tr>
+                                    <th>Client</th>
+                                    <th>Plan & Pricing</th>
+                                    <th>Lead Generation</th>
+                                    <th>Usage</th>
+                                    <th>Performance</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clientsManagementBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
         </main>
+    </div>
+
+    <!-- ===== CLIENT MODAL (Add/Edit) ===== -->
+    <div class="modal-overlay" id="clientModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h2 class="modal-title" id="clientModalTitle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                    </svg>
+                    Add New Client
+                </h2>
+                <button class="modal-close" onclick="closeClientModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="clientForm">
+                    <input type="hidden" id="clientFormId">
+
+                    <!-- Basic Info -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        Basic Information
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Agent Name</label>
+                            <input type="text" class="form-input" id="clientAgentName" placeholder="e.g., Dental Assistant AI" required>
+                            <div class="form-hint">The name of the AI agent</div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Contact Name</label>
+                            <input type="text" class="form-input" id="clientContactName" placeholder="e.g., John Smith" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Organization</label>
+                            <input type="text" class="form-input" id="clientOrganization" placeholder="e.g., Smile Dental Clinic" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Email</label>
+                            <input type="email" class="form-input" id="clientEmail" placeholder="e.g., contact@company.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="clientPhone" placeholder="e.g., (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Industry</label>
+                            <select class="form-select" id="clientIndustry">
+                                <option value="">Select industry...</option>
+                                <option value="Dental">Dental</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Legal">Legal</option>
+                                <option value="HVAC">HVAC</option>
+                                <option value="Roofing">Roofing</option>
+                                <option value="Plumbing">Plumbing</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Subscription -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Subscription & Pricing
+                    </div>
+
+                    <div class="form-row-3">
+                        <div class="form-group">
+                            <label class="form-label required">Plan</label>
+                            <select class="form-select" id="clientPlan" onchange="updatePlanDefaults()" required>
+                                <option value="Starter">Starter (Free)</option>
+                                <option value="Professional">Professional</option>
+                                <option value="Enterprise">Enterprise</option>
+                                <option value="Custom">Custom</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Monthly Rate (CAD)</label>
+                            <input type="number" class="form-input" id="clientMonthlyRate" min="0" step="50" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label required">Call Limit</label>
+                            <input type="number" class="form-input" id="clientCallLimit" min="0" step="50" value="100" required>
+                            <div class="form-hint">Calls per month</div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Billing Start Date</label>
+                            <input type="date" class="form-input" id="clientBillingStart">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" id="clientPaymentMethod">
+                                <option value="Stripe">Stripe</option>
+                                <option value="Invoice">Invoice</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Lead Generation Service -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Lead Generation Service
+                    </div>
+
+                    <div class="toggle-wrapper" style="margin-bottom: 16px;">
+                        <div>
+                            <div class="toggle-label">Enable Lead Generation</div>
+                            <div class="toggle-description">Provide leads to this client for an additional monthly fee</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="clientHasLeadGen" onchange="toggleLeadGenFields()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <div id="leadGenFields" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Lead Gen Monthly Cost (CAD)</label>
+                                <input type="number" class="form-input" id="clientLeadGenCost" min="0" step="25" value="0">
+                                <div class="form-hint">Additional monthly charge for lead generation</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Leads Per Month Target</label>
+                                <input type="number" class="form-input" id="clientLeadsTarget" min="0" step="5" value="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Status & Settings -->
+                    <div class="form-section-title">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Status & Display
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label required">Status</label>
+                            <select class="form-select" id="clientStatus" required>
+                                <option value="Active">Active</option>
+                                <option value="Paused">Paused</option>
+                                <option value="Cancelled">Cancelled</option>
+                                <option value="Onboarding">Onboarding</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Avatar Color</label>
+                            <div class="color-options" id="colorOptions">
+                                <div class="color-option selected" data-color="#3b82f6" style="background: #3b82f6;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#8b5cf6" style="background: #8b5cf6;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#22c55e" style="background: #22c55e;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#f59e0b" style="background: #f59e0b;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#ef4444" style="background: #ef4444;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#ec4899" style="background: #ec4899;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#06b6d4" style="background: #06b6d4;" onclick="selectColor(this)"></div>
+                                <div class="color-option" data-color="#84cc16" style="background: #84cc16;" onclick="selectColor(this)"></div>
+                            </div>
+                            <input type="hidden" id="clientColor" value="#3b82f6">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-textarea" id="clientNotes" placeholder="Internal notes about this client..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeClientModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveClient()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                    </svg>
+                    Save Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CLIENT VIEW MODAL ===== -->
+    <div class="modal-overlay" id="clientViewModal">
+        <div class="modal large">
+            <div class="modal-header">
+                <h2 class="modal-title" id="viewClientTitle">Client Details</h2>
+                <button class="modal-close" onclick="closeClientViewModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="clientViewContent">
+                <!-- Populated by JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeClientViewModal()">Close</button>
+                <button class="btn btn-primary" id="viewClientEditBtn" onclick="editFromView()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit Client
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DELETE CONFIRM MODAL ===== -->
+    <div class="modal-overlay" id="deleteConfirmModal">
+        <div class="modal" style="max-width: 450px;">
+            <div class="modal-body">
+                <div class="confirm-dialog">
+                    <div class="confirm-icon danger">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            <line x1="10" y1="11" x2="10" y2="17"/>
+                            <line x1="14" y1="11" x2="14" y2="17"/>
+                        </svg>
+                    </div>
+                    <h3 class="confirm-title">Delete Client?</h3>
+                    <p class="confirm-message" id="deleteConfirmMessage">Are you sure you want to delete this client? This action cannot be undone.</p>
+                    <div class="confirm-actions">
+                        <button class="btn btn-secondary" onclick="closeDeleteConfirm()">Cancel</button>
+                        <button class="btn btn-primary" style="background: var(--danger);" onclick="confirmDeleteClient()">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== TOAST NOTIFICATION ===== -->
@@ -1599,13 +2521,492 @@
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        // ===== PLACEHOLDER FUNCTIONS =====
-        function viewClient(id) {
-            showToast('Client details view coming soon', 'success');
+        // ===== NAVIGATION =====
+        function switchSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            // Show selected section
+            const section = document.getElementById('section-' + sectionId);
+            if (section) {
+                section.classList.add('active');
+            }
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            const navItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+            if (navItem) {
+                navItem.classList.add('active');
+            }
+            // Trigger section-specific updates
+            if (sectionId === 'clients') {
+                updateClientsSection();
+            }
+        }
+
+        // ===== CLIENTS SECTION =====
+        let currentViewClientId = null;
+        let deleteClientId = null;
+
+        function updateClientsSection() {
+            // Update stats
+            const total = AppState.clients.length;
+            const active = AppState.clients.filter(c => c.status === 'Active').length;
+            const paused = AppState.clients.filter(c => c.status === 'Paused').length;
+            const mrr = AppState.clients.filter(c => c.status === 'Active').reduce((sum, c) => sum + c.monthlyRate + (c.hasLeadGen ? c.leadGenCost : 0), 0);
+
+            document.getElementById('clientsTotalCount').textContent = total;
+            document.getElementById('clientsActiveCount').textContent = active;
+            document.getElementById('clientsPausedCount').textContent = paused;
+            document.getElementById('clientsTotalMRR').textContent = formatCurrency(mrr);
+
+            // Render clients table
+            renderClientsManagementTable();
+        }
+
+        function filterClients() {
+            renderClientsManagementTable();
+        }
+
+        function renderClientsManagementTable() {
+            const search = document.getElementById('clientSearch').value.toLowerCase();
+            const statusFilter = document.getElementById('clientStatusFilter').value;
+            const planFilter = document.getElementById('clientPlanFilter').value;
+            const leadGenFilter = document.getElementById('clientLeadGenFilter').value;
+
+            let filtered = AppState.clients.filter(client => {
+                const matchesSearch = !search ||
+                    client.agentName.toLowerCase().includes(search) ||
+                    client.organization.toLowerCase().includes(search) ||
+                    client.name.toLowerCase().includes(search) ||
+                    client.email.toLowerCase().includes(search);
+                const matchesStatus = !statusFilter || client.status === statusFilter;
+                const matchesPlan = !planFilter || client.plan === planFilter;
+                const matchesLeadGen = !leadGenFilter ||
+                    (leadGenFilter === 'true' && client.hasLeadGen) ||
+                    (leadGenFilter === 'false' && !client.hasLeadGen);
+
+                return matchesSearch && matchesStatus && matchesPlan && matchesLeadGen;
+            });
+
+            const tbody = document.getElementById('clientsManagementBody');
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                <div class="empty-state-title">No clients found</div>
+                                <p>Try adjusting your filters or add a new client</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(client => {
+                const usagePercent = (client.callsMTD / client.callLimit) * 100;
+                const usageClass = usagePercent >= 90 ? 'danger' : usagePercent >= 70 ? 'warning' : 'success';
+                const bookingRate = client.callsMTD > 0 ? ((client.bookings / client.callsMTD) * 100).toFixed(1) : 0;
+
+                return `
+                <tr>
+                    <td>
+                        <div class="client-info">
+                            <div class="client-avatar" style="background: ${client.color};">${client.name.charAt(0)}</div>
+                            <div>
+                                <div class="client-name">${client.agentName}</div>
+                                <div class="client-org">${client.organization}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">${client.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="plan-info">
+                            <span class="badge ${client.plan === 'Enterprise' ? 'badge-purple' : client.plan === 'Professional' ? 'badge-info' : 'badge-neutral'}">${client.plan}</span>
+                            <span class="plan-price" style="margin-top: 4px;">${formatCurrency(client.monthlyRate)}/mo</span>
+                        </div>
+                    </td>
+                    <td>
+                        ${client.hasLeadGen
+                            ? `<span class="badge badge-success">Active</span><div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">${formatCurrency(client.leadGenCost)}/mo</div>`
+                            : `<span class="badge badge-neutral">Not Active</span>`
+                        }
+                    </td>
+                    <td>
+                        <div style="min-width: 120px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-weight: 600;">${client.callsMTD.toLocaleString()}</span>
+                                <span style="color: var(--text-muted); font-size: 0.8rem;">/ ${client.callLimit.toLocaleString()}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill ${usageClass}" style="width: ${Math.min(usagePercent, 100)}%;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">${usagePercent.toFixed(0)}% used</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <div style="font-weight: 600; color: var(--success);">${client.bookings} bookings</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">${bookingRate}% rate</div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge ${client.status === 'Active' ? 'badge-success' : client.status === 'Paused' ? 'badge-warning' : client.status === 'Onboarding' ? 'badge-info' : 'badge-danger'}">
+                            ${client.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="action-btn view" onclick="viewClient(${client.id})" title="View Details">View</button>
+                            <button class="action-btn edit" onclick="editClient(${client.id})" title="Edit Client">Edit</button>
+                            ${client.status === 'Active'
+                                ? `<button class="action-btn danger" onclick="toggleClientStatus(${client.id}, 'Paused')" title="Pause Client">Pause</button>`
+                                : client.status === 'Paused'
+                                ? `<button class="action-btn success" onclick="toggleClientStatus(${client.id}, 'Active')" title="Activate Client">Activate</button>`
+                                : ''
+                            }
+                            <button class="action-btn danger" onclick="deleteClient(${client.id})" title="Delete Client">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        // ===== CLIENT MODAL FUNCTIONS =====
+        function openAddClientModal() {
+            document.getElementById('clientModalTitle').innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/>
+                </svg>
+                Add New Client
+            `;
+            resetClientForm();
+            document.getElementById('clientModal').classList.add('active');
         }
 
         function editClient(id) {
-            showToast('Client edit modal coming soon', 'success');
+            const client = AppState.clients.find(c => c.id === id);
+            if (!client) return;
+
+            document.getElementById('clientModalTitle').innerHTML = `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Edit Client
+            `;
+
+            // Populate form
+            document.getElementById('clientFormId').value = client.id;
+            document.getElementById('clientAgentName').value = client.agentName || '';
+            document.getElementById('clientContactName').value = client.name || '';
+            document.getElementById('clientOrganization').value = client.organization || '';
+            document.getElementById('clientEmail').value = client.email || '';
+            document.getElementById('clientPhone').value = client.phone || '';
+            document.getElementById('clientIndustry').value = client.industry || '';
+            document.getElementById('clientPlan').value = client.plan || 'Starter';
+            document.getElementById('clientMonthlyRate').value = client.monthlyRate || 0;
+            document.getElementById('clientCallLimit').value = client.callLimit || 100;
+            document.getElementById('clientBillingStart').value = client.billingStart || '';
+            document.getElementById('clientPaymentMethod').value = client.paymentMethod || 'Stripe';
+            document.getElementById('clientHasLeadGen').checked = client.hasLeadGen || false;
+            document.getElementById('clientLeadGenCost').value = client.leadGenCost || 0;
+            document.getElementById('clientLeadsTarget').value = client.leadsTarget || 50;
+            document.getElementById('clientStatus').value = client.status || 'Active';
+            document.getElementById('clientColor').value = client.color || '#3b82f6';
+            document.getElementById('clientNotes').value = client.notes || '';
+
+            // Update color selection
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.color === client.color);
+            });
+
+            // Toggle lead gen fields
+            toggleLeadGenFields();
+
+            document.getElementById('clientModal').classList.add('active');
+        }
+
+        function closeClientModal() {
+            document.getElementById('clientModal').classList.remove('active');
+            resetClientForm();
+        }
+
+        function resetClientForm() {
+            document.getElementById('clientForm').reset();
+            document.getElementById('clientFormId').value = '';
+            document.getElementById('clientColor').value = '#3b82f6';
+            document.querySelectorAll('.color-option').forEach((opt, i) => {
+                opt.classList.toggle('selected', i === 0);
+            });
+            document.getElementById('leadGenFields').style.display = 'none';
+        }
+
+        function toggleLeadGenFields() {
+            const hasLeadGen = document.getElementById('clientHasLeadGen').checked;
+            document.getElementById('leadGenFields').style.display = hasLeadGen ? 'block' : 'none';
+        }
+
+        function updatePlanDefaults() {
+            const plan = document.getElementById('clientPlan').value;
+            const rateInput = document.getElementById('clientMonthlyRate');
+            const limitInput = document.getElementById('clientCallLimit');
+
+            const defaults = {
+                'Starter': { rate: 0, limit: 100 },
+                'Professional': { rate: 1500, limit: 500 },
+                'Enterprise': { rate: 2500, limit: 1000 },
+                'Custom': { rate: rateInput.value, limit: limitInput.value }
+            };
+
+            if (plan !== 'Custom') {
+                rateInput.value = defaults[plan].rate;
+                limitInput.value = defaults[plan].limit;
+            }
+        }
+
+        function selectColor(element) {
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+            document.getElementById('clientColor').value = element.dataset.color;
+        }
+
+        function saveClient() {
+            // Validate form
+            const form = document.getElementById('clientForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            const clientId = document.getElementById('clientFormId').value;
+            const clientData = {
+                agentName: document.getElementById('clientAgentName').value,
+                name: document.getElementById('clientContactName').value,
+                organization: document.getElementById('clientOrganization').value,
+                email: document.getElementById('clientEmail').value,
+                phone: document.getElementById('clientPhone').value || '',
+                industry: document.getElementById('clientIndustry').value || '',
+                plan: document.getElementById('clientPlan').value,
+                monthlyRate: parseFloat(document.getElementById('clientMonthlyRate').value) || 0,
+                callLimit: parseInt(document.getElementById('clientCallLimit').value) || 100,
+                billingStart: document.getElementById('clientBillingStart').value || '',
+                paymentMethod: document.getElementById('clientPaymentMethod').value || 'Stripe',
+                hasLeadGen: document.getElementById('clientHasLeadGen').checked,
+                leadGenCost: parseFloat(document.getElementById('clientLeadGenCost').value) || 0,
+                leadsTarget: parseInt(document.getElementById('clientLeadsTarget').value) || 50,
+                status: document.getElementById('clientStatus').value,
+                color: document.getElementById('clientColor').value,
+                notes: document.getElementById('clientNotes').value || ''
+            };
+
+            if (clientId) {
+                // Update existing client
+                const index = AppState.clients.findIndex(c => c.id === parseInt(clientId));
+                if (index !== -1) {
+                    AppState.clients[index] = { ...AppState.clients[index], ...clientData };
+                    showToast('Client updated successfully', 'success');
+                }
+            } else {
+                // Create new client
+                const newId = Math.max(...AppState.clients.map(c => c.id), 0) + 1;
+                AppState.clients.push({
+                    id: newId,
+                    ...clientData,
+                    callsMTD: 0,
+                    bookings: 0
+                });
+                showToast('Client created successfully', 'success');
+            }
+
+            closeClientModal();
+            updateDashboard();
+            updateClientsSection();
+        }
+
+        // ===== VIEW CLIENT =====
+        function viewClient(id) {
+            const client = AppState.clients.find(c => c.id === id);
+            if (!client) return;
+
+            currentViewClientId = id;
+            document.getElementById('viewClientTitle').textContent = client.agentName;
+
+            const usagePercent = (client.callsMTD / client.callLimit) * 100;
+            const usageClass = usagePercent >= 90 ? 'danger' : usagePercent >= 70 ? 'warning' : 'success';
+            const bookingRate = client.callsMTD > 0 ? ((client.bookings / client.callsMTD) * 100).toFixed(1) : 0;
+            const totalRevenue = client.monthlyRate + (client.hasLeadGen ? client.leadGenCost : 0);
+
+            document.getElementById('clientViewContent').innerHTML = `
+                <div class="client-header">
+                    <div class="client-header-avatar" style="background: ${client.color};">${client.name.charAt(0)}</div>
+                    <div class="client-header-info">
+                        <div class="client-header-name">${client.agentName}</div>
+                        <div class="client-header-org">${client.organization}</div>
+                        <div class="client-header-meta">
+                            <span class="client-meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                ${client.email}
+                            </span>
+                            ${client.phone ? `
+                            <span class="client-meta-item">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                                ${client.phone}
+                            </span>
+                            ` : ''}
+                            <span class="client-meta-item">
+                                <span class="badge ${client.status === 'Active' ? 'badge-success' : client.status === 'Paused' ? 'badge-warning' : 'badge-danger'}">${client.status}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="client-stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Monthly Revenue</div>
+                        <div class="stat-value success">${formatCurrency(totalRevenue)}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Calls This Month</div>
+                        <div class="stat-value">${client.callsMTD.toLocaleString()}</div>
+                        <div class="progress-bar" style="margin-top: 8px;">
+                            <div class="progress-fill ${usageClass}" style="width: ${Math.min(usagePercent, 100)}%;"></div>
+                        </div>
+                        <div class="stat-subtext">${usagePercent.toFixed(0)}% of ${client.callLimit.toLocaleString()} limit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Bookings</div>
+                        <div class="stat-value success">${client.bookings}</div>
+                        <div class="stat-subtext">${bookingRate}% booking rate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Plan</div>
+                        <div class="stat-value" style="font-size: 1.25rem;">
+                            <span class="badge ${client.plan === 'Enterprise' ? 'badge-purple' : client.plan === 'Professional' ? 'badge-info' : 'badge-neutral'}" style="font-size: 0.9rem;">${client.plan}</span>
+                        </div>
+                        <div class="stat-subtext">${formatCurrency(client.monthlyRate)}/month</div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <h3 class="card-title">Subscription Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="financial-breakdown">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Base Plan (${client.plan})</span>
+                                <span class="breakdown-value">${formatCurrency(client.monthlyRate)}/mo</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Call Limit</span>
+                                <span class="breakdown-value">${client.callLimit.toLocaleString()} calls/mo</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Lead Generation Service</span>
+                                <span class="breakdown-value">
+                                    ${client.hasLeadGen
+                                        ? `<span class="badge badge-success">Active</span> ${formatCurrency(client.leadGenCost)}/mo`
+                                        : `<span class="badge badge-neutral">Not Active</span>`
+                                    }
+                                </span>
+                            </div>
+                            <div class="breakdown-item" style="background: var(--success-muted); border-color: rgba(34,197,94,0.3);">
+                                <span class="breakdown-label" style="font-weight: 600;">Total Monthly</span>
+                                <span class="breakdown-value" style="color: var(--success);">${formatCurrency(totalRevenue)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                ${client.notes ? `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Internal Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: var(--text-secondary);">${client.notes}</p>
+                    </div>
+                </div>
+                ` : ''}
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    ${client.status === 'Active'
+                        ? `<button class="btn btn-secondary" onclick="toggleClientStatus(${client.id}, 'Paused'); closeClientViewModal();">Pause Client</button>`
+                        : client.status === 'Paused'
+                        ? `<button class="btn btn-primary" onclick="toggleClientStatus(${client.id}, 'Active'); closeClientViewModal();">Activate Client</button>`
+                        : ''
+                    }
+                    <button class="btn btn-secondary" style="color: var(--danger);" onclick="deleteClient(${client.id}); closeClientViewModal();">Delete Client</button>
+                </div>
+            `;
+
+            document.getElementById('clientViewModal').classList.add('active');
+        }
+
+        function closeClientViewModal() {
+            document.getElementById('clientViewModal').classList.remove('active');
+            currentViewClientId = null;
+        }
+
+        function editFromView() {
+            if (currentViewClientId) {
+                closeClientViewModal();
+                editClient(currentViewClientId);
+            }
+        }
+
+        // ===== CLIENT ACTIONS =====
+        function toggleClientStatus(id, newStatus) {
+            const client = AppState.clients.find(c => c.id === id);
+            if (client) {
+                client.status = newStatus;
+                showToast(`Client ${newStatus === 'Active' ? 'activated' : 'paused'} successfully`, 'success');
+                updateDashboard();
+                updateClientsSection();
+            }
+        }
+
+        function deleteClient(id) {
+            const client = AppState.clients.find(c => c.id === id);
+            if (!client) return;
+
+            deleteClientId = id;
+            document.getElementById('deleteConfirmMessage').textContent =
+                `Are you sure you want to delete "${client.agentName}" (${client.organization})? This action cannot be undone.`;
+            document.getElementById('deleteConfirmModal').classList.add('active');
+        }
+
+        function closeDeleteConfirm() {
+            document.getElementById('deleteConfirmModal').classList.remove('active');
+            deleteClientId = null;
+        }
+
+        function confirmDeleteClient() {
+            if (deleteClientId) {
+                AppState.clients = AppState.clients.filter(c => c.id !== deleteClientId);
+                showToast('Client deleted successfully', 'success');
+                closeDeleteConfirm();
+                updateDashboard();
+                updateClientsSection();
+            }
         }
 
         // ===== EVENT LISTENERS =====
@@ -1620,13 +3021,32 @@
             document.getElementById('sidebar').classList.toggle('open');
         });
 
+        // Navigation
         document.querySelectorAll('.nav-item').forEach(item => {
             item.addEventListener('click', () => {
                 if (!item.classList.contains('disabled')) {
-                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
+                    const section = item.dataset.section;
+                    switchSection(section);
                 }
             });
+        });
+
+        // Close modals on overlay click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
         });
 
         // Auto-login for development (remove in production)
