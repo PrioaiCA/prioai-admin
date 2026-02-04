@@ -7,2231 +7,1514 @@
     <link rel="icon" type="image/png" href="https://prioai.ca/assets/icon_white.png">
     <style>
         :root {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #141414;
-            --bg-tertiary: #1a1a1a;
-            --border: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --text-muted: #666666;
-            --accent: #3B82F6;
-            --accent-hover: #2563EB;
+            --bg-primary: #09090b;
+            --bg-secondary: #111113;
+            --bg-tertiary: #18181b;
+            --bg-elevated: #1f1f23;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --accent-muted: rgba(59, 130, 246, 0.15);
             --success: #22c55e;
+            --success-muted: rgba(34, 197, 94, 0.15);
             --warning: #f59e0b;
+            --warning-muted: rgba(245, 158, 11, 0.15);
             --danger: #ef4444;
-            --purple: #8B5CF6;
+            --danger-muted: rgba(239, 68, 68, 0.15);
+            --purple: #8b5cf6;
+            --purple-muted: rgba(139, 92, 246, 0.15);
         }
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; }
-        
-        /* Login Screen */
-        .login-container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .login-box { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; padding: 40px; width: 100%; max-width: 400px; }
-        .login-logo { text-align: center; margin-bottom: 32px; }
-        .login-logo img { height: 40px; }
-        .login-logo h1 { font-size: 1.5rem; margin-top: 12px; color: var(--text-primary); }
-        .login-logo .admin-badge { background: var(--danger); color: white; font-size: 0.625rem; padding: 4px 8px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
-        .login-form { display: flex; flex-direction: column; gap: 16px; }
-        .login-form input { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; color: var(--text-primary); font-size: 1rem; }
-        .login-form input:focus { outline: none; border-color: var(--accent); }
-        .login-form button { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 14px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .login-form button:hover { background: var(--accent-hover); }
-        .login-error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); color: var(--danger); padding: 12px; border-radius: 8px; font-size: 0.875rem; display: none; }
-        
-        /* Main Layout */
-        .admin-layout { display: flex; min-height: 100vh; }
-        .admin-sidebar { width: 260px; background: var(--bg-secondary); border-right: 1px solid var(--border); padding: 20px 0; position: fixed; height: 100vh; overflow-y: auto; }
-        .admin-main { flex: 1; margin-left: 260px; padding: 32px; }
-        
-        /* Sidebar */
-        .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
-        .sidebar-logo img { height: 32px; }
-        .sidebar-logo span { font-size: 0.625rem; background: var(--danger); color: white; padding: 2px 6px; border-radius: 4px; margin-left: 8px; vertical-align: middle; }
-        .sidebar-nav { display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
-        .sidebar-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; color: var(--text-secondary); text-decoration: none; transition: all 0.2s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; font-size: 0.9rem; }
-        .sidebar-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
-        .sidebar-item.active { background: var(--accent); color: white; }
-        .sidebar-item svg { width: 20px; height: 20px; }
-        .sidebar-section { font-size: 0.625rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); padding: 20px 16px 8px; }
-        .sidebar-user { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 20px; border-top: 1px solid var(--border); background: var(--bg-secondary); }
-        .sidebar-user-info { display: flex; align-items: center; gap: 12px; }
-        .sidebar-user-avatar { width: 36px; height: 36px; background: var(--accent); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
-        .sidebar-user-name { font-size: 0.875rem; font-weight: 500; }
-        .sidebar-user-role { font-size: 0.75rem; color: var(--text-muted); }
-        
-        /* Page Header */
-        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
-        .page-title { font-size: 1.75rem; font-weight: 700; }
-        .page-subtitle { color: var(--text-secondary); font-size: 0.875rem; margin-top: 4px; }
-        
-        /* Currency Toggle */
-        .currency-toggle { display: flex; background: var(--bg-tertiary); border-radius: 8px; padding: 4px; }
-        .currency-btn { padding: 8px 16px; border: none; background: none; color: var(--text-secondary); cursor: pointer; border-radius: 6px; font-size: 0.875rem; font-weight: 500; transition: all 0.2s; }
-        .currency-btn.active { background: var(--accent); color: white; }
-        
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 32px; }
-        .stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-        .stat-card.highlight { border-color: var(--accent); background: linear-gradient(135deg, var(--bg-secondary), rgba(59,130,246,0.1)); }
-        .stat-card.success { border-color: var(--success); background: linear-gradient(135deg, var(--bg-secondary), rgba(34,197,94,0.1)); }
-        .stat-card.warning { border-color: var(--warning); background: linear-gradient(135deg, var(--bg-secondary), rgba(245,158,11,0.1)); }
-        .stat-card.danger { border-color: var(--danger); background: linear-gradient(135deg, var(--bg-secondary), rgba(239,68,68,0.1)); }
-        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
-        .stat-value { font-size: 1.75rem; font-weight: 700; }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        /* ===== LOGIN SCREEN ===== */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #0f0f12 100%);
+        }
+
+        .login-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo img {
+            height: 36px;
+            margin-bottom: 16px;
+        }
+
+        .login-logo .admin-badge {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 6px;
+            letter-spacing: 0.05em;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-form input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 18px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+
+        .login-form input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-muted);
+        }
+
+        .login-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .login-form button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .login-form button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .login-error {
+            background: var(--danger-muted);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            display: none;
+            margin-bottom: 8px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-logo img {
+            height: 28px;
+        }
+
+        .sidebar-logo .badge {
+            background: var(--danger);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.05em;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: all 0.15s;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .nav-item.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-item.disabled:hover {
+            background: none;
+            color: var(--text-secondary);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .nav-item .coming-soon {
+            font-size: 0.6rem;
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.15s;
+        }
+
+        .logout-btn:hover {
+            background: var(--danger-muted);
+            color: var(--danger);
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 32px;
+            min-height: 100vh;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* ===== CURRENCY TOGGLE ===== */
+        .currency-toggle {
+            display: flex;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            padding: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .currency-btn {
+            padding: 8px 16px;
+            border: none;
+            background: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+
+        .currency-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .currency-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            transition: all 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--border-light);
+        }
+
+        .stat-card.success {
+            border-color: rgba(34, 197, 94, 0.3);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(34, 197, 94, 0.05) 100%);
+        }
+
+        .stat-card.danger {
+            border-color: rgba(239, 68, 68, 0.3);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(239, 68, 68, 0.05) 100%);
+        }
+
+        .stat-card.warning {
+            border-color: rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(245, 158, 11, 0.05) 100%);
+        }
+
+        .stat-card.accent {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(59, 130, 246, 0.05) 100%);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
         .stat-value.success { color: var(--success); }
-        .stat-value.warning { color: var(--warning); }
         .stat-value.danger { color: var(--danger); }
-        .stat-change { font-size: 0.75rem; margin-top: 8px; }
-        .stat-change.up { color: var(--success); }
-        .stat-change.down { color: var(--danger); }
-        
-        /* Cards */
-        .card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; }
-        .card-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .card-title { font-size: 1rem; font-weight: 600; }
-        .card-body { padding: 24px; }
-        .card-body.no-padding { padding: 0; }
-        
-        /* Collapsible/Accordion */
-        .collapsible { cursor: pointer; user-select: none; }
-        .collapsible .collapse-icon { transition: transform 0.3s; display: inline-block; }
-        .collapsible.active .collapse-icon { transform: rotate(180deg); }
-        .collapse-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .collapse-content.open { max-height: 2000px; }
-        
-        /* Tables */
-        .data-table { width: 100%; border-collapse: collapse; }
-        .data-table th { text-align: left; padding: 12px 16px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); border-bottom: 1px solid var(--border); background: var(--bg-tertiary); }
-        .data-table td { padding: 16px; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
-        .data-table tr:hover td { background: var(--bg-tertiary); }
-        .data-table tr:last-child td { border-bottom: none; }
-        
-        /* Buttons */
-        .btn { padding: 10px 20px; border-radius: 8px; font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.2s; border: none; display: inline-flex; align-items: center; gap: 8px; }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: var(--accent-hover); }
-        .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); }
-        .btn-secondary:hover { border-color: var(--text-muted); }
-        .btn-success { background: var(--success); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-sm { padding: 6px 12px; font-size: 0.75rem; }
-        .btn-icon { padding: 8px; }
-        
-        /* Badges */
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 500; }
-        .badge-success { background: rgba(34,197,94,0.15); color: var(--success); }
-        .badge-warning { background: rgba(245,158,11,0.15); color: var(--warning); }
-        .badge-danger { background: rgba(239,68,68,0.15); color: var(--danger); }
-        .badge-info { background: rgba(59,130,246,0.15); color: var(--accent); }
-        .badge-purple { background: rgba(139,92,246,0.15); color: var(--purple); }
-        
-        /* Forms */
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 8px; }
-        .form-input { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text-primary); font-size: 0.9rem; }
-        .form-input:focus { outline: none; border-color: var(--accent); }
-        .form-select { width: 100%; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; color: var(--text-primary); font-size: 0.9rem; }
-        .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-        
-        /* Filters */
-        .filters-row { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
-        .filter-select { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.875rem; min-width: 150px; }
-        .filter-input { background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; color: var(--text-primary); font-size: 0.875rem; }
-        
-        /* Client Row Actions */
-        .row-actions { display: flex; gap: 8px; }
-        .action-btn { padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.75rem; transition: all 0.2s; }
-        .action-view { background: rgba(59,130,246,0.15); color: var(--accent); }
-        .action-view:hover { background: var(--accent); color: white; }
-        .action-edit { background: rgba(245,158,11,0.15); color: var(--warning); }
-        .action-edit:hover { background: var(--warning); color: white; }
-        .action-pause { background: rgba(239,68,68,0.15); color: var(--danger); }
-        .action-pause:hover { background: var(--danger); color: white; }
-        
-        /* Modal */
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-overlay.active { display: flex; }
-        .modal { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 16px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
-        .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .modal-title { font-size: 1.25rem; font-weight: 600; }
-        .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem; line-height: 1; }
-        .modal-body { padding: 24px; }
-        .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 12px; }
-        
-        /* Charts placeholder */
-        .chart-container { height: 300px; display: flex; align-items: center; justify-content: center; background: var(--bg-tertiary); border-radius: 8px; color: var(--text-muted); }
-        
-        /* Cost Editor */
-        .cost-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
-        .cost-row:last-child { border-bottom: none; }
-        .cost-label { font-size: 0.9rem; }
-        .cost-value { display: flex; align-items: center; gap: 8px; }
-        .cost-input { width: 100px; background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 6px; padding: 8px 12px; color: var(--text-primary); text-align: right; font-size: 0.875rem; }
-        
-        /* Tabs */
-        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-        .tab { padding: 10px 20px; border: none; background: none; color: var(--text-secondary); cursor: pointer; font-size: 0.875rem; border-radius: 8px 8px 0 0; transition: all 0.2s; }
-        .tab:hover { color: var(--text-primary); }
-        .tab.active { background: var(--bg-tertiary); color: var(--accent); }
-        
-        /* Daily breakdown table */
-        .breakdown-table { font-size: 0.8rem; }
-        .breakdown-table th, .breakdown-table td { padding: 10px 12px; }
-        .breakdown-table .highlight-row { background: rgba(59,130,246,0.1); }
-        
-        /* Notification composer */
-        .notification-preview { background: var(--bg-tertiary); border-radius: 8px; padding: 16px; margin-top: 16px; }
-        .notification-preview-title { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
-        
-        /* Loading */
-        .loading { display: flex; align-items: center; justify-content: center; padding: 40px; color: var(--text-muted); }
-        .spinner { width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin-right: 12px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Hide sections */
-        .admin-section { display: none; }
-        .admin-section.active { display: block; }
-        
-        /* Responsive */
+        .stat-value.warning { color: var(--warning); }
+        .stat-value.accent { color: var(--accent); }
+
+        .stat-subtext {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        .stat-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-top: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .stat-change.up {
+            background: var(--success-muted);
+            color: var(--success);
+        }
+
+        .stat-change.down {
+            background: var(--danger-muted);
+            color: var(--danger);
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        .card-body.no-padding {
+            padding: 0;
+        }
+
+        /* ===== TABLES ===== */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-tertiary);
+        }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--success-muted);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: var(--warning-muted);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: var(--danger-muted);
+            color: var(--danger);
+        }
+
+        .badge-info {
+            background: var(--accent-muted);
+            color: var(--accent);
+        }
+
+        .badge-purple {
+            background: var(--purple-muted);
+            color: var(--purple);
+        }
+
+        .badge-neutral {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-light);
+            background: var(--bg-elevated);
+        }
+
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 0.8rem;
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        /* ===== CLIENT ROW ===== */
+        .client-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .client-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .client-name {
+            font-weight: 600;
+        }
+
+        .client-org {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .plan-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .plan-name {
+            font-weight: 600;
+        }
+
+        .plan-price {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.8rem;
+        }
+
+        .service-item.active {
+            color: var(--success);
+        }
+
+        .service-item.inactive {
+            color: var(--text-muted);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.15s;
+        }
+
+        .action-btn.view {
+            background: var(--accent-muted);
+            color: var(--accent);
+        }
+
+        .action-btn.view:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .action-btn.edit {
+            background: var(--warning-muted);
+            color: var(--warning);
+        }
+
+        .action-btn.edit:hover {
+            background: var(--warning);
+            color: white;
+        }
+
+        /* ===== SECTION VISIBILITY ===== */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* ===== FINANCIAL SUMMARY ===== */
+        .financial-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .financial-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .breakdown-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .breakdown-value.editable {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .edit-input {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 100px;
+            text-align: right;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 24px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            z-index: 2000;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        .toast.show {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .financial-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 1024px) {
-            .admin-sidebar { width: 220px; }
-            .admin-main { margin-left: 220px; padding: 24px; }
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-left: 240px;
+                padding: 24px;
+            }
         }
+
         @media (max-width: 768px) {
-            .admin-sidebar { position: fixed; left: -280px; z-index: 100; transition: left 0.3s; }
-            .admin-sidebar.open { left: 0; }
-            .admin-main { margin-left: 0; }
-            .mobile-menu-btn { display: block !important; }
-            .form-row { grid-template-columns: 1fr; }
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .sidebar {
+                position: fixed;
+                left: -280px;
+                transition: left 0.3s ease;
+            }
+            .sidebar.open {
+                left: 0;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
-        .mobile-menu-btn { display: none; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 10px; cursor: pointer; }
-        
-        /* Toast */
-        .toast { position: fixed; bottom: 24px; right: 24px; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 16px 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 2000; display: none; }
-        .toast.show { display: block; animation: slideIn 0.3s ease; }
-        .toast.success { border-color: var(--success); }
-        .toast.error { border-color: var(--danger); }
-        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
+    <!-- ===== LOGIN SCREEN ===== -->
     <div class="login-container" id="loginScreen">
         <div class="login-box">
             <div class="login-logo">
                 <img src="https://prioai.ca/assets/logo_white.png" alt="Prio AI">
-                <h1 style="margin-top:16px;"><span class="admin-badge" style="font-size:0.875rem;padding:6px 12px;">ADMIN</span></h1>
+                <div style="margin-top: 16px;">
+                    <span class="admin-badge">ADMIN PORTAL</span>
+                </div>
             </div>
-            <div class="login-error" id="loginError">Invalid credentials or unauthorized access</div>
+            <div class="login-error" id="loginError">Invalid credentials</div>
             <form class="login-form" id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="email" id="loginEmail" placeholder="Email address" required>
                 <input type="password" id="loginPassword" placeholder="Password" required>
-                <button type="submit" id="loginBtn">Sign In</button>
+                <button type="submit">Sign In</button>
             </form>
         </div>
     </div>
 
-    <!-- Admin Layout -->
-    <div class="admin-layout" id="adminLayout" style="display:none;">
-        <!-- Sidebar -->
-        <aside class="admin-sidebar" id="adminSidebar">
-            <div class="sidebar-logo">
-                <img src="https://prioai.ca/assets/logo_white.png" alt="Prio AI">
-                <span>ADMIN</span>
+    <!-- ===== ADMIN LAYOUT ===== -->
+    <div class="admin-layout" id="adminLayout" style="display: none;">
+
+        <!-- ===== SIDEBAR ===== -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="https://prioai.ca/assets/logo_white.png" alt="Prio AI">
+                    <span class="badge">ADMIN</span>
+                </div>
             </div>
-            
+
             <nav class="sidebar-nav">
-                <div class="sidebar-section">Overview</div>
-                <button class="sidebar-item active" data-section="dashboard">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-                    Dashboard
-                </button>
-                <button class="sidebar-item" data-section="clients">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    Clients
-                </button>
-                
-                <div class="sidebar-section">Analytics</div>
-                <button class="sidebar-item" data-section="analytics">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                    Performance
-                </button>
-                <button class="sidebar-item" data-section="calls">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                    Call Analytics
-                </button>
-                
-                <div class="sidebar-section">Financials</div>
-                <button class="sidebar-item" data-section="revenue">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    Revenue
-                </button>
-                <button class="sidebar-item" data-section="costs">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                    Costs
-                </button>
-                
-                <div class="sidebar-section">Management</div>
-                <button class="sidebar-item" data-section="notifications">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                    Notifications
-                </button>
-                <button class="sidebar-item" data-section="team">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4.354a4 4 0 1 1 0 7.292"/><path d="M15 21H3v-1a6 6 0 0 1 12 0v1z"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-1a4 4 0 0 0-3-3.85"/></svg>
-                    Team
-                </button>
-                <button class="sidebar-item" data-section="settings">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                    Settings
-                </button>
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <button class="nav-item active" data-section="overview">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                        Business Overview
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <button class="nav-item disabled" data-section="clients">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Clients
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                    <button class="nav-item disabled" data-section="leads">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        Lead Generation
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Analytics</div>
+                    <button class="nav-item disabled" data-section="calls">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                        Call Analytics
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                    <button class="nav-item disabled" data-section="performance">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Performance
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Financials</div>
+                    <button class="nav-item disabled" data-section="revenue">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Revenue
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                    <button class="nav-item disabled" data-section="costs">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Costs
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">System</div>
+                    <button class="nav-item disabled" data-section="settings">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                        <span class="coming-soon">Soon</span>
+                    </button>
+                </div>
             </nav>
-            
-            <div class="sidebar-user">
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-avatar" id="userAvatar">S</div>
-                    <div>
-                        <div class="sidebar-user-name" id="userName">Admin</div>
-                        <div class="sidebar-user-role" id="userRole">Owner</div>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">S</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Admin</div>
+                        <div class="user-role" id="userRole">Owner</div>
                     </div>
+                    <button class="logout-btn" id="logoutBtn" title="Logout">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </aside>
 
-        <!-- Main Content -->
-        <main class="admin-main">
-            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-            
-            <!-- Dashboard Section -->
-            <section class="admin-section active" id="section-dashboard">
+        <!-- ===== MAIN CONTENT ===== -->
+        <main class="main-content">
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+
+            <!-- ===== BUSINESS OVERVIEW SECTION ===== -->
+            <section class="admin-section active" id="section-overview">
                 <div class="page-header">
                     <div>
-                        <h1 class="page-title">Dashboard</h1>
-                        <p class="page-subtitle">Business overview for <span id="currentMonth">January 2026</span></p>
+                        <h1 class="page-title">Business Overview</h1>
+                        <p class="page-subtitle">Complete snapshot of Prio AI operations - <span id="currentDate">February 2026</span></p>
                     </div>
-                    <div class="currency-toggle">
-                        <button class="currency-btn" data-currency="USD">USD</button>
-                        <button class="currency-btn active" data-currency="CAD">CAD</button>
+                    <div class="header-actions">
+                        <div class="currency-toggle">
+                            <button class="currency-btn" data-currency="USD">USD</button>
+                            <button class="currency-btn active" data-currency="CAD">CAD</button>
+                        </div>
                     </div>
                 </div>
-                
+
+                <!-- Financial Summary Stats -->
                 <div class="stats-grid">
                     <div class="stat-card success">
                         <div class="stat-label">Monthly Revenue</div>
-                        <div class="stat-value success" id="dashRevenue">$0</div>
+                        <div class="stat-value success" id="totalRevenue">$4,250</div>
+                        <div class="stat-subtext">from <span id="payingClientsCount">3</span> paying clients</div>
                     </div>
                     <div class="stat-card danger">
                         <div class="stat-label">Monthly Costs</div>
-                        <div class="stat-value danger" id="dashCosts">$0</div>
+                        <div class="stat-value danger" id="totalCosts">$1,847</div>
+                        <div class="stat-subtext">usage + fixed costs</div>
                     </div>
-                    <div class="stat-card highlight">
+                    <div class="stat-card accent">
                         <div class="stat-label">Net Profit</div>
-                        <div class="stat-value" id="dashProfit">$0</div>
+                        <div class="stat-value accent" id="netProfit">$2,403</div>
+                        <div class="stat-change up" id="profitChange">+12% vs last month</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Profit Margin</div>
-                        <div class="stat-value" id="dashMargin">0%</div>
+                        <div class="stat-value" id="profitMargin">56.5%</div>
+                        <div class="stat-subtext">healthy margin</div>
                     </div>
                 </div>
-                
+
+                <!-- Operational Stats -->
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Active Clients</div>
-                        <div class="stat-value" id="dashActiveClients">0</div>
+                        <div class="stat-value" id="activeClients">4</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Calls (MTD)</div>
-                        <div class="stat-value" id="dashTotalCalls">0</div>
+                        <div class="stat-value" id="totalCalls">1,247</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Total Bookings</div>
-                        <div class="stat-value success" id="dashBookings">0</div>
+                        <div class="stat-value success" id="totalBookings">89</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Booking Rate</div>
-                        <div class="stat-value" id="dashBookingRate">0%</div>
+                        <div class="stat-label">Avg Booking Rate</div>
+                        <div class="stat-value" id="avgBookingRate">7.1%</div>
                     </div>
                 </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📊 Today's Snapshot</h3>
-                        <span id="todayDate"></span>
-                    </div>
-                    <div class="card-body">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-label">Calls Today</div>
-                                <div class="stat-value" id="todayCalls">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Conversations</div>
-                                <div class="stat-value" id="todayConvos">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Bookings</div>
-                                <div class="stat-value success" id="todayBookings">0</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-label">Cost Today</div>
-                                <div class="stat-value" id="todayCost">$0</div>
-                            </div>
+
+                <!-- Revenue & Cost Breakdown -->
+                <div class="financial-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                Revenue Breakdown
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" id="editRevenueBtn">Edit</button>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">👥 Client Overview</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Client</th>
-                                    <th>Plan</th>
-                                    <th>Calls (MTD)</th>
-                                    <th>Limit</th>
-                                    <th>Usage</th>
-                                    <th>Bookings</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dashClientTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Clients Section -->
-            <section class="admin-section" id="section-clients">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Clients</h1>
-                        <p class="page-subtitle">Manage all client accounts</p>
-                    </div>
-                    <button class="btn btn-primary" id="addClientBtn">+ Add Client</button>
-                </div>
-                
-                <div class="filters-row">
-                    <select class="filter-select" id="filterClientStatus">
-                        <option value="">All Statuses</option>
-                        <option value="Active">Active</option>
-                        <option value="Paused">Paused</option>
-                        <option value="Cancelled">Cancelled</option>
-                    </select>
-                    <select class="filter-select" id="filterClientPlan">
-                        <option value="">All Plans</option>
-                        <option value="Starter">Starter</option>
-                        <option value="Professional">Professional</option>
-                        <option value="Enterprise">Enterprise</option>
-                    </select>
-                    <input type="search" class="filter-input" id="filterClientSearch" placeholder="Search clients...">
-                </div>
-                
-                <div class="card">
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Agent Name</th>
-                                    <th>Organization</th>
-                                    <th>Email</th>
-                                    <th>Phone</th>
-                                    <th>Plan</th>
-                                    <th>Calls / Limit</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="clientsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Analytics Section -->
-            <section class="admin-section" id="section-analytics">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Performance Analytics</h1>
-                        <p class="page-subtitle">Business-wide performance metrics</p>
-                    </div>
-                    <div class="currency-toggle">
-                        <button class="currency-btn" data-currency="USD">USD</button>
-                        <button class="currency-btn active" data-currency="CAD">CAD</button>
-                    </div>
-                </div>
-                
-                <div class="filters-row">
-                    <select class="filter-select" id="analyticsClient">
-                        <option value="">All Clients</option>
-                    </select>
-                    <select class="filter-select" id="analyticsPeriod">
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month" selected>This Month</option>
-                        <option value="all">All Time</option>
-                    </select>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Total Calls</div>
-                        <div class="stat-value" id="analyticsTotalCalls">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Conversations</div>
-                        <div class="stat-value" id="analyticsConvos">0</div>
-                    </div>
-                    <div class="stat-card success">
-                        <div class="stat-label">Bookings</div>
-                        <div class="stat-value success" id="analyticsBookings">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Booking Rate</div>
-                        <div class="stat-value" id="analyticsBookingRate">0%</div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📋 Call Outcomes</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Outcome</th>
-                                    <th>Count</th>
-                                    <th>Percentage</th>
-                                </tr>
-                            </thead>
-                            <tbody id="analyticsOutcomesTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📊 Lead Status Breakdown</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Status</th>
-                                    <th>Count</th>
-                                    <th>% of Total</th>
-                                </tr>
-                            </thead>
-                            <tbody id="analyticsStatusTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header collapsible" onclick="toggleAdvancedMetrics(this)">
-                        <h3 class="card-title">📈 Advanced Metrics <span class="collapse-icon">▼</span></h3>
-                    </div>
-                    <div class="collapse-content" id="advancedMetricsContent">
                         <div class="card-body">
-                            <div class="stats-grid" style="margin-bottom: 24px;">
-                                <div class="stat-card">
-                                    <div class="stat-label">Avg Call Duration</div>
-                                    <div class="stat-value" id="advAvgDuration">0s</div>
+                            <div class="financial-breakdown" id="revenueBreakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Client Subscriptions</span>
+                                    <span class="breakdown-value">$3,500</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Total Talk Time</div>
-                                    <div class="stat-value" id="advTotalTalkTime">0h</div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Lead Gen Services</span>
+                                    <span class="breakdown-value">$750</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Callback Rate</div>
-                                    <div class="stat-value" id="advCallbackRate">0%</div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Setup Fees</span>
+                                    <span class="breakdown-value">$0</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Follow Up Rate</div>
-                                    <div class="stat-value" id="advFollowUpRate">0%</div>
-                                </div>
-                            </div>
-                            
-                            <div class="stats-grid" style="margin-bottom: 24px;">
-                                <div class="stat-card">
-                                    <div class="stat-label">Voicemail Rate</div>
-                                    <div class="stat-value" id="advVoicemailRate">0%</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">No Answer Rate</div>
-                                    <div class="stat-value" id="advNoAnswerRate">0%</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">DNC Rate</div>
-                                    <div class="stat-value" id="advDNCRate">0%</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Wrong Person Rate</div>
-                                    <div class="stat-value" id="advWrongPersonRate">0%</div>
+                                <div class="breakdown-item" style="background: var(--success-muted); border-color: rgba(34,197,94,0.3);">
+                                    <span class="breakdown-label" style="font-weight: 600;">Total Revenue</span>
+                                    <span class="breakdown-value" style="color: var(--success);">$4,250</span>
                                 </div>
                             </div>
-                            
-                            <h4 style="margin-bottom: 16px; font-size: 0.95rem; color: var(--text-secondary);">Lead Progression Rates</h4>
-                            <div class="stats-grid">
-                                <div class="stat-card">
-                                    <div class="stat-label">New → Booked</div>
-                                    <div class="stat-value success" id="advNewToBooked">0%</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                Cost Breakdown
+                            </h3>
+                            <button class="btn btn-sm btn-secondary" id="editCostsBtn">Edit</button>
+                        </div>
+                        <div class="card-body">
+                            <div class="financial-breakdown" id="costBreakdown">
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Retell AI (Usage)</span>
+                                    <span class="breakdown-value">$892</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Retry → Booked</div>
-                                    <div class="stat-value" id="advRetryToBooked">0%</div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">OpenAI (Usage)</span>
+                                    <span class="breakdown-value">$156</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Max Attempts Rate</div>
-                                    <div class="stat-value warning" id="advMaxAttemptsRate">0%</div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Vercel Hosting</span>
+                                    <span class="breakdown-value">$20</span>
                                 </div>
-                                <div class="stat-card">
-                                    <div class="stat-label">Avg Cost per Booking</div>
-                                    <div class="stat-value" id="advCostPerBooking">$0</div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Supabase</span>
+                                    <span class="breakdown-value">$25</span>
+                                </div>
+                                <div class="breakdown-item">
+                                    <span class="breakdown-label">Other Fixed Costs</span>
+                                    <span class="breakdown-value">$754</span>
+                                </div>
+                                <div class="breakdown-item" style="background: var(--danger-muted); border-color: rgba(239,68,68,0.3);">
+                                    <span class="breakdown-label" style="font-weight: 600;">Total Costs</span>
+                                    <span class="breakdown-value" style="color: var(--danger);">$1,847</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Calls Section -->
-            <section class="admin-section" id="section-calls">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Call Analytics</h1>
-                        <p class="page-subtitle">Detailed call breakdown by time, type, and performance</p>
-                    </div>
-                </div>
-                
-                <div class="filters-row">
-                    <select class="filter-select" id="callsClient">
-                        <option value="">All Clients</option>
-                    </select>
-                    <select class="filter-select" id="callsPeriod">
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month" selected>This Month</option>
-                    </select>
-                    <select class="filter-select" id="callsType">
-                        <option value="">All Types</option>
-                        <option value="Outbound">Outbound</option>
-                        <option value="Inbound">Inbound</option>
-                    </select>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Outbound Calls</div>
-                        <div class="stat-value" id="callsOutbound">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Inbound Calls</div>
-                        <div class="stat-value" id="callsInbound">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Pickup Rate</div>
-                        <div class="stat-value" id="callsPickupRate">0%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Avg Cost/Call</div>
-                        <div class="stat-value" id="callsAvgCost">$0</div>
-                    </div>
-                </div>
-                
+                <!-- Client Overview Table -->
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">⏰ Calls by Hour (Call Block)</h3>
+                        <h3 class="card-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            Client Summary
+                        </h3>
+                        <button class="btn btn-sm btn-primary" id="addClientBtn">+ Add Client</button>
                     </div>
                     <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Hour Block</th>
-                                    <th>Calls</th>
-                                    <th>Pickups</th>
-                                    <th>Pickup Rate</th>
-                                    <th>Booked/Callback</th>
-                                    <th>Booking Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody id="callBlocksTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📊 Conversion Funnel</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Metric</th>
-                                    <th>Count</th>
-                                    <th>Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody id="conversionFunnelTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Revenue Section -->
-            <section class="admin-section" id="section-revenue">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Revenue</h1>
-                        <p class="page-subtitle">Monthly recurring revenue and payment tracking</p>
-                    </div>
-                    <div class="currency-toggle">
-                        <button class="currency-btn" data-currency="USD">USD</button>
-                        <button class="currency-btn active" data-currency="CAD">CAD</button>
-                    </div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card success">
-                        <div class="stat-label">Monthly Recurring Revenue</div>
-                        <div class="stat-value success" id="revenueMRR">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Paying Clients</div>
-                        <div class="stat-value" id="revenuePayingClients">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Avg Revenue/Client</div>
-                        <div class="stat-value" id="revenueARPC">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Free Clients</div>
-                        <div class="stat-value" id="revenueFreeClients">0</div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">💰 Revenue by Client</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
+                        <table class="data-table" id="clientsTable">
                             <thead>
                                 <tr>
                                     <th>Client</th>
                                     <th>Plan</th>
                                     <th>Monthly Rate</th>
+                                    <th>Lead Gen</th>
+                                    <th>Calls (MTD)</th>
+                                    <th>Bookings</th>
                                     <th>Status</th>
-                                    <th>Payment Date</th>
-                                </tr>
-                            </thead>
-                            <tbody id="revenueTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Costs Section -->
-            <section class="admin-section" id="section-costs">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Costs</h1>
-                        <p class="page-subtitle">Usage costs and fixed monthly expenses</p>
-                    </div>
-                    <div class="currency-toggle">
-                        <button class="currency-btn" data-currency="USD">USD</button>
-                        <button class="currency-btn active" data-currency="CAD">CAD</button>
-                    </div>
-                </div>
-                
-                <div class="filters-row">
-                    <select class="filter-select" id="costsMonth">
-                        <option value="">Current Month</option>
-                    </select>
-                    <select class="filter-select" id="costsYear">
-                        <option value="2026">2026</option>
-                        <option value="2025">2025</option>
-                    </select>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-label">Retell AI</div>
-                        <div class="stat-value" id="costRetell">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">OpenAI</div>
-                        <div class="stat-value" id="costOpenAI">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Usage Subtotal</div>
-                        <div class="stat-value warning" id="costUsageTotal">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Fixed Costs</div>
-                        <div class="stat-value" id="costFixed">$0</div>
-                    </div>
-                </div>
-                
-                <div class="stats-grid">
-                    <div class="stat-card danger">
-                        <div class="stat-label">Total Monthly Cost</div>
-                        <div class="stat-value danger" id="costTotal">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Cost per Call</div>
-                        <div class="stat-value" id="costPerCall">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Cost per Lead</div>
-                        <div class="stat-value" id="costPerLead">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-label">Attempts per Lead</div>
-                        <div class="stat-value" id="costAttemptsPerLead">0</div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📅 Daily Usage Breakdown</h3>
-                    </div>
-                    <div class="card-body no-padding" style="max-height:400px;overflow-y:auto;">
-                        <table class="data-table breakdown-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Calls</th>
-                                    <th>Retell</th>
-                                    <th>OpenAI</th>
-                                    <th>Total</th>
-                                    <th>$/Call</th>
-                                </tr>
-                            </thead>
-                            <tbody id="dailyCostsTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">⚙️ Fixed Monthly Costs</h3>
-                        <button class="btn btn-sm btn-secondary" id="editFixedCostsBtn">Edit</button>
-                    </div>
-                    <div class="card-body">
-                        <div id="fixedCostsList"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Notifications Section -->
-            <section class="admin-section" id="section-notifications">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Notifications</h1>
-                        <p class="page-subtitle">Send announcements to clients</p>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📢 Send Notification</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label class="form-label">Recipients</label>
-                            <select class="form-select" id="notifRecipients">
-                                <option value="all">All Active Clients</option>
-                                <option value="specific">Specific Client</option>
-                            </select>
-                        </div>
-                        <div class="form-group" id="notifClientSelectGroup" style="display:none;">
-                            <label class="form-label">Select Client</label>
-                            <select class="form-select" id="notifClientSelect"></select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Notification Type</label>
-                            <select class="form-select" id="notifType">
-                                <option value="info">ℹ️ Info</option>
-                                <option value="update">🚀 System Update</option>
-                                <option value="warning">⚠️ Warning</option>
-                                <option value="maintenance">🔧 Maintenance</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Title</label>
-                            <input type="text" class="form-input" id="notifTitle" placeholder="Notification title...">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Message</label>
-                            <textarea class="form-input" id="notifMessage" rows="4" placeholder="Write your message..."></textarea>
-                        </div>
-                        <button class="btn btn-primary" id="sendNotifBtn">Send Notification</button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">📜 Sent Notifications</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Type</th>
-                                    <th>Title</th>
-                                    <th>Recipients</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sentNotifsTable">
-                                <tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:40px;">No notifications sent yet</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Team Section -->
-            <section class="admin-section" id="section-team">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Team</h1>
-                        <p class="page-subtitle">Manage team members and permissions</p>
-                    </div>
-                    <button class="btn btn-primary" id="addTeamMemberBtn">+ Add Team Member</button>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">👤 Team Members</h3>
-                    </div>
-                    <div class="card-body no-padding">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Status</th>
-                                    <th>Added</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="teamTable"></tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">🔐 Permission Levels</h3>
-                    </div>
-                    <div class="card-body">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Role</th>
-                                    <th>Dashboard</th>
-                                    <th>Clients</th>
-                                    <th>Analytics</th>
-                                    <th>Financials</th>
-                                    <th>Team</th>
-                                    <th>Settings</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><span class="badge badge-danger">Owner</span></td>
-                                    <td>✅ Full</td><td>✅ Full</td><td>✅ Full</td><td>✅ Full</td><td>✅ Full</td><td>✅ Full</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge badge-warning">Admin</span></td>
-                                    <td>✅ Full</td><td>✅ Full</td><td>✅ Full</td><td>✅ View</td><td>❌ No</td><td>✅ View</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge badge-info">Support</span></td>
-                                    <td>✅ View</td><td>✅ View</td><td>✅ View</td><td>❌ No</td><td>❌ No</td><td>❌ No</td>
-                                </tr>
-                                <tr>
-                                    <td><span class="badge badge-purple">Viewer</span></td>
-                                    <td>✅ View</td><td>✅ View</td><td>✅ View</td><td>❌ No</td><td>❌ No</td><td>❌ No</td>
-                                </tr>
+                            <tbody id="clientsTableBody">
+                                <!-- Client rows populated by JS -->
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            <!-- Settings Section -->
-            <section class="admin-section" id="section-settings">
-                <div class="page-header">
-                    <div>
-                        <h1 class="page-title">Settings</h1>
-                        <p class="page-subtitle">Configure system settings and pricing</p>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">💱 Currency Settings</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">USD to CAD Exchange Rate</label>
-                                <input type="number" step="0.01" class="form-input" id="settingFxRate" value="1.39">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Default Display Currency</label>
-                                <select class="form-select" id="settingDefaultCurrency">
-                                    <option value="CAD">CAD (Canadian Dollar)</option>
-                                    <option value="USD">USD (US Dollar)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="saveCurrencySettings">Save Currency Settings</button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">💰 Pricing Tiers</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Starter Price (CAD/month)</label>
-                                <input type="number" class="form-input" id="settingStarterPrice" value="149">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Starter Call Limit</label>
-                                <input type="number" class="form-input" id="settingStarterLimit" value="1000">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Professional Price (CAD/month)</label>
-                                <input type="number" class="form-input" id="settingProPrice" value="249">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Professional Call Limit</label>
-                                <input type="number" class="form-input" id="settingProLimit" value="3000">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">Starter Promo Price (First 10 clients)</label>
-                                <input type="number" class="form-input" id="settingStarterPromo" value="99">
-                            </div>
-                        </div>
-                        <button class="btn btn-primary" id="savePricingSettings">Save Pricing Settings</button>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">🏢 Fixed Monthly Costs</h3>
-                    </div>
-                    <div class="card-body">
-                        <div id="settingsFixedCosts"></div>
-                        <button class="btn btn-secondary" id="addFixedCostBtn" style="margin-top:16px;">+ Add Cost Item</button>
-                        <button class="btn btn-primary" id="saveFixedCostsBtn" style="margin-top:16px;margin-left:8px;">Save Fixed Costs</button>
-                    </div>
-                </div>
-            </section>
         </main>
     </div>
 
-    <!-- Edit Client Modal -->
-    <div class="modal-overlay" id="editClientModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Edit Client</h3>
-                <button class="modal-close" onclick="closeModal('editClientModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="editClientId">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Agent Name</label>
-                        <input type="text" class="form-input" id="editClientName">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Organization</label>
-                        <input type="text" class="form-input" id="editClientOrg">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-input" id="editClientEmail">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Phone</label>
-                        <input type="text" class="form-input" id="editClientPhone">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Plan</label>
-                        <select class="form-select" id="editClientPlan">
-                            <option value="Starter">Starter</option>
-                            <option value="Professional">Professional</option>
-                            <option value="Enterprise">Enterprise</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Monthly Rate (CAD)</label>
-                        <input type="number" class="form-input" id="editClientRate">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="form-label">Call Limit</label>
-                        <input type="number" class="form-input" id="editClientLimit">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Status</label>
-                        <select class="form-select" id="editClientStatus">
-                            <option value="Active">Active</option>
-                            <option value="Paused">Paused</option>
-                            <option value="Cancelled">Cancelled</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('editClientModal')">Cancel</button>
-                <button class="btn btn-primary" id="saveClientBtn">Save Changes</button>
-            </div>
-        </div>
+    <!-- ===== TOAST NOTIFICATION ===== -->
+    <div class="toast" id="toast">
+        <span id="toastMessage">Saved successfully</span>
     </div>
 
-    <!-- Add Team Member Modal -->
-    <div class="modal-overlay" id="addTeamModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Add Team Member</h3>
-                <button class="modal-close" onclick="closeModal('addTeamModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" class="form-input" id="addTeamName">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="addTeamEmail">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Role</label>
-                    <select class="form-select" id="addTeamRole">
-                        <option value="Viewer">Viewer</option>
-                        <option value="Support">Support</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
-                <p style="font-size:0.8rem;color:var(--text-muted);margin-top:12px;">
-                    Note: The team member will need to be added to Supabase authentication separately to log in.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('addTeamModal')">Cancel</button>
-                <button class="btn btn-primary" id="saveTeamMemberBtn">Add Member</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // ========== CONFIGURATION ==========
-        const SUPABASE_URL = 'https://nnsgxxgvnmejhpwoyffj.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5uc2d4eGd2bm1lamhwd295ZmZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY3MDc2NjksImV4cCI6MjA1MjI4MzY2OX0.aCROjILi-P8BuVDvBFNWTYBBwXcBnRx2OokPykkA7Gg';
-        const AIRTABLE_TOKEN = 'patYah9J08s35ASWN.4a3f2b29e4770ef39a3d99b03344ae78544240653df9055819fa58bd48b97e2e';
-        const AIRTABLE_BASE = 'applOjDjhH0RqLtBH';
-        const AIRTABLE_CLIENTS_TABLE = 'tblMptC862PyL7Znw';
-        const AIRTABLE_CALLS_TABLE = 'tblvB5OpG0b5mVix3';
-        const AIRTABLE_LEADS_TABLE = 'tblLpN4wceakfNFpq';
-        const AIRTABLE_SETTINGS_TABLE = 'Admin%20Settings';
-        const AIRTABLE_TEAM_TABLE = 'Team%20Members';
-        
-        // Authorized admin emails (hardcoded for security)
-        const AUTHORIZED_ADMINS = ['info@prioai.ca'];
-        
-        // Simple admin password (change this!)
-        const ADMIN_PASSWORD = 'PrioAdmin2026!';
+        // ===== APP STATE =====
+        const AppState = {
+            currentUser: null,
+            currency: 'CAD',
+            fxRate: 1.39,
+            clients: [
+                {
+                    id: 1,
+                    name: 'Sarah',
+                    agentName: 'Dental Assistant AI',
+                    organization: 'Smile Dental Clinic',
+                    email: 'sarah@smileclinic.com',
+                    plan: 'Professional',
+                    monthlyRate: 1500,
+                    hasLeadGen: true,
+                    leadGenCost: 250,
+                    callsMTD: 423,
+                    callLimit: 500,
+                    bookings: 34,
+                    status: 'Active',
+                    color: '#3b82f6'
+                },
+                {
+                    id: 2,
+                    name: 'Mike',
+                    agentName: 'HVAC Scheduler',
+                    organization: 'CoolAir Services',
+                    email: 'mike@coolair.com',
+                    plan: 'Enterprise',
+                    monthlyRate: 2000,
+                    hasLeadGen: true,
+                    leadGenCost: 500,
+                    callsMTD: 687,
+                    callLimit: 1000,
+                    bookings: 42,
+                    status: 'Active',
+                    color: '#8b5cf6'
+                },
+                {
+                    id: 3,
+                    name: 'Jessica',
+                    agentName: 'Legal Intake Bot',
+                    organization: 'Parker Law Firm',
+                    email: 'jessica@parkerlaw.com',
+                    plan: 'Starter',
+                    monthlyRate: 0,
+                    hasLeadGen: false,
+                    leadGenCost: 0,
+                    callsMTD: 89,
+                    callLimit: 100,
+                    bookings: 8,
+                    status: 'Active',
+                    color: '#22c55e'
+                },
+                {
+                    id: 4,
+                    name: 'David',
+                    agentName: 'Roofing Assistant',
+                    organization: 'TopRoof Inc',
+                    email: 'david@toproof.com',
+                    plan: 'Starter',
+                    monthlyRate: 0,
+                    hasLeadGen: false,
+                    leadGenCost: 0,
+                    callsMTD: 48,
+                    callLimit: 100,
+                    bookings: 5,
+                    status: 'Paused',
+                    color: '#f59e0b'
+                }
+            ],
+            costs: {
+                retell: 892,
+                openai: 156,
+                vercel: 20,
+                supabase: 25,
+                other: 754
+            }
+        };
 
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        // ========== STATE ==========
-        let currentUser = null;
-        let currentTeamMember = null;
-        let allClients = [];
-        let allCalls = [];
-        let allLeads = [];
-        let adminSettings = {};
-        let teamMembers = [];
-        let currentCurrency = 'CAD';
-        let fxRate = 1.39;
-        
-        // ========== AUTH ==========
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // ===== AUTH =====
+        const ADMIN_USERS = {
+            'admin@prioai.ca': { password: 'admin123', name: 'Admin', role: 'Owner' }
+        };
+
+        function handleLogin(e) {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            const errorEl = document.getElementById('loginError');
-            const loginBtn = document.getElementById('loginBtn');
-            
-            errorEl.style.display = 'none';
-            loginBtn.textContent = 'Signing in...';
-            loginBtn.disabled = true;
-            
-            try {
-                // Simple auth check for admin
-                if (AUTHORIZED_ADMINS.includes(email) && password === ADMIN_PASSWORD) {
-                    console.log('Admin login successful');
-                    currentUser = { email: email };
-                    currentTeamMember = { fields: { Name: 'Satnam', Role: 'Owner', Email: email } };
-                    
-                    // Store session in localStorage
-                    localStorage.setItem('adminSession', JSON.stringify({ email: email, timestamp: Date.now() }));
-                    
-                    initAdmin();
-                    return;
-                }
-                
-                // Try Supabase auth as fallback for other team members
-                try {
-                    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                    
-                    if (error) throw error;
-                    
-                    if (!data || !data.user) {
-                        throw new Error('No user data returned');
-                    }
-                    
-                    console.log('Supabase auth successful:', data.user.email);
-                    currentUser = data.user;
-                    
-                    await loadTeamMembers();
-                    const teamMember = teamMembers.find(t => t.fields['Email']?.toLowerCase() === email);
-                    
-                    if (teamMember) {
-                        currentTeamMember = teamMember;
-                        initAdmin();
-                    } else {
-                        throw new Error('Unauthorized: Not a team member');
-                    }
-                } catch (supaErr) {
-                    console.error('Auth error:', supaErr);
-                    throw new Error('Invalid email or password');
-                }
-            } catch (err) {
-                console.error('Login error:', err);
-                errorEl.textContent = err.message || 'Login failed';
-                errorEl.style.display = 'block';
-            } finally {
-                loginBtn.textContent = 'Sign In';
-                loginBtn.disabled = false;
+
+            const user = ADMIN_USERS[email];
+            if (user && user.password === password) {
+                AppState.currentUser = { email, ...user };
+                showAdminPanel();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
             }
-        });
-        
-        // Check for existing session
-        function checkLocalSession() {
-            const session = localStorage.getItem('adminSession');
-            if (session) {
-                try {
-                    const data = JSON.parse(session);
-                    // Session valid for 24 hours
-                    if (Date.now() - data.timestamp < 24 * 60 * 60 * 1000) {
-                        if (AUTHORIZED_ADMINS.includes(data.email)) {
-                            currentUser = { email: data.email };
-                            currentTeamMember = { fields: { Name: 'Satnam', Role: 'Owner', Email: data.email } };
-                            initAdmin();
-                            return true;
-                        }
-                    } else {
-                        localStorage.removeItem('adminSession');
-                    }
-                } catch (e) {}
-            }
-            return false;
         }
-        
-        // ========== INIT ==========
-        async function initAdmin() {
+
+        function showAdminPanel() {
             document.getElementById('loginScreen').style.display = 'none';
             document.getElementById('adminLayout').style.display = 'flex';
-            
-            // Set user info
-            document.getElementById('userName').textContent = currentTeamMember.fields['Name'] || 'Admin';
-            document.getElementById('userRole').textContent = currentTeamMember.fields['Role'] || 'Owner';
-            document.getElementById('userAvatar').textContent = (currentTeamMember.fields['Name'] || 'A')[0].toUpperCase();
-            
-            // Set current month
-            const now = new Date();
-            document.getElementById('currentMonth').textContent = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            document.getElementById('todayDate').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-            
-            // Load all data
-            showLoading();
-            await Promise.all([
-                loadAdminSettings(),
-                loadClients(),
-                loadCalls(),
-                loadLeads()
-            ]);
-            
-            // Populate dropdowns
-            populateClientDropdowns();
-            populateMonthDropdowns();
-            
-            // Render dashboard
-            renderDashboard();
-            hideLoading();
+            document.getElementById('userAvatar').textContent = AppState.currentUser.name.charAt(0);
+            document.getElementById('userName').textContent = AppState.currentUser.name;
+            document.getElementById('userRole').textContent = AppState.currentUser.role;
+            updateDashboard();
         }
-        
-        function populateMonthDropdowns() {
-            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            
-            let monthOptions = '<option value="">Current Month</option>';
-            for (let i = 0; i < 12; i++) {
-                monthOptions += `<option value="${i}">${months[i]}</option>`;
+
+        function handleLogout() {
+            AppState.currentUser = null;
+            document.getElementById('adminLayout').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('loginForm').reset();
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        // ===== CURRENCY =====
+        function formatCurrency(amount) {
+            if (AppState.currency === 'USD') {
+                amount = amount / AppState.fxRate;
             }
-            
-            document.getElementById('costsMonth').innerHTML = monthOptions;
+            return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
         }
-        
-        // ========== DATA LOADING ==========
-        async function loadAdminSettings() {
-            try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_SETTINGS_TABLE}`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
-                
-                if (data.records) {
-                    data.records.forEach(r => {
-                        adminSettings[r.fields['Setting Key']] = r.fields['Setting Value'];
-                    });
-                }
-                
-                fxRate = parseFloat(adminSettings['usd_to_cad_rate']) || 1.39;
-                document.getElementById('settingFxRate').value = fxRate;
-                document.getElementById('settingStarterPrice').value = adminSettings['starter_price'] || 149;
-                document.getElementById('settingStarterPromo').value = adminSettings['starter_promo_price'] || 99;
-                document.getElementById('settingProPrice').value = adminSettings['professional_price'] || 249;
-                document.getElementById('settingStarterLimit').value = adminSettings['starter_call_limit'] || 1000;
-                document.getElementById('settingProLimit').value = adminSettings['professional_call_limit'] || 3000;
-                
-            } catch (err) {
-                console.error('Error loading settings:', err);
-            }
-        }
-        
-        async function loadTeamMembers() {
-            try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
-                teamMembers = data.records || [];
-            } catch (err) {
-                console.error('Error loading team:', err);
-                teamMembers = [];
-            }
-        }
-        
-        async function loadClients() {
-            try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}?pageSize=100`, {
-                    headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                });
-                const data = await response.json();
-                allClients = data.records || [];
-            } catch (err) {
-                console.error('Error loading clients:', err);
-            }
-        }
-        
-        async function loadCalls() {
-            try {
-                let all = [];
-                let offset = null;
-                let pages = 0;
-                const maxPages = 100;
-                
-                do {
-                    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CALLS_TABLE}?pageSize=100&sort[0][field]=Timestamp&sort[0][direction]=desc`;
-                    if (offset) url += `&offset=${offset}`;
-                    
-                    const response = await fetch(url, {
-                        headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                    });
-                    const data = await response.json();
-                    
-                    if (data.records) all = all.concat(data.records);
-                    offset = data.offset;
-                    pages++;
-                } while (offset && pages < maxPages);
-                
-                allCalls = all;
-                console.log('Loaded calls:', allCalls.length);
-            } catch (err) {
-                console.error('Error loading calls:', err);
-            }
-        }
-        
-        async function loadLeads() {
-            try {
-                let all = [];
-                let offset = null;
-                let pages = 0;
-                const maxPages = 50;
-                
-                do {
-                    let url = `https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_LEADS_TABLE}?pageSize=100`;
-                    if (offset) url += `&offset=${offset}`;
-                    
-                    const response = await fetch(url, {
-                        headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` }
-                    });
-                    const data = await response.json();
-                    
-                    if (data.records) all = all.concat(data.records);
-                    offset = data.offset;
-                    pages++;
-                } while (offset && pages < maxPages);
-                
-                allLeads = all;
-                console.log('Loaded leads:', allLeads.length);
-            } catch (err) {
-                console.error('Error loading leads:', err);
-            }
-        }
-        
-        // ========== CURRENCY ==========
-        function formatCurrency(amountUSD, forceUSD = false) {
-            if (forceUSD || currentCurrency === 'USD') {
-                return '$' + parseFloat(amountUSD || 0).toFixed(2);
-            }
-            return '$' + (parseFloat(amountUSD || 0) * fxRate).toFixed(2);
-        }
-        
-        function formatCurrency4(amountUSD, forceUSD = false) {
-            if (forceUSD || currentCurrency === 'USD') {
-                return '$' + parseFloat(amountUSD || 0).toFixed(4);
-            }
-            return '$' + (parseFloat(amountUSD || 0) * fxRate).toFixed(4);
-        }
-        
-        function formatCurrencyCAD(amountCAD) {
-            if (currentCurrency === 'USD') {
-                return '$' + (parseFloat(amountCAD || 0) / fxRate).toFixed(2);
-            }
-            return '$' + parseFloat(amountCAD || 0).toFixed(2);
-        }
-        
-        document.querySelectorAll('.currency-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                currentCurrency = this.dataset.currency;
-                renderDashboard();
-                renderCosts();
-                renderRevenue();
+
+        function setCurrency(currency) {
+            AppState.currency = currency;
+            document.querySelectorAll('.currency-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.currency === currency);
             });
-        });
-        
-        // ========== NAVIGATION ==========
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-                
-                const section = this.dataset.section;
-                document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-                document.getElementById('section-' + section).classList.add('active');
-                
-                // Render section data
-                switch(section) {
-                    case 'dashboard': renderDashboard(); break;
-                    case 'clients': renderClients(); break;
-                    case 'analytics': renderAnalytics(); break;
-                    case 'calls': renderCallAnalytics(); break;
-                    case 'revenue': renderRevenue(); break;
-                    case 'costs': renderCosts(); break;
-                    case 'team': renderTeam(); break;
-                    case 'settings': renderSettings(); break;
-                }
-            });
-        });
-        
-        // Mobile menu
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
-            document.getElementById('adminSidebar').classList.toggle('open');
-        });
-        
-        // ========== RENDER FUNCTIONS ==========
-        function renderDashboard() {
-            const now = new Date();
-            const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-            const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            
-            // Filter calls for this month
-            const monthCalls = allCalls.filter(c => {
-                const ts = c.fields['Timestamp'];
-                return ts && new Date(ts) >= monthStart;
-            });
-            
-            const todayCalls = allCalls.filter(c => {
-                const ts = c.fields['Timestamp'];
-                return ts && new Date(ts) >= todayStart;
-            });
-            
+            updateDashboard();
+        }
+
+        // ===== DASHBOARD UPDATE =====
+        function updateDashboard() {
+            const activeClients = AppState.clients.filter(c => c.status === 'Active');
+            const payingClients = AppState.clients.filter(c => c.monthlyRate > 0 && c.status === 'Active');
+
+            // Calculate revenue
+            const subscriptionRevenue = payingClients.reduce((sum, c) => sum + c.monthlyRate, 0);
+            const leadGenRevenue = AppState.clients.filter(c => c.hasLeadGen && c.status === 'Active').reduce((sum, c) => sum + c.leadGenCost, 0);
+            const totalRevenue = subscriptionRevenue + leadGenRevenue;
+
             // Calculate costs
-            let totalRetell = 0, totalOpenAI = 0;
-            monthCalls.forEach(c => {
-                totalRetell += parseFloat(c.fields['Cost'] || 0);
-                totalOpenAI += parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            const usageCost = totalRetell + totalOpenAI;
-            
-            // Fixed costs
-            let fixedCost = 0;
-            Object.keys(adminSettings).forEach(key => {
-                if (key.startsWith('fixed_cost_')) {
-                    fixedCost += parseFloat(adminSettings[key] || 0);
-                }
-            });
-            
-            const totalCost = usageCost + fixedCost;
-            
-            // Revenue
-            let revenue = 0;
-            const activeClients = allClients.filter(c => c.fields['Status'] === 'Active');
-            activeClients.forEach(c => {
-                revenue += parseFloat(c.fields['Monthly Rate'] || 0);
-            });
-            
-            const profit = revenue - (totalCost * fxRate); // Convert costs to CAD
-            const margin = revenue > 0 ? (profit / revenue * 100) : 0;
-            
-            // Count bookings (Booked + Callback)
-            const bookings = monthCalls.filter(c => c.fields['Outcome'] === 'Booked' || c.fields['Outcome'] === 'Callback').length;
-            const conversations = monthCalls.filter(c => ['Booked', 'Callback', 'Follow Up', 'Timeline', 'Not Interested'].includes(c.fields['Outcome'])).length;
-            const bookingRate = monthCalls.length > 0 ? (bookings / monthCalls.length * 100) : 0;
-            
-            // Today stats
-            const todayBookings = todayCalls.filter(c => c.fields['Outcome'] === 'Booked' || c.fields['Outcome'] === 'Callback').length;
-            const todayConvos = todayCalls.filter(c => ['Booked', 'Callback', 'Follow Up', 'Timeline', 'Not Interested'].includes(c.fields['Outcome'])).length;
-            let todayCost = 0;
-            todayCalls.forEach(c => {
-                todayCost += parseFloat(c.fields['Cost'] || 0) + parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            
-            // Update dashboard
-            document.getElementById('dashRevenue').textContent = formatCurrencyCAD(revenue);
-            document.getElementById('dashCosts').textContent = formatCurrency(totalCost);
-            document.getElementById('dashProfit').textContent = formatCurrencyCAD(profit);
-            document.getElementById('dashMargin').textContent = margin.toFixed(1) + '%';
-            document.getElementById('dashActiveClients').textContent = activeClients.length;
-            document.getElementById('dashTotalCalls').textContent = monthCalls.length.toLocaleString();
-            document.getElementById('dashBookings').textContent = bookings;
-            document.getElementById('dashBookingRate').textContent = bookingRate.toFixed(2) + '%';
-            
-            document.getElementById('todayCalls').textContent = todayCalls.length;
-            document.getElementById('todayConvos').textContent = todayConvos;
-            document.getElementById('todayBookings').textContent = todayBookings;
-            document.getElementById('todayCost').textContent = formatCurrency(todayCost);
-            
-            // Client table
-            const tbody = document.getElementById('dashClientTable');
-            tbody.innerHTML = allClients.map(client => {
-                const f = client.fields;
-                const calls = f['Calls This Month'] || 0;
-                const limit = f['Call Limit'] || (f['Monthly Plan'] === 'Professional' ? 3000 : 1000);
-                const usage = limit > 0 ? (calls / limit * 100) : 0;
-                const usageClass = usage >= 90 ? 'danger' : usage >= 70 ? 'warning' : 'success';
-                const statusClass = f['Status'] === 'Active' ? 'badge-success' : f['Status'] === 'Paused' ? 'badge-warning' : 'badge-danger';
-                
-                return `<tr>
-                    <td>${f['Agent Name'] || '-'}</td>
-                    <td><span class="badge badge-info">${f['Monthly Plan'] || 'Starter'}</span></td>
-                    <td>${calls.toLocaleString()}</td>
-                    <td>${limit.toLocaleString()}</td>
-                    <td><span class="badge badge-${usageClass}">${usage.toFixed(0)}%</span></td>
-                    <td>${f['Booked Leads'] || 0}</td>
-                    <td><span class="badge ${statusClass}">${f['Status'] || 'Active'}</span></td>
-                </tr>`;
-            }).join('');
-        }
-        
-        function renderClients() {
-            const statusFilter = document.getElementById('filterClientStatus').value;
-            const planFilter = document.getElementById('filterClientPlan').value;
-            const searchFilter = document.getElementById('filterClientSearch').value.toLowerCase();
-            
-            let filtered = allClients.filter(c => {
-                const f = c.fields;
-                if (statusFilter && f['Status'] !== statusFilter) return false;
-                if (planFilter && f['Monthly Plan'] !== planFilter) return false;
-                if (searchFilter) {
-                    const searchStr = (f['Agent Name'] || '') + (f['Organization Name'] || '') + (f['Email'] || '');
-                    if (!searchStr.toLowerCase().includes(searchFilter)) return false;
-                }
-                return true;
-            });
-            
-            const tbody = document.getElementById('clientsTable');
-            tbody.innerHTML = filtered.map(client => {
-                const f = client.fields;
-                const calls = f['Calls This Month'] || 0;
-                const limit = f['Call Limit'] || 1000;
-                const statusClass = f['Status'] === 'Active' ? 'badge-success' : f['Status'] === 'Paused' ? 'badge-warning' : 'badge-danger';
-                
-                return `<tr>
-                    <td><strong>${f['Agent Name'] || '-'}</strong></td>
-                    <td>${f['Organization Name'] || '-'}</td>
-                    <td>${f['Email'] || '-'}</td>
-                    <td>${f['Phone'] || '-'}</td>
-                    <td><span class="badge badge-info">${f['Monthly Plan'] || 'Starter'}</span></td>
-                    <td>${calls.toLocaleString()} / ${limit.toLocaleString()}</td>
-                    <td><span class="badge ${statusClass}">${f['Status'] || 'Active'}</span></td>
-                    <td class="row-actions">
-                        <button class="action-btn action-view" onclick="viewAsClient('${client.id}')">View</button>
-                        <button class="action-btn action-edit" onclick="editClient('${client.id}')">Edit</button>
-                        <button class="action-btn action-pause" onclick="toggleClientStatus('${client.id}')">${f['Status'] === 'Active' ? 'Pause' : 'Activate'}</button>
-                    </td>
-                </tr>`;
-            }).join('');
-        }
-        
-        function toggleAdvancedMetrics(header) {
-            header.classList.toggle('active');
-            const content = document.getElementById('advancedMetricsContent');
-            content.classList.toggle('open');
-        }
-        
-        function renderAnalytics() {
-            const clientFilter = document.getElementById('analyticsClient').value;
-            const periodFilter = document.getElementById('analyticsPeriod').value;
-            
-            let filtered = filterCallsByPeriod(allCalls, periodFilter);
-            if (clientFilter) {
-                const clientLeads = allLeads.filter(l => l.fields['Client'] && l.fields['Client'].includes(clientFilter));
-                const leadIds = clientLeads.map(l => l.id);
-                filtered = filtered.filter(c => {
-                    const callLeads = c.fields['Leads'] || [];
-                    return callLeads.some(lid => leadIds.includes(lid));
-                });
-            }
-            
-            const total = filtered.length;
-            const outcomes = {};
-            filtered.forEach(c => {
-                const o = c.fields['Outcome'] || 'Unknown';
-                outcomes[o] = (outcomes[o] || 0) + 1;
-            });
-            
-            const bookings = (outcomes['Booked'] || 0) + (outcomes['Callback'] || 0);
-            const convos = (outcomes['Booked'] || 0) + (outcomes['Callback'] || 0) + (outcomes['Follow Up'] || 0) + (outcomes['Timeline'] || 0) + (outcomes['Not Interested'] || 0);
-            
-            document.getElementById('analyticsTotalCalls').textContent = total.toLocaleString();
-            document.getElementById('analyticsConvos').textContent = convos.toLocaleString();
-            document.getElementById('analyticsBookings').textContent = bookings;
-            document.getElementById('analyticsBookingRate').textContent = total > 0 ? (bookings / total * 100).toFixed(2) + '%' : '0%';
-            
-            // Outcomes table - separate Booked and Callback
-            const outcomeOrder = ['Booked', 'Callback', 'Follow Up', 'Timeline', 'Not Interested', 'Voicemail', 'No Answer', 'Wrong Person', 'DNC', 'Inconclusive', 'Max Attempts'];
-            document.getElementById('analyticsOutcomesTable').innerHTML = outcomeOrder.map(o => {
-                const count = outcomes[o] || 0;
-                const pct = total > 0 ? (count / total * 100).toFixed(1) : '0';
-                return `<tr><td>${o}</td><td>${count}</td><td>${pct}%</td></tr>`;
-            }).join('');
-            
-            // Lead status breakdown - exclude Calling
-            const statuses = {};
-            allLeads.forEach(l => {
-                const s = l.fields['Status'] || 'Unknown';
-                if (s !== 'Calling') {
-                    statuses[s] = (statuses[s] || 0) + 1;
-                }
-            });
-            const totalLeadsForStatus = Object.values(statuses).reduce((a, b) => a + b, 0);
-            document.getElementById('analyticsStatusTable').innerHTML = Object.entries(statuses).map(([s, count]) => {
-                const pct = totalLeadsForStatus > 0 ? (count / totalLeadsForStatus * 100).toFixed(1) : '0';
-                return `<tr><td>${s}</td><td>${count}</td><td>${pct}%</td></tr>`;
-            }).join('');
-            
-            // Advanced Metrics
-            // Avg call duration
-            let totalDuration = 0;
-            filtered.forEach(c => {
-                totalDuration += parseFloat(c.fields['Duration'] || 0);
-            });
-            const avgDuration = total > 0 ? totalDuration / total : 0;
-            document.getElementById('advAvgDuration').textContent = avgDuration > 60 ? (avgDuration / 60).toFixed(1) + 'm' : avgDuration.toFixed(0) + 's';
-            
-            // Total talk time
-            const totalMinutes = totalDuration / 60;
-            const totalHours = totalMinutes / 60;
-            document.getElementById('advTotalTalkTime').textContent = totalHours >= 1 ? totalHours.toFixed(1) + 'h' : totalMinutes.toFixed(0) + 'm';
-            
-            // Outcome rates
-            document.getElementById('advCallbackRate').textContent = total > 0 ? ((outcomes['Callback'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advFollowUpRate').textContent = total > 0 ? ((outcomes['Follow Up'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advVoicemailRate').textContent = total > 0 ? ((outcomes['Voicemail'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advNoAnswerRate').textContent = total > 0 ? ((outcomes['No Answer'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advDNCRate').textContent = total > 0 ? ((outcomes['DNC'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advWrongPersonRate').textContent = total > 0 ? ((outcomes['Wrong Person'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            
-            // Max Attempts Rate
-            document.getElementById('advMaxAttemptsRate').textContent = total > 0 ? ((outcomes['Max Attempts'] || 0) / total * 100).toFixed(1) + '%' : '0%';
-            
-            // Cost per booking
-            let totalCost = 0;
-            filtered.forEach(c => {
-                totalCost += parseFloat(c.fields['Cost'] || 0) + parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            const costPerBooking = bookings > 0 ? totalCost / bookings : 0;
-            document.getElementById('advCostPerBooking').textContent = formatCurrency(costPerBooking);
-            
-            // Lead progression rates (based on leads, not calls)
-            const bookedLeads = allLeads.filter(l => l.fields['Status'] === 'Booked').length;
-            const newLeads = allLeads.filter(l => l.fields['Status'] === 'New').length;
-            const retryLeads = allLeads.filter(l => l.fields['Status'] === 'Retry').length;
-            const closedLeads = allLeads.filter(l => l.fields['Status'] === 'Closed').length;
-            
-            const totalActiveLeads = allLeads.length;
-            document.getElementById('advNewToBooked').textContent = totalActiveLeads > 0 ? (bookedLeads / totalActiveLeads * 100).toFixed(1) + '%' : '0%';
-            document.getElementById('advRetryToBooked').textContent = (retryLeads + bookedLeads) > 0 ? (bookedLeads / (retryLeads + bookedLeads + closedLeads) * 100).toFixed(1) + '%' : '0%';
-        }
-        
-        function renderCallAnalytics() {
-            const clientFilter = document.getElementById('callsClient').value;
-            const periodFilter = document.getElementById('callsPeriod').value;
-            const typeFilter = document.getElementById('callsType').value;
-            
-            let filtered = filterCallsByPeriod(allCalls, periodFilter);
-            if (typeFilter) {
-                filtered = filtered.filter(c => c.fields['Call Type'] === typeFilter);
-            }
-            
-            // Debug: Log calls without call blocks
-            const withoutBlock = filtered.filter(c => !c.fields['Call Block']);
-            console.log('Calls without Call Block:', withoutBlock.length);
-            if (withoutBlock.length > 0) {
-                console.log('Sample call without block:', withoutBlock[0].fields);
-            }
-            
-            const outbound = filtered.filter(c => c.fields['Call Type'] === 'Outbound').length;
-            const inbound = filtered.filter(c => c.fields['Call Type'] === 'Inbound').length;
-            const pickups = filtered.filter(c => !['Voicemail', 'No Answer'].includes(c.fields['Outcome'])).length;
-            const pickupRate = filtered.length > 0 ? (pickups / filtered.length * 100) : 0;
-            
-            let totalCost = 0;
-            filtered.forEach(c => {
-                totalCost += parseFloat(c.fields['Cost'] || 0) + parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            const avgCost = filtered.length > 0 ? totalCost / filtered.length : 0;
-            
-            document.getElementById('callsOutbound').textContent = outbound.toLocaleString();
-            document.getElementById('callsInbound').textContent = inbound.toLocaleString();
-            document.getElementById('callsPickupRate').textContent = pickupRate.toFixed(1) + '%';
-            document.getElementById('callsAvgCost').textContent = formatCurrency(avgCost);
-            
-            // Call blocks
-            const blocks = {};
-            filtered.forEach(c => {
-                const block = c.fields['Call Block'] || 'No Block';
-                if (!blocks[block]) blocks[block] = { calls: 0, pickups: 0, bookings: 0 };
-                blocks[block].calls++;
-                if (!['Voicemail', 'No Answer'].includes(c.fields['Outcome'])) blocks[block].pickups++;
-                if (c.fields['Outcome'] === 'Booked' || c.fields['Outcome'] === 'Callback') blocks[block].bookings++;
-            });
-            
-            // Sort blocks numerically (Block 1, Block 2, ... Block 11, then Unknown/No Block at end)
-            const sortedBlocks = Object.entries(blocks).sort((a, b) => {
-                const numA = parseInt(a[0].replace(/\D/g, ''));
-                const numB = parseInt(b[0].replace(/\D/g, ''));
-                if (isNaN(numA) && isNaN(numB)) return a[0].localeCompare(b[0]);
-                if (isNaN(numA)) return 1;
-                if (isNaN(numB)) return -1;
-                return numA - numB;
-            });
-            
-            // Calculate total from blocks for verification
-            const blockTotal = sortedBlocks.reduce((sum, [, data]) => sum + data.calls, 0);
-            console.log('Total calls:', filtered.length, 'Block total:', blockTotal);
-            
-            document.getElementById('callBlocksTable').innerHTML = sortedBlocks
-                .map(([block, data]) => {
-                    const pickupRate = data.calls > 0 ? (data.pickups / data.calls * 100).toFixed(1) : '0';
-                    const bookingRate = data.calls > 0 ? (data.bookings / data.calls * 100).toFixed(2) : '0';
-                    return `<tr>
-                        <td>${block}</td>
-                        <td>${data.calls}</td>
-                        <td>${data.pickups}</td>
-                        <td>${pickupRate}%</td>
-                        <td>${data.bookings}</td>
-                        <td>${bookingRate}%</td>
-                    </tr>`;
-                }).join('');
-            
-            // Conversion funnel
-            const total = filtered.length;
-            const didntPickup = filtered.filter(c => ['Voicemail', 'No Answer'].includes(c.fields['Outcome'])).length;
-            const invalid = filtered.filter(c => ['DNC', 'Wrong Person'].includes(c.fields['Outcome'])).length;
-            const qualified = filtered.filter(c => ['Booked', 'Callback', 'Follow Up', 'Timeline', 'Not Interested'].includes(c.fields['Outcome'])).length;
-            const booked = filtered.filter(c => c.fields['Outcome'] === 'Booked' || c.fields['Outcome'] === 'Callback').length;
-            
-            document.getElementById('conversionFunnelTable').innerHTML = `
-                <tr><td>Total Calls</td><td>${total}</td><td>100%</td></tr>
-                <tr><td>Didn't Pickup</td><td>${didntPickup}</td><td>${total > 0 ? (didntPickup/total*100).toFixed(1) : 0}%</td></tr>
-                <tr><td>DNC/Wrong Person</td><td>${invalid}</td><td>${total > 0 ? (invalid/total*100).toFixed(1) : 0}%</td></tr>
-                <tr><td>Pickup Rate</td><td>${pickups}</td><td>${total > 0 ? (pickups/total*100).toFixed(1) : 0}%</td></tr>
-                <tr><td>Qualified Conversations</td><td>${qualified}</td><td>${total > 0 ? (qualified/total*100).toFixed(1) : 0}%</td></tr>
-                <tr style="background:rgba(34,197,94,0.1)"><td><strong>Booked/Callback</strong></td><td><strong>${booked}</strong></td><td><strong>${total > 0 ? (booked/total*100).toFixed(2) : 0}%</strong></td></tr>
+            const totalCosts = Object.values(AppState.costs).reduce((sum, val) => sum + val, 0);
+
+            // Calculate profit
+            const netProfit = totalRevenue - totalCosts;
+            const profitMargin = totalRevenue > 0 ? ((netProfit / totalRevenue) * 100).toFixed(1) : 0;
+
+            // Update stats
+            document.getElementById('totalRevenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('totalCosts').textContent = formatCurrency(totalCosts);
+            document.getElementById('netProfit').textContent = formatCurrency(netProfit);
+            document.getElementById('profitMargin').textContent = profitMargin + '%';
+            document.getElementById('payingClientsCount').textContent = payingClients.length;
+
+            document.getElementById('activeClients').textContent = activeClients.length;
+            document.getElementById('totalCalls').textContent = AppState.clients.reduce((sum, c) => sum + c.callsMTD, 0).toLocaleString();
+            document.getElementById('totalBookings').textContent = AppState.clients.reduce((sum, c) => sum + c.bookings, 0);
+
+            const totalCallsNum = AppState.clients.reduce((sum, c) => sum + c.callsMTD, 0);
+            const totalBookingsNum = AppState.clients.reduce((sum, c) => sum + c.bookings, 0);
+            const avgRate = totalCallsNum > 0 ? ((totalBookingsNum / totalCallsNum) * 100).toFixed(1) : 0;
+            document.getElementById('avgBookingRate').textContent = avgRate + '%';
+
+            // Update revenue breakdown
+            document.getElementById('revenueBreakdown').innerHTML = `
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Client Subscriptions</span>
+                    <span class="breakdown-value">${formatCurrency(subscriptionRevenue)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Lead Gen Services</span>
+                    <span class="breakdown-value">${formatCurrency(leadGenRevenue)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Setup Fees</span>
+                    <span class="breakdown-value">${formatCurrency(0)}</span>
+                </div>
+                <div class="breakdown-item" style="background: var(--success-muted); border-color: rgba(34,197,94,0.3);">
+                    <span class="breakdown-label" style="font-weight: 600;">Total Revenue</span>
+                    <span class="breakdown-value" style="color: var(--success);">${formatCurrency(totalRevenue)}</span>
+                </div>
             `;
-        }
-        
-        function renderRevenue() {
-            const activeClients = allClients.filter(c => c.fields['Status'] === 'Active');
-            const payingClients = activeClients.filter(c => parseFloat(c.fields['Monthly Rate'] || 0) > 0);
-            const freeClients = activeClients.filter(c => !c.fields['Monthly Rate'] || parseFloat(c.fields['Monthly Rate']) === 0);
-            
-            let mrr = 0;
-            payingClients.forEach(c => mrr += parseFloat(c.fields['Monthly Rate'] || 0));
-            const arpc = payingClients.length > 0 ? mrr / payingClients.length : 0;
-            
-            document.getElementById('revenueMRR').textContent = formatCurrencyCAD(mrr);
-            document.getElementById('revenuePayingClients').textContent = payingClients.length;
-            document.getElementById('revenueARPC').textContent = formatCurrencyCAD(arpc);
-            document.getElementById('revenueFreeClients').textContent = freeClients.length;
-            
-            document.getElementById('revenueTable').innerHTML = allClients.map(c => {
-                const f = c.fields;
-                const rate = parseFloat(f['Monthly Rate'] || 0);
-                const statusClass = f['Status'] === 'Active' ? 'badge-success' : 'badge-danger';
-                return `<tr>
-                    <td>${f['Agent Name'] || '-'}</td>
-                    <td><span class="badge badge-info">${f['Monthly Plan'] || 'Starter'}</span></td>
-                    <td>${rate > 0 ? formatCurrencyCAD(rate) : '<span class="badge badge-purple">Free</span>'}</td>
-                    <td><span class="badge ${statusClass}">${f['Status'] || '-'}</span></td>
-                    <td>${f['Payment Date'] || '-'}</td>
-                </tr>`;
-            }).join('');
-        }
-        
-        function renderCosts() {
-            const now = new Date();
-            const selectedMonth = document.getElementById('costsMonth').value;
-            const selectedYear = parseInt(document.getElementById('costsYear').value) || now.getFullYear();
-            
-            let monthStart, monthEnd;
-            if (selectedMonth) {
-                const month = parseInt(selectedMonth);
-                monthStart = new Date(selectedYear, month, 1);
-                monthEnd = new Date(selectedYear, month + 1, 0, 23, 59, 59);
-            } else {
-                monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-                monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
-            }
-            
-            const monthCalls = allCalls.filter(c => {
-                const ts = c.fields['Timestamp'];
-                if (!ts) return false;
-                const date = new Date(ts);
-                return date >= monthStart && date <= monthEnd;
-            });
-            
-            let totalRetell = 0, totalOpenAI = 0;
-            monthCalls.forEach(c => {
-                totalRetell += parseFloat(c.fields['Cost'] || 0);
-                totalOpenAI += parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            
-            // Fixed costs
-            let fixedCost = 0;
-            const fixedCostItems = [];
-            Object.keys(adminSettings).forEach(key => {
-                if (key.startsWith('fixed_cost_')) {
-                    const value = parseFloat(adminSettings[key] || 0);
-                    fixedCost += value;
-                    fixedCostItems.push({ key, name: key.replace('fixed_cost_', '').replace(/_/g, ' '), value });
-                }
-            });
-            
-            const usageTotal = totalRetell + totalOpenAI;
-            const total = usageTotal + fixedCost;
-            const costPerCall = monthCalls.length > 0 ? total / monthCalls.length : 0;
-            const uniqueLeads = new Set(monthCalls.map(c => (c.fields['Leads'] || [])[0]).filter(Boolean)).size;
-            const costPerLead = uniqueLeads > 0 ? total / uniqueLeads : 0;
-            const attemptsPerLead = uniqueLeads > 0 ? monthCalls.length / uniqueLeads : 0;
-            
-            document.getElementById('costRetell').textContent = formatCurrency(totalRetell);
-            document.getElementById('costOpenAI').textContent = formatCurrency(totalOpenAI);
-            document.getElementById('costUsageTotal').textContent = formatCurrency(usageTotal);
-            document.getElementById('costFixed').textContent = formatCurrency(fixedCost);
-            document.getElementById('costTotal').textContent = formatCurrency(total);
-            document.getElementById('costPerCall').textContent = formatCurrency4(costPerCall);
-            document.getElementById('costPerLead').textContent = formatCurrency4(costPerLead);
-            document.getElementById('costAttemptsPerLead').textContent = attemptsPerLead.toFixed(2);
-            
-            // Fixed costs list
-            document.getElementById('fixedCostsList').innerHTML = fixedCostItems.map(item => `
-                <div class="cost-row">
-                    <span class="cost-label" style="text-transform:capitalize;">${item.name}</span>
-                    <span class="cost-value">${formatCurrency(item.value)}/mo</span>
+
+            // Update cost breakdown
+            document.getElementById('costBreakdown').innerHTML = `
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Retell AI (Usage)</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.retell)}</span>
                 </div>
-            `).join('');
-            
-            // Daily breakdown
-            const dailyData = {};
-            monthCalls.forEach(c => {
-                const ts = c.fields['Timestamp'];
-                if (!ts) return;
-                const date = ts.split('T')[0];
-                if (!dailyData[date]) dailyData[date] = { calls: 0, retell: 0, openai: 0 };
-                dailyData[date].calls++;
-                dailyData[date].retell += parseFloat(c.fields['Cost'] || 0);
-                dailyData[date].openai += parseFloat(c.fields['OpenAI Cost'] || 0);
-            });
-            
-            const today = now.toISOString().split('T')[0];
-            document.getElementById('dailyCostsTable').innerHTML = Object.entries(dailyData)
-                .sort((a, b) => b[0].localeCompare(a[0]))
-                .map(([date, data]) => {
-                    const totalUSD = data.retell + data.openai;
-                    const totalCAD = totalUSD * fxRate;
-                    const perCallUSD = data.calls > 0 ? totalUSD / data.calls : 0;
-                    const perCallCAD = data.calls > 0 ? totalCAD / data.calls : 0;
-                    const isToday = date === today;
-                    
-                    // Display based on current currency
-                    const retellDisplay = currentCurrency === 'CAD' ? (data.retell * fxRate) : data.retell;
-                    const openaiDisplay = currentCurrency === 'CAD' ? (data.openai * fxRate) : data.openai;
-                    const totalDisplay = currentCurrency === 'CAD' ? totalCAD : totalUSD;
-                    const perCallDisplay = currentCurrency === 'CAD' ? perCallCAD : perCallUSD;
-                    
-                    return `<tr class="${isToday ? 'highlight-row' : ''}">
-                        <td>${isToday ? date + ' ★' : date}</td>
-                        <td>${data.calls}</td>
-                        <td>$${retellDisplay.toFixed(2)}</td>
-                        <td>$${openaiDisplay.toFixed(4)}</td>
-                        <td>$${totalDisplay.toFixed(2)}</td>
-                        <td>$${perCallDisplay.toFixed(4)}</td>
-                    </tr>`;
-                }).join('');
+                <div class="breakdown-item">
+                    <span class="breakdown-label">OpenAI (Usage)</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.openai)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Vercel Hosting</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.vercel)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Supabase</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.supabase)}</span>
+                </div>
+                <div class="breakdown-item">
+                    <span class="breakdown-label">Other Fixed Costs</span>
+                    <span class="breakdown-value">${formatCurrency(AppState.costs.other)}</span>
+                </div>
+                <div class="breakdown-item" style="background: var(--danger-muted); border-color: rgba(239,68,68,0.3);">
+                    <span class="breakdown-label" style="font-weight: 600;">Total Costs</span>
+                    <span class="breakdown-value" style="color: var(--danger);">${formatCurrency(totalCosts)}</span>
+                </div>
+            `;
+
+            // Update clients table
+            renderClientsTable();
+
+            // Update date
+            const now = new Date();
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
         }
-        
-        function renderTeam() {
-            document.getElementById('teamTable').innerHTML = teamMembers.map(member => {
-                const f = member.fields;
-                const roleClass = f['Role'] === 'Owner' ? 'badge-danger' : f['Role'] === 'Admin' ? 'badge-warning' : f['Role'] === 'Support' ? 'badge-info' : 'badge-purple';
-                const statusClass = f['Status'] === 'Active' ? 'badge-success' : 'badge-danger';
-                return `<tr>
-                    <td><strong>${f['Name'] || '-'}</strong></td>
-                    <td>${f['Email'] || '-'}</td>
-                    <td><span class="badge ${roleClass}">${f['Role'] || '-'}</span></td>
-                    <td><span class="badge ${statusClass}">${f['Status'] || 'Active'}</span></td>
-                    <td>${f['Added Date'] || '-'}</td>
-                    <td class="row-actions">
-                        ${f['Role'] !== 'Owner' ? '<button class="action-btn action-edit" onclick="editTeamMember(\'' + member.id + '\')">Edit</button>' : ''}
+
+        function renderClientsTable() {
+            const tbody = document.getElementById('clientsTableBody');
+            tbody.innerHTML = AppState.clients.map(client => `
+                <tr>
+                    <td>
+                        <div class="client-info">
+                            <div class="client-avatar" style="background: ${client.color};">${client.name.charAt(0)}</div>
+                            <div>
+                                <div class="client-name">${client.agentName}</div>
+                                <div class="client-org">${client.organization}</div>
+                            </div>
+                        </div>
                     </td>
-                </tr>`;
-            }).join('');
-        }
-        
-        function renderSettings() {
-            const fixedCostItems = [];
-            Object.keys(adminSettings).forEach(key => {
-                if (key.startsWith('fixed_cost_')) {
-                    fixedCostItems.push({ key, name: key.replace('fixed_cost_', '').replace(/_/g, ' '), value: adminSettings[key] });
-                }
-            });
-            
-            document.getElementById('settingsFixedCosts').innerHTML = fixedCostItems.map((item, i) => `
-                <div class="form-row" style="margin-bottom:12px;">
-                    <div class="form-group" style="margin-bottom:0;">
-                        <input type="text" class="form-input fixed-cost-name" value="${item.name}" placeholder="Cost name">
-                    </div>
-                    <div class="form-group" style="margin-bottom:0;display:flex;gap:8px;">
-                        <input type="number" step="0.01" class="form-input fixed-cost-value" value="${item.value}" placeholder="Amount USD">
-                        <button class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.remove()">×</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // ========== HELPERS ==========
-        function filterCallsByPeriod(calls, period) {
-            const now = new Date();
-            let start;
-            
-            switch(period) {
-                case 'today':
-                    start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                    break;
-                case 'week':
-                    const dayOfWeek = now.getDay();
-                    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-                    start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + mondayOffset);
-                    break;
-                case 'month':
-                    start = new Date(now.getFullYear(), now.getMonth(), 1);
-                    break;
-                case 'all':
-                    start = new Date(2020, 0, 1);
-                    break;
-                default:
-                    start = new Date(now.getFullYear(), now.getMonth(), 1);
-            }
-            
-            return calls.filter(c => {
-                const ts = c.fields['Timestamp'];
-                return ts && new Date(ts) >= start;
-            });
-        }
-        
-        function populateClientDropdowns() {
-            const options = '<option value="">All Clients</option>' + allClients.map(c => 
-                `<option value="${c.id}">${c.fields['Agent Name'] || c.fields['Email']}</option>`
-            ).join('');
-            
-            document.getElementById('analyticsClient').innerHTML = options;
-            document.getElementById('callsClient').innerHTML = options;
-            document.getElementById('notifClientSelect').innerHTML = allClients.map(c => 
-                `<option value="${c.id}">${c.fields['Agent Name'] || c.fields['Email']}</option>`
-            ).join('');
-        }
-        
-        // ========== ACTIONS ==========
-        function viewAsClient(clientId) {
-            const client = allClients.find(c => c.id === clientId);
-            if (client) {
-                window.open(`https://prioai.ca/dashboard?viewAs=${client.fields['Email']}`, '_blank');
-            }
-        }
-        
-        function editClient(clientId) {
-            const client = allClients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            const f = client.fields;
-            document.getElementById('editClientId').value = clientId;
-            document.getElementById('editClientName').value = f['Agent Name'] || '';
-            document.getElementById('editClientOrg').value = f['Organization Name'] || '';
-            document.getElementById('editClientEmail').value = f['Email'] || '';
-            document.getElementById('editClientPhone').value = f['Phone'] || '';
-            document.getElementById('editClientPlan').value = f['Monthly Plan'] || 'Starter';
-            document.getElementById('editClientRate').value = f['Monthly Rate'] || 0;
-            document.getElementById('editClientLimit').value = f['Call Limit'] || 1000;
-            document.getElementById('editClientStatus').value = f['Status'] || 'Active';
-            
-            document.getElementById('editClientModal').classList.add('active');
-        }
-        
-        async function toggleClientStatus(clientId) {
-            const client = allClients.find(c => c.id === clientId);
-            if (!client) return;
-            
-            const newStatus = client.fields['Status'] === 'Active' ? 'Paused' : 'Active';
-            
-            try {
-                await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ fields: { Status: newStatus } })
-                });
-                
-                client.fields['Status'] = newStatus;
-                renderClients();
-                showToast(`Client ${newStatus === 'Active' ? 'activated' : 'paused'} successfully`, 'success');
-            } catch (err) {
-                showToast('Error updating client', 'error');
-            }
-        }
-        
-        document.getElementById('saveClientBtn').addEventListener('click', async function() {
-            const clientId = document.getElementById('editClientId').value;
-            
-            const updates = {
-                'Agent Name': document.getElementById('editClientName').value,
-                'Organization Name': document.getElementById('editClientOrg').value,
-                'Email': document.getElementById('editClientEmail').value,
-                'Phone': document.getElementById('editClientPhone').value,
-                'Monthly Plan': document.getElementById('editClientPlan').value,
-                'Monthly Rate': parseFloat(document.getElementById('editClientRate').value) || 0,
-                'Call Limit': parseInt(document.getElementById('editClientLimit').value) || 1000,
-                'Status': document.getElementById('editClientStatus').value
-            };
-            
-            try {
-                await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_CLIENTS_TABLE}/${clientId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ fields: updates })
-                });
-                
-                // Update local data
-                const client = allClients.find(c => c.id === clientId);
-                if (client) Object.assign(client.fields, updates);
-                
-                closeModal('editClientModal');
-                renderClients();
-                showToast('Client updated successfully', 'success');
-            } catch (err) {
-                showToast('Error updating client', 'error');
-            }
-        });
-        
-        // ========== MODALS ==========
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-        
-        // ========== FILTERS ==========
-        document.getElementById('filterClientStatus').addEventListener('change', renderClients);
-        document.getElementById('filterClientPlan').addEventListener('change', renderClients);
-        document.getElementById('filterClientSearch').addEventListener('input', renderClients);
-        document.getElementById('analyticsClient').addEventListener('change', renderAnalytics);
-        document.getElementById('analyticsPeriod').addEventListener('change', renderAnalytics);
-        document.getElementById('callsClient').addEventListener('change', renderCallAnalytics);
-        document.getElementById('callsPeriod').addEventListener('change', renderCallAnalytics);
-        document.getElementById('callsType').addEventListener('change', renderCallAnalytics);
-        document.getElementById('costsMonth').addEventListener('change', renderCosts);
-        document.getElementById('costsYear').addEventListener('change', renderCosts);
-        
-        // ========== NOTIFICATIONS ==========
-        document.getElementById('notifRecipients').addEventListener('change', function() {
-            document.getElementById('notifClientSelectGroup').style.display = this.value === 'specific' ? 'block' : 'none';
-        });
-        
-        document.getElementById('sendNotifBtn').addEventListener('click', function() {
-            const title = document.getElementById('notifTitle').value;
-            const message = document.getElementById('notifMessage').value;
-            
-            if (!title || !message) {
-                showToast('Please fill in title and message', 'error');
-                return;
-            }
-            
-            // For now, just show success - in production this would send to clients via websocket/push
-            showToast('Notification sent successfully', 'success');
-            document.getElementById('notifTitle').value = '';
-            document.getElementById('notifMessage').value = '';
-        });
-        
-        // ========== TEAM ==========
-        document.getElementById('addTeamMemberBtn').addEventListener('click', function() {
-            document.getElementById('addTeamModal').classList.add('active');
-        });
-        
-        document.getElementById('saveTeamMemberBtn').addEventListener('click', async function() {
-            const name = document.getElementById('addTeamName').value;
-            const email = document.getElementById('addTeamEmail').value;
-            const role = document.getElementById('addTeamRole').value;
-            
-            if (!name || !email) {
-                showToast('Please fill in name and email', 'error');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${AIRTABLE_TEAM_TABLE}`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${AIRTABLE_TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        records: [{
-                            fields: {
-                                Name: name,
-                                Email: email,
-                                Role: role,
-                                Status: 'Active',
-                                'Added Date': new Date().toISOString().split('T')[0]
+                    <td>
+                        <div class="plan-info">
+                            <span class="plan-name">${client.plan}</span>
+                            <span class="plan-price">${client.callLimit} calls/mo</span>
+                        </div>
+                    </td>
+                    <td><strong>${formatCurrency(client.monthlyRate)}</strong></td>
+                    <td>
+                        <div class="services-list">
+                            ${client.hasLeadGen
+                                ? `<span class="service-item active">Active - ${formatCurrency(client.leadGenCost)}/mo</span>`
+                                : `<span class="service-item inactive">Not subscribed</span>`
                             }
-                        }]
-                    })
-                });
-                
-                await loadTeamMembers();
-                closeModal('addTeamModal');
-                renderTeam();
-                showToast('Team member added successfully', 'success');
-            } catch (err) {
-                showToast('Error adding team member', 'error');
-            }
-        });
-        
-        // ========== SETTINGS ==========
-        document.getElementById('saveCurrencySettings').addEventListener('click', async function() {
-            fxRate = parseFloat(document.getElementById('settingFxRate').value) || 1.39;
-            showToast('Currency settings saved', 'success');
-            renderDashboard();
-        });
-        
-        document.getElementById('savePricingSettings').addEventListener('click', function() {
-            showToast('Pricing settings saved', 'success');
-        });
-        
-        document.getElementById('addFixedCostBtn').addEventListener('click', function() {
-            const container = document.getElementById('settingsFixedCosts');
-            const div = document.createElement('div');
-            div.className = 'form-row';
-            div.style.marginBottom = '12px';
-            div.innerHTML = `
-                <div class="form-group" style="margin-bottom:0;">
-                    <input type="text" class="form-input fixed-cost-name" placeholder="Cost name">
-                </div>
-                <div class="form-group" style="margin-bottom:0;display:flex;gap:8px;">
-                    <input type="number" step="0.01" class="form-input fixed-cost-value" placeholder="Amount USD">
-                    <button class="btn btn-danger btn-sm" onclick="this.parentElement.parentElement.remove()">×</button>
-                </div>
-            `;
-            container.appendChild(div);
-        });
-        
-        // ========== TOAST ==========
+                        </div>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span>${client.callsMTD.toLocaleString()}</span>
+                            <span style="color: var(--text-muted); font-size: 0.8rem;">/ ${client.callLimit}</span>
+                        </div>
+                    </td>
+                    <td><span class="badge badge-success">${client.bookings}</span></td>
+                    <td>
+                        <span class="badge ${client.status === 'Active' ? 'badge-success' : client.status === 'Paused' ? 'badge-warning' : 'badge-danger'}">
+                            ${client.status}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="action-btn view" onclick="viewClient(${client.id})">View</button>
+                            <button class="action-btn edit" onclick="editClient(${client.id})">Edit</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ===== TOAST =====
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
-            toast.textContent = message;
+            const toastMessage = document.getElementById('toastMessage');
+            toastMessage.textContent = message;
             toast.className = 'toast show ' + type;
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
-        
-        function showLoading() {
-            // Could add a loading overlay
+
+        // ===== PLACEHOLDER FUNCTIONS =====
+        function viewClient(id) {
+            showToast('Client details view coming soon', 'success');
         }
-        
-        function hideLoading() {
-            // Hide loading overlay
+
+        function editClient(id) {
+            showToast('Client edit modal coming soon', 'success');
         }
-        
-        // ========== INIT ==========
-        checkLocalSession();
+
+        // ===== EVENT LISTENERS =====
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+
+        document.querySelectorAll('.currency-btn').forEach(btn => {
+            btn.addEventListener('click', () => setCurrency(btn.dataset.currency));
+        });
+
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (!item.classList.contains('disabled')) {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Auto-login for development (remove in production)
+        // showAdminPanel();
     </script>
 </body>
 </html>
