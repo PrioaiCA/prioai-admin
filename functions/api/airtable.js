@@ -4,7 +4,7 @@
 // Allowed Airtable bases and tables
 const ALLOWED_PATHS = {
     bases: ['applOjDjhH0RqLtBH'],
-    tables: ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq', 'tblvB5OpG0b5mVix3', 'Clients', 'Calls', 'Leads', 'Costs', 'Revenue', 'Settings']
+    tables: ['tblMptC862PyL7Znw', 'tblLpN4wceakfNFpq', 'tblvB5OpG0b5mVix3', 'tblJfJPnkTbMWhwTc', 'tblGD3iwn1nU0gjtx', 'tbl0TbzugbJiLZQOt', 'Clients', 'Calls', 'Leads', 'Costs', 'Revenue', 'Settings', 'Lead Gen Inbox', 'Admin Settings', 'Team Members']
 };
 
 // CORS allowed origins
